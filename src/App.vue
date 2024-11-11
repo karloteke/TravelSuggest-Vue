@@ -10,7 +10,7 @@ import HeaderComponent from '@/components/HeaderComponent.vue';
     </header>
 
     <main>
-      <!-- <RouterView /> -->
+      <RouterView />
     </main>
 
     <footer>
