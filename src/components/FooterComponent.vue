@@ -10,11 +10,10 @@
 
 
 <template>
-  <v-footer color="black" class="footer">
+  <v-footer class="footer">
     <v-row justify="center" no-gutters>
       <v-col cols="12" class="text-center mb-2">
         <img src="@/assets/logo.png" alt="Logo" style="max-height: 80px; margin-right: 12px;">
-        <!-- <span class="footer-title">TravelSuggest</span> -->
       </v-col>
 
       <!-- Enlaces de Navegación -->
@@ -40,6 +39,7 @@
     padding: 20px 0;
     color: white;
     text-align: center;
+    background-color: rgb(21, 21, 21)
   }
 
   .footer-title {

@@ -51,26 +51,30 @@
 </template>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
   .tips-container {
     padding: 80px;
     max-width: 800px;
     margin: auto;
     line-height: 1.8;
     color: #333;
-    font-family: 'Open Sans', sans-serif;
   }
 
   h1 {
     font-size: 35px;
+    font-weight: bold;
     color: #9aadff;
     text-align: center;
+    margin-top: 45px;
     margin-bottom: 20px;
+    font-family: Georgia, 'Times New Roman', Times, serif;
   }
 
   .intro, .closing {
     margin-bottom: 20px;
     color: #555;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 15px;
   }
 
   .tip {
@@ -79,6 +83,7 @@
     background-color: #f0f4ff;
     border-left: 6px solid #9aadff;
     border-radius: 8px;
+  
   }
 
   .tip h2 {
@@ -87,12 +92,14 @@
     margin-bottom: 10px;
     display: flex;
     align-items: center;
+    font-family: Georgia, 'Times New Roman', Times, serif;
   }
 
   p {
     margin: 0;
-    font-size: 1.1em;
+    font-size: 15px;
     color: #444;
     text-align: justify;
+    font-family: 'Open Sans', sans-serif;
   }
 </style>

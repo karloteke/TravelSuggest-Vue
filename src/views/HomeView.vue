@@ -16,7 +16,7 @@
     <p>
       En TravelSuggest, tienes la libertad de explorar una gran variedad de destinos y sugerencias 
       de viaje compartidas por nuestra comunidad de viajeros. Sin embargo, si quieres 
-      contribuir y agregar destionos nuevos o tus propias recomendaciones, es necesario que te registres.
+      contribuir y agregar destinos nuevos o tus propias recomendaciones, es necesario que te registres.
     </p>
     <p>
       Al unirte, no solo serás parte de una comunidad de viajeros, sino que también 
@@ -25,7 +25,7 @@
     </p>
 
     <div class="points-box">
-      <h3>Beneficios de Registrarte:</h3>
+      <h3>Puntos por Participación</h3>
       <ul>
         <li>🎉 <strong>100 puntos de bienvenida</strong> al registrarte.</li>
         <li>🗺️ <strong>150 puntos por cada destino</strong> que agregues.</li>
@@ -33,20 +33,30 @@
       </ul>
     </div>
 
+    <div class="levels-box">
+      <h3>Niveles de Recompensas</h3>
+      <ul>
+        <li>🥉 <strong>Nivel Bronce</strong>: 2000 puntos - Descuentos en viajes.</li>
+        <li>🥈 <strong>Nivel Plata</strong>: 5000 puntos - Packs de experiencias.</li>
+        <li>🥇 <strong>Nivel Oro</strong>: 10.000 puntos - Artículos de viaje.</li>
+      </ul>
+    </div>
+
     <p>
       Con estos puntos, podrás disfrutar de <strong>descuentos especiales</strong>, 
-      <strong>packs de experiencias únicas</strong> y <strong>artículos de viaje</strong> que harán 
+      <strong>packs de experiencias</strong> y <strong>artículos de viaje</strong> que harán 
       tus próximas aventuras aún más emocionantes. Recuerda mantener tus aportes adecuados y 
       respetuosos para que todos los viajeros puedan disfrutar de una comunidad positiva y útil.
     </p>
-    <p>
+    <p class="text-center">
       ¡Únete hoy a nuestra comunidad de viajeros TravelSuggest!
     </p>
   </div>
 </template>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
+
   .home-container {
     position: relative;
     overflow: hidden;
@@ -82,7 +92,6 @@
   .overlay-content p {
     font-size: 20px;
     color: #e0e0e0;
-    font-family: Georgia, 'Times New Roman', Times, serif;
   }
 
   .description-content {
@@ -92,14 +101,14 @@
     text-align: left;
     line-height: 1.8;
     color: #555;
-    font-family: 'Open Sans', sans-serif;
   }
 
   .description-content h2 {
-    font-size: 28px;
-    color: #4a4a4a;
+    font-size: 35px;
+    color: #9aadff;
     margin-bottom: 15px;
-    font-family:Open sans;
+    text-align: center;
+    font-family: Georgia, 'Times New Roman', Times, serif;
   }
 
   .description-content p {
@@ -107,34 +116,43 @@
     color: #444;
     text-align: justify;
     margin-bottom: 20px;
+    font-family: 'Open Sans', sans-serif;
   }
 
-  .points-box {
-    background-color: #e9f1ff;
-    border: 2px solid #9aadff;
+  /* Caja de puntos y niveles */
+  .points-box, .levels-box {
+    border: 1px solid #be9ffe;
+    background-color: #f0f4ff;
     border-radius: 8px;
     padding: 20px;
-    margin: 20px auto;
+    margin: 35px auto;
     width: 500px;
     text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
 
-  .points-box h3 {
-    font-size: 1.4em;
-    color: #4a4a4a;
+  .points-box h3, .levels-box h3 {
+    font-size: 22px;
+    color: #9aadff;
     margin-bottom: 10px;
+    font-family: Georgia, 'Times New Roman', Times, serif;
   }
 
-  .points-box ul {
+  .points-box ul, .levels-box ul {
     list-style-type: none;
     padding: 0;
+    font-family: 'Open Sans', sans-serif;
+    color: #333;
   }
 
-  .points-box li {
-    font-size: 1.1em;
-    color: #333;
+  .points-box li, .levels-box li {
+    font-size: 17px;
     margin: 8px 0;
-    padding-left: 20px;
     position: relative;
+  }
+
+  .text-center{
+    display: flex;
+    justify-content: center;
   }
 </style>
