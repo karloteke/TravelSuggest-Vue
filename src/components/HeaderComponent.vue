@@ -32,7 +32,7 @@
     <v-btn
       variant="text"
       class="menu-button mx-2"
-      @click="navigateTo('destination')"
+      @click="navigateTo('destinations')"
     >
       Destinos
     </v-btn>
@@ -66,7 +66,7 @@
 <style scoped>
 
   .design-logo{
-    max-height: 60px;
+    max-height: 70px;
     margin-right: 12px;
   }
   .v-toolbar-title {
@@ -76,6 +76,9 @@
 
    .menu-button {
     color: #9aadff;
+    font-size: 15px;
+    font-weight: bold;
+    font-family: Georgia, 'Times New Roman', Times, serif;
   }
 
   .menu-button:hover {
@@ -85,5 +88,7 @@
   .login-button{
     background-color: #9aadff;
     color: white;
+    font-weight: bold;
+    font-family: Georgia, 'Times New Roman', Times, serif;
   }
 </style>
