@@ -32,6 +32,13 @@
     <v-btn
       variant="text"
       class="menu-button mx-2"
+      @click="navigateTo('users')"
+    >
+      Usuarios
+    </v-btn>
+    <v-btn
+      variant="text"
+      class="menu-button mx-2"
       @click="navigateTo('destinations')"
     >
       Destinos
