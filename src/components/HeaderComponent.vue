@@ -46,7 +46,7 @@
     <v-btn
       variant="text"
       class="menu-button mx-2"
-      @click="navigateTo('suggest')"
+      @click="navigateTo('suggestions')"
     >
       Sugerencias
     </v-btn>
