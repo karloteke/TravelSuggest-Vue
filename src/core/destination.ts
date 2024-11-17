@@ -5,6 +5,7 @@ export interface Destination {
     season: string
     isPopular: boolean
     category: string
+    userId: number
 }
 
 

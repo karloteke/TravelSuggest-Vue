@@ -39,9 +39,6 @@ const handleSubmit = async () => {
   // Resetear valores del formulario
   userData.value = { userName: '', email: '', password: '', points: 0 };
 
-  // Mostrar el alerta de éxito
-  successAlert.value = true;
-
   setTimeout(() => {
     successAlert.value = false;
   }, 2000);
@@ -94,6 +91,7 @@ const handleSubmit = async () => {
     </v-card>
   </v-dialog>
 
+
   <!-- v-alert para mensaje de éxito -->
   <v-alert v-model="successAlert" type="success" dismissible class="success-alert">
     Usuario creado correctamente.
@@ -138,9 +136,7 @@ const handleSubmit = async () => {
   top: 70px;
   right: 20px;
   width: 300px;
-  box-shadow: 0 4px 12px rgba(154, 173, 255, 0.6);
   z-index: 1000;
-  background-color: #9aadff;
   color: white;
   font-weight: bold;
   font-size: 16px;

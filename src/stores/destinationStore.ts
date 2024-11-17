@@ -24,8 +24,55 @@ export const useDestinationStore = defineStore('destinations', () => {
         }
     }
 
+    async function addDestination(newDestination: Destination, userId: number) {
+        try {
+            const response = await fetch(`http://localhost:5146/Destination?userId=${userId}`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newDestination)
+            });
+
+            if (response.ok) {
+                const createdDestination = await response.json();
+                console.log('Destino añadido satisfactoriamente:', createdDestination);
+               
+                fetchAllDestinations();  // Actualizar la lista de destinos 
+            } else {
+                const errorMessage = await response.text();
+                console.error('Fallo al añadir el destino:', errorMessage);
+            }
+        } catch (error) {
+            console.error('Error al añadir destino:', error);
+        }
+    }
+
+    async function deleteDestination(destinationId: number) {
+        try {
+          const response = await fetch(`http://localhost:5146/Destination/${destinationId}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+    
+          if (response.ok) {
+            console.log(`Destino con ID ${destinationId} borrado satisfactoriamente`);
+            await fetchAllDestinations();
+          } else {
+            const errorMessage = await response.text();
+            console.error('Fallo al borrar el destino:', errorMessage);
+          }
+        } catch (error) {
+          console.error('Error al borrar el destino:', error);
+        }
+      }
+
     return {
         destinations,
         fetchAllDestinations,
+        addDestination,
+        deleteDestination
     };
 });
