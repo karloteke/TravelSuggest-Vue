@@ -46,13 +46,56 @@ const paginatedDestinations = computed(() => {
 const changePage = (page: number) => {
   currentPage.value = page
 }
+
+// Iconos según estación del año
+const getSeasonIcon = (season: string) => {
+  switch (season) {
+    case 'Verano':
+      return 'mdi-weather-sunny'
+    case 'Primavera':
+      return 'mdi-flower'
+    case 'Otoño':
+      return 'mdi-leaf-maple'
+    case 'Invierno':
+      return 'mdi-snowflake'
+    case 'Todas las estaciones del año':
+      return 'mdi-earth'
+    default:
+      return 'mdi-calendar'
+  }
+}
+
+// Iconos según categoría
+const getCategoryIcon = (category: string) => {
+  switch (category) {
+    case 'Playa':
+      return 'mdi-beach'
+    case 'Montaña':
+      return 'mdi-mountain'
+    case 'Ciudad':
+      return 'mdi-city'
+    case 'Aventura':
+      return 'mdi-hiking'
+    case 'Cultural':
+      return 'mdi-drama-masks'
+    case 'Gastronomía':
+      return 'mdi-silverware-fork-knife'
+    case 'Ocio':
+      return 'mdi-party-popper'
+    default:
+      return 'mdi-label-outline'
+  }
+}
 </script>
 
 <template>
   <div class="container">
-    <h1 class="section-title">
-      <strong>Destinos compartidos por los viajeros de TravelSuggest</strong>
-    </h1>
+    <div class="section-title-container">
+      <h1 class="section-title">
+        <strong>Destinos compartidos por los viajeros de TravelSuggest</strong>
+      </h1>
+    </div>
+    
     <p class="description">
       Explora los destinos recomendados por nuestra comunidad de viajeros. Descubre lugares únicos y
       planifica tu próxima aventura de forma responsable. ¿Tienes un destino en mente? ¡Compártelo
@@ -81,18 +124,18 @@ const changePage = (page: number) => {
             :key="destination.id"
           >
             <v-card class="mx-auto my-4 custom-card" outlined>
-              <v-card-title class="city-name">{{ destination.cityName }}</v-card-title>
+              <v-card-title class="title-destination">{{ destination.cityName }}</v-card-title>
               <v-card-subtitle class="subtitle"
-                >Mejor estación: {{ destination.season }}</v-card-subtitle
+                ><v-icon small>mdi-card-account-details-outline</v-icon> {{ destination.id }}</v-card-subtitle
               >
               <v-card-text class="details-text">
-                <p><v-icon small>mdi-pound</v-icon> ID: {{ destination.id }}</p>
                 <p><v-icon small>mdi-information-outline</v-icon> {{ destination.description }}</p>
-                <p>
-                  <v-icon small>mdi-star</v-icon> Popularidad:
+                <p class="mt-4"><v-icon :icon="getSeasonIcon(destination.season)" small></v-icon> {{ destination.season }}</p>
+                <p class="mt-4">
+                  <v-icon small>mdi-heart-outline</v-icon> 
                   {{ destination.isPopular ? 'Alta' : 'Normal' }}
                 </p>
-                <p><v-icon small>mdi-tag</v-icon> Categoría: {{ destination.category }}</p>
+                <p class="mt-4"><v-icon :icon="getCategoryIcon(destination.category)" small></v-icon> {{ destination.category }}</p>
               </v-card-text>
 
               <v-card-actions class="actions-container">
@@ -141,6 +184,10 @@ const changePage = (page: number) => {
   width: 100%;
 }
 
+.section-title-container{
+  text-align: center;
+}
+
 /* @media (max-width: 600px) {
   .container {
     padding: 15px;
@@ -150,16 +197,17 @@ const changePage = (page: number) => {
 .floating-add-button {
   background-color: #ffffff;
   color: rgb(0, 0, 0);
-  font-size: 16px;
+  font-size: 20px;
   padding: 10px 10px;
   border-radius: 50px;
-  box-shadow: 0 4px 12px rgba(154, 173, 255, 0.6);
+  box-shadow: 0 3px 10px #be9ffe;
   cursor: pointer;
   border: none;
   display: flex;
   align-items: center;
   gap: 5px;
   margin-left: 30px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
 .floating-add-button:hover {
@@ -204,17 +252,19 @@ const changePage = (page: number) => {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.city-name {
-  color: #9aadff;
-  font-weight: 700;
+.title-destination {
+  font-size: 35px;
   font-family: Georgia, 'Times New Roman', Times, serif;
-  font-size: 25px;
+  font-weight: bold;
+  color: #9aadff;
+  margin-bottom: 20px;
+  text-align: center;  
 }
 
 .subtitle {
   color: #555;
-  font-size: 0.9em;
-  margin-bottom: 10px;
+  font-size: 15px;
+  text-align: center;
 }
 
 .details-text p {
