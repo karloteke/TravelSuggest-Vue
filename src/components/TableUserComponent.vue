@@ -112,119 +112,119 @@ const changePage = (page: number) => {
 </template>
 
 <style scoped>
-  @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
 
-  .container {
-    max-width: 1200px;
-    margin: auto;
-    padding: 30px 20px;
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 8px;
-    position: relative;
-    text-align: center;
-  }
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 30px 20px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  position: relative;
+  text-align: center;
+}
 
-  .section-title {
-    font-size: 35px;
-    font-family: 'Open Sans', sans-serif;
-    font-weight: bold;
-    color: #9aadff;
-    margin-top: 85px;
-    margin-bottom: 20px;
-  }
+.section-title {
+  font-size: 35px;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: bold;
+  color: #9aadff;
+  margin-top: 85px;
+  margin-bottom: 20px;
+}
 
-  .table-container {
-    width: 100%;
-    overflow-x: auto;
-  }
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+}
 
-  .user-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    background-color: rgba(255, 255, 255, 0.85);
-    box-shadow: 0 4px 12px rgba(154, 173, 255, 0.15);
-    border-radius: 8px;
-  }
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 4px 12px rgba(154, 173, 255, 0.15);
+  border-radius: 8px;
+}
 
-  .user-table th, .user-table td {
-    padding: 12px;
-    font-size: 16px;
-    color: #333;
-    text-align: center;
-    border-bottom: 1px solid #ddd;
-  }
+.user-table th, .user-table td {
+  padding: 12px;
+  font-size: 16px;
+  color: #333;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
 
-  .user-table th {
-    background-color: #9aadff;
-    color: white;
-    font-weight: bold;
-  }
+.user-table th {
+  background-color: #9aadff;
+  color: white;
+  font-weight: bold;
+}
 
-  .user-table tbody tr:hover {
-    background-color: rgba(154, 173, 255, 0.1);
-  }
+.user-table tbody tr:hover {
+  background-color: rgba(154, 173, 255, 0.1);
+}
 
-  .action-icons {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-  }
+.action-icons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
 
-  .icon-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    padding: 5px;
-  }
+.icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 5px;
+}
 
-  .icon-button.edit {
-    color: #9aadff;
-  }
+.icon-button.edit {
+  color: #9aadff;
+}
 
-  .icon-button.delete {
-    color: #f4978e;
-  }
+.icon-button.delete {
+  color: #f4978e;
+}
 
-  .pagination-container {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin: 20px 0;
-  }
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
+}
 
-  .pagination-button {
-    background-color: #9aadff;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
+.pagination-button {
+  background-color: #9aadff;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
 
-  .pagination-button.active {
-    background-color: #6b8cff;
-    font-weight: bold;
-  }
+.pagination-button.active {
+  background-color: #6b8cff;
+  font-weight: bold;
+}
 
-  .floating-add-button {
-    bottom: 30px;
-    right: 30px;
-    background-color: #ffffff;
-    color: rgb(0, 0, 0);
-    font-size: 16px;
-    padding: 10px 20px;
-    border-radius: 50px;
-    box-shadow: 0 4px 12px rgba(154, 173, 255, 0.6);
-    cursor: pointer;
-    border: none;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
+.floating-add-button {
+  bottom: 30px;
+  right: 30px;
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  font-size: 16px;
+  padding: 10px 20px;
+  border-radius: 50px;
+  box-shadow: 0 4px 12px rgba(154, 173, 255, 0.6);
+  cursor: pointer;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
 
-  .floating-add-button:hover {
-    box-shadow: 0 8px 16px rgba(154, 173, 255, 0.3);
-  }
+.floating-add-button:hover {
+  box-shadow: 0 8px 16px rgba(154, 173, 255, 0.3);
+}
 </style>
