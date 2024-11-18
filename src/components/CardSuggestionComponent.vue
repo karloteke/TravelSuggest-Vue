@@ -4,13 +4,36 @@ import { useRouter } from 'vue-router'
 import { ref, computed } from 'vue'
 import { format } from 'date-fns'
 
-const { suggestions } = useSuggestionStore()
+const { suggestions, deleteSuggestion } = useSuggestionStore()
 const router = useRouter()
 const pageSize = 6
 const currentPage = ref(1)
 
+const deleteConfirmDialog = ref(false) // Estado del modal de confirmación de eliminación
+const suggestionToDelete = ref<number | null>(null) // ID del destino a eliminar
+
 const handleAddSuggestion = () => {
   router.push('/add-suggestion')
+}
+
+const editSuggestion = (suggestionId: number) => {
+  router.push(`/edit-suggestion/${suggestionId}`)
+}
+
+// Función para abrir el modal de confirmación de eliminación
+const openDeleteConfirmDialog = (suggestionId: number) => {
+  suggestionToDelete.value = suggestionId
+  deleteConfirmDialog.value = true
+}
+
+// Función para confirmar e eliminar destino
+const confirmDeleteSuggestion = async () => {
+  console.log("confirmDeleteSuggestion called");
+  if (suggestionToDelete.value !== null) {
+    await deleteSuggestion(suggestionToDelete.value)
+    deleteConfirmDialog.value = false
+    suggestionToDelete.value = null
+  }
 }
 
 const totalPages = computed(() => Math.ceil(suggestions.length / pageSize))
@@ -94,6 +117,15 @@ const getStars = (rating: number) => {
                     </v-icon>
                   </span>
                 </p>
+
+                <v-card-actions class="actions-container">
+                <v-btn icon color="#9aadff" @click="editSuggestion(suggestion.id)">
+                  <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+                <v-btn icon color="#f4978e" @click="openDeleteConfirmDialog(suggestion.id)">
+                  <v-icon>mdi-delete</v-icon>
+                </v-btn>
+              </v-card-actions>
               </v-card-text>
             </v-card>
           </v-col>
@@ -105,6 +137,18 @@ const getStars = (rating: number) => {
       <v-pagination v-model="currentPage" :length="totalPages" @input="changePage"></v-pagination>
     </div>
   </div>
+
+  <!-- Modal de Confirmación de Eliminación -->
+  <v-dialog v-model="deleteConfirmDialog" max-width="400">
+    <v-card>
+      <v-card-title class="headline">Confirmar Eliminación</v-card-title>
+      <v-card-text> ¿Estás seguro de que deseas eliminar esta experiencia? </v-card-text>
+      <v-card-actions>
+        <v-btn color="red" @click="confirmDeleteSuggestion">Sí, eliminar</v-btn>
+        <v-btn color="blue-grey" @click="deleteConfirmDialog = false">Cancelar</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <style scoped>
