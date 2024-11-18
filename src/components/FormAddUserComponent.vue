@@ -38,7 +38,7 @@ const handleSubmit = async () => {
   
   // Resetear valores del formulario
   userData.value = { userName: '', email: '', password: '', points: 0 };
-
+  successAlert.value = true;
   setTimeout(() => {
     successAlert.value = false;
   }, 2000);
@@ -47,12 +47,13 @@ const handleSubmit = async () => {
 
 <template>
   <div class="container-form">
-    <v-sheet class="mx-auto form-container" width="400">
+    <v-sheet class="mx-auto form-container" width="450">
       <h2 class="form-title">Crear Nuevo Usuario</h2>
       <v-form @submit.prevent="handleSubmit">
         <v-text-field
           v-model="userData.userName"
           label="Nombre de usuario"
+          prepend-icon="mdi-account"
           outlined
           dense
           required
@@ -61,6 +62,7 @@ const handleSubmit = async () => {
         <v-text-field
           v-model="userData.email"
           label="Email"
+          prepend-icon="mdi-email-outline"
           outlined
           dense
           required
@@ -69,6 +71,7 @@ const handleSubmit = async () => {
         <v-text-field
           v-model="userData.password"
           label="Contraseña"
+          prepend-icon="mdi-lock-outline"
           outlined
           dense
           required
@@ -80,7 +83,7 @@ const handleSubmit = async () => {
     </v-sheet>
   </div>
 
-  <!-- Pop-Up Modal para mensaje de campos incompletos -->
+  <!-- Modal para mensaje de campos incompletos -->
   <v-dialog v-model="showModal" max-width="290">
     <v-card>
       <v-card-title class="headline">Campos incompletos</v-card-title>
@@ -91,8 +94,7 @@ const handleSubmit = async () => {
     </v-card>
   </v-dialog>
 
-
-  <!-- v-alert para mensaje de éxito -->
+  <!-- Alerta de éxito -->
   <v-alert v-model="successAlert" type="success" dismissible class="success-alert">
     Usuario creado correctamente.
   </v-alert>
@@ -110,13 +112,13 @@ const handleSubmit = async () => {
 
 .form-container {
   padding: 30px;
-  border-radius: 8px;
-  background-color: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 6px 18px rgba(90, 103, 216, 0.3);
 }
 
 .form-title {
-  font-size: 24px;
+  font-size: 26px;
   font-weight: bold;
   color: #9aadff;
   text-align: center;
@@ -126,9 +128,9 @@ const handleSubmit = async () => {
 
 .submit-button {
   margin-top: 20px;
-  background-color: #9aadff;
-  color: white;
+  font-size: 16px;
   font-weight: bold;
+  color: white;
 }
 
 .success-alert {

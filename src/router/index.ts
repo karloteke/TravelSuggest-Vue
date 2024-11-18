@@ -6,6 +6,7 @@ import UserListView from '@/views/UserListView.vue';
 import FormAddUserComponent from '../components/FormAddUserComponent.vue';
 import AddDestinationView from '@/views/AddDestinationView.vue';
 import SuggestionView from '@/views/SuggestionView.vue';
+import AddSuggestionView from '@/views/AddSuggestionView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,6 +45,11 @@ const router = createRouter({
       path: '/suggestions',
       name: 'suggestions',
       component: SuggestionView
+    },
+    { 
+      path: '/add-suggestion',
+      name: 'addSuggestion',
+      component: AddSuggestionView
     },
 
   ],
