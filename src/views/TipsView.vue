@@ -53,7 +53,7 @@
 <style scoped>
   @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
   .tips-container {
-    padding: 80px;
+    padding: 40px 30px;
     max-width: 800px;
     margin: auto;
     line-height: 1.8;
@@ -63,7 +63,7 @@
   h1 {
     font-size: 35px;
     font-weight: bold;
-    color: #9aadff;
+    color:#4a90e2; 
     text-align: center;
     margin-top: 45px;
     margin-bottom: 20px;
@@ -74,20 +74,20 @@
     margin-bottom: 20px;
     color: #555;
     font-family: 'Open Sans', sans-serif;
-    font-size: 15px;
+    font-size: 16px;
   }
 
   .tip {
     margin-bottom: 20px;
     padding: 20px;
     background-color: #f0f4ff;
-    border-left: 6px solid #9aadff;
+    border-left: 6px solid #05a4c8;
     border-radius: 8px;
   
   }
 
   .tip h2 {
-    font-size: 20px;
+    font-size: 23px;
     color: #4a4a4a;
     margin-bottom: 10px;
     display: flex;
@@ -97,7 +97,7 @@
 
   p {
     margin: 0;
-    font-size: 15px;
+    font-size: 16px;
     color: #444;
     text-align: justify;
     font-family: 'Open Sans', sans-serif;

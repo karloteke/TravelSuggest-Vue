@@ -20,21 +20,30 @@ import HeaderComponent from '@/components/HeaderComponent.vue';
 </template>
 
 <style scoped>
-/* Configuración de Flexbox para mantener el footer en la parte inferior */
+body, html {
+  margin: 0; 
+  padding: 0; 
+  overflow-x: hidden; 
+}
+
 .app-layout {
-  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; 
   box-sizing: border-box; 
 }
 
+header {
+  flex: 0 0 auto; 
+}
+
 .main-content {
-  flex: 1; /* Permite que el contenido principal ocupe el espacio disponible */
+  flex: 1; 
+  overflow: auto; 
 }
 
-body {
-  overflow-x: hidden;
-  padding: 0px;
-  margin: 0px;
+footer {
+  flex: 0 0 auto;
 }
-
 
 </style>

@@ -117,7 +117,7 @@ const handleSubmit = async () => {
           outlined
         ></v-text-field>
 
-        <v-btn class="submit-btn" type="submit" block color="#9aadff">Crear Sugerencia</v-btn>
+        <v-btn class="submit-button" type="submit" block color="#05a4c8">Crear Sugerencia</v-btn>
       </v-form>
     </v-sheet>
 
@@ -150,8 +150,9 @@ const handleSubmit = async () => {
 
 .form-title {
   font-size: 26px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
   font-weight: bold;
-  color: #9aadff; 
+  color:  #4a90e2; 
   text-align: center;
   margin-bottom: 20px;
   font-family: 'Open Sans', sans-serif;
@@ -164,22 +165,31 @@ const handleSubmit = async () => {
   box-shadow: 0 6px 18px rgba(90, 103, 216, 0.3);
 }
 
-.submit-btn {
+.submit-button {
+  margin-top: 20px;
   font-size: 16px;
   font-weight: bold;
-  margin-top: 15px;
   color: white;
+  background-color: #05a4c8; 
+  transition: background 0.3s, box-shadow 0.3s;
+}
+
+.submit-button:hover {
+  background: linear-gradient(135deg, #0d6fe5, #05a4c8); 
+  box-shadow: 0 4px 12px rgba(5, 164, 200, 0.3); 
 }
 
 .success-alert {
   position: fixed;
-  top: 70px;
+  top: 85px;
   right: 20px;
   width: 300px;
   z-index: 1000;
+  background-color: #00e194; 
   color: white;
   font-weight: bold;
-  font-size: 16px; 
+  font-size: 16px;
+  box-shadow: 0 4px 8px rgba(0, 225, 148, 0.4); 
 }
 
 </style>
