@@ -71,7 +71,7 @@ const getCategoryIcon = (category: string) => {
     case 'Playa':
       return 'mdi-beach'
     case 'Montaña':
-      return 'mdi-mountain'
+      return 'mdi-terrain'
     case 'Ciudad':
       return 'mdi-city'
     case 'Aventura':
@@ -132,14 +132,14 @@ const getCategoryIcon = (category: string) => {
                 <p><v-icon small>mdi-information-outline</v-icon> {{ destination.description }}</p>
                 <p class="mt-4"><v-icon :icon="getSeasonIcon(destination.season)" small></v-icon> {{ destination.season }}</p>
                 <p class="mt-4">
-                  <v-icon small>mdi-heart-outline</v-icon> 
+                  <v-icon small>mdi-fire</v-icon> 
                   {{ destination.isPopular ? 'Alta' : 'Normal' }}
                 </p>
                 <p class="mt-4"><v-icon :icon="getCategoryIcon(destination.category)" small></v-icon> {{ destination.category }}</p>
               </v-card-text>
 
               <v-card-actions class="actions-container">
-                <v-btn icon color="#9aadff" @click="editDestination(destination.id)">
+                <v-btn icon color="#05a4c8" @click="editDestination(destination.id)">
                   <v-icon>mdi-pencil</v-icon>
                 </v-btn>
                 <v-btn icon color="#f4978e" @click="openDeleteConfirmDialog(destination.id)">
@@ -177,7 +177,8 @@ const getCategoryIcon = (category: string) => {
   box-sizing: border-box;
   background-image: url('/src/assets/fondo.jpg');
   min-height: 100vh;
-  padding: 25px;
+  padding: 40px 20px;
+  margin: 0 auto; 
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -188,19 +189,13 @@ const getCategoryIcon = (category: string) => {
   text-align: center;
 }
 
-/* @media (max-width: 600px) {
-  .container {
-    padding: 15px;
-  }
-} */
-
 .floating-add-button {
-  background-color: #ffffff;
-  color: rgb(0, 0, 0);
+  background-color: #ffffff; 
+  color: #4a90e2; 
   font-size: 20px;
-  padding: 10px 10px;
+  padding: 10px 20px;
   border-radius: 50px;
-  box-shadow: 0 3px 10px #be9ffe;
+  box-shadow: 0 4px 12px rgba(5, 164, 200, 0.3); 
   cursor: pointer;
   border: none;
   display: flex;
@@ -208,17 +203,20 @@ const getCategoryIcon = (category: string) => {
   gap: 5px;
   margin-left: 30px;
   font-family: Georgia, 'Times New Roman', Times, serif;
+  transition: background 0.3s, color 0.3s, box-shadow 0.3s;
 }
 
 .floating-add-button:hover {
-  box-shadow: 0 8px 16px rgba(154, 173, 255, 0.3);
+  background: linear-gradient(135deg, #62bff6, #66e2b7); 
+  color: #ffffff; 
+  box-shadow: 0 6px 12px rgba(102, 189, 240, 0.4); 
 }
 
 .section-title {
   font-size: 35px;
   font-family: Georgia, 'Times New Roman', Times, serif;
   font-weight: bold;
-  color: #9aadff;
+  color:#4a90e2; 
   margin-top: 85px;
   margin-bottom: 20px;
   text-align: center;
@@ -230,7 +228,7 @@ const getCategoryIcon = (category: string) => {
   margin-bottom: 20px;
   line-height: 1.6;
   font-family: 'Open Sans', sans-serif;
-  padding-left: 30px;
+  padding: 40px 20px;
 }
 
 .button-container {
@@ -242,21 +240,22 @@ const getCategoryIcon = (category: string) => {
 
 .custom-card {
   background-color: #ffffff;
-  border: 1px solid #be9ffe;
+  border: 1px solid #05a4c8;
   color: rgb(74, 74, 74);
   border-radius: 8px;
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 5px;
   font-family: 'Open Sans', sans-serif;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(13, 111, 229, 0.1);
+  max-width: 100%; 
 }
 
 .title-destination {
-  font-size: 35px;
+  font-size: 28px;
   font-family: Georgia, 'Times New Roman', Times, serif;
   font-weight: bold;
-  color: #9aadff;
+  color:#62bff6;
   margin-bottom: 20px;
   text-align: center;  
 }

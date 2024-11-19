@@ -19,8 +19,8 @@
       <!-- Enlaces de Navegación -->
       <v-col cols="12" class="text-center mb-4">
         <v-btn variant = "text" class="footer-link" @click="navigateTo('home')">Inicio</v-btn>
-        <v-btn variant = "text" class="footer-link" @click="navigateTo('destination')">Destinos</v-btn>
-        <v-btn variant = "text" class="footer-link" @click="navigateTo('suggest')">Sugerencias</v-btn>
+        <v-btn variant = "text" class="footer-link" @click="navigateTo('destinations')">Destinos</v-btn>
+        <v-btn variant = "text" class="footer-link" @click="navigateTo('suggestions')">Sugerencias</v-btn>
         <v-btn variant = "text" class="footer-link" @click="navigateTo('tips')">Consejos para un viaje responsable</v-btn>
       </v-col>
 
@@ -39,13 +39,12 @@
     padding: 20px 0;
     color: white;
     text-align: center;
-    background-color: rgb(21, 21, 21)
+    background-color: rgb(40, 40, 40)
   }
 
   .footer-title {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #ffb4f3;
     font-family: Ro; 
   }
 
@@ -56,7 +55,7 @@
   }
 
   .footer-link:hover {
-    color: #ffb4f3; 
+    color: #05a4c8 
   }
 
   .footer-copy {

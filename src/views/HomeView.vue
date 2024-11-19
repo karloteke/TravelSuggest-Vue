@@ -7,7 +7,7 @@
 
     <div class="overlay-content">
       <h1>Bienvenidos a TravelSuggest</h1>
-      <p>Explora el mundo de forma responsable</p>
+      <p>Conectando aventuras y destinos</p>
     </div>
   </div>
 
@@ -95,7 +95,6 @@
   }
 
   .description-content {
-    padding: 30px;
     max-width: 85%;
     margin: 60px auto 40px;
     text-align: left;
@@ -105,7 +104,7 @@
 
   .description-content h2 {
     font-size: 35px;
-    color: #9aadff;
+    color:#4a90e2;
     margin-bottom: 15px;
     text-align: center;
     font-family: Georgia, 'Times New Roman', Times, serif;
@@ -121,19 +120,20 @@
 
   /* Caja de puntos y niveles */
   .points-box, .levels-box {
-    border: 1px solid #be9ffe;
+    border: 1px solid #0d6fe5;
     background-color: #f0f4ff;
     border-radius: 8px;
     padding: 20px;
     margin: 35px auto;
-    width: 500px;
+    max-width: 500px; 
+    width: 100%;
     text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(11, 1, 93, 0.1);
   }
 
   .points-box h3, .levels-box h3 {
     font-size: 22px;
-    color: #9aadff;
+    color:#4a90e2;
     margin-bottom: 10px;
     font-family: Georgia, 'Times New Roman', Times, serif;
   }

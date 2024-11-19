@@ -128,7 +128,7 @@ const changePage = (page: number) => {
   font-size: 35px;
   font-family: 'Open Sans', sans-serif;
   font-weight: bold;
-  color: #9aadff;
+  color: #4a90e2; 
   margin-top: 85px;
   margin-bottom: 20px;
 }
@@ -143,7 +143,7 @@ const changePage = (page: number) => {
   border-collapse: collapse;
   margin-top: 20px;
   background-color: rgba(255, 255, 255, 0.85);
-  box-shadow: 0 4px 12px rgba(154, 173, 255, 0.15);
+  box-shadow: 0 4px 12px rgba(13, 111, 229, 0.15);
   border-radius: 8px;
 }
 
@@ -156,13 +156,18 @@ const changePage = (page: number) => {
 }
 
 .user-table th {
-  background-color: #9aadff;
+  background-color:#0db4f3; 
   color: white;
   font-weight: bold;
 }
 
+.user-table tbody tr {
+  transition: box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
 .user-table tbody tr:hover {
-  background-color: rgba(154, 173, 255, 0.1);
+  background-color: rgba(13, 111, 229, 0.1); 
+  box-shadow: 0 4px 12px rgba(13, 111, 229, 0.2);
 }
 
 .action-icons {
@@ -179,12 +184,26 @@ const changePage = (page: number) => {
   padding: 5px;
 }
 
-.icon-button.edit {
-  color: #9aadff;
+/* .icon-button.edit {
+  color: #0d6fe5;
 }
+
+.icon-button.edit:hover {
+  color: #0d6fe5;
+  background-color: rgba(13, 111, 229, 0.1);
+  border-radius: 50%;
+  transition: background-color 0.3s;
+} */
 
 .icon-button.delete {
   color: #f4978e;
+}
+
+.icon-button.delete:hover {
+  color: #f4978e;
+  background-color: rgba(244, 151, 142, 0.1);
+  border-radius: 50%;
+  transition: background-color 0.3s;
 }
 
 .pagination-container {
@@ -195,36 +214,40 @@ const changePage = (page: number) => {
 }
 
 .pagination-button {
-  background-color: #9aadff;
+  background-color:#0db4f3; 
   color: white;
   border: none;
   padding: 8px 12px;
   border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s;
 }
 
-.pagination-button.active {
-  background-color: #6b8cff;
-  font-weight: bold;
+.pagination-button.active,
+.pagination-button:hover {
+  background-color: #4a90e2; 
+  box-shadow: 0 4px 8px rgba(13, 111, 229, 0.3);
 }
 
 .floating-add-button {
-  bottom: 30px;
-  right: 30px;
-  background-color: #ffffff;
-  color: rgb(0, 0, 0);
+  background-color: #ffffff; 
+  color: #4a90e2; 
   font-size: 16px;
   padding: 10px 20px;
   border-radius: 50px;
-  box-shadow: 0 4px 12px rgba(154, 173, 255, 0.6);
+  box-shadow: 0 4px 12px rgba(5, 164, 200, 0.3); 
   cursor: pointer;
   border: none;
   display: flex;
   align-items: center;
   gap: 5px;
+  transition: background 0.3s, color 0.3s, box-shadow 0.3s;
 }
 
 .floating-add-button:hover {
-  box-shadow: 0 8px 16px rgba(154, 173, 255, 0.3);
+  background: linear-gradient(135deg, #62bff6, #66e2b7); 
+  color: #ffffff; 
+  box-shadow: 0 6px 12px rgba(102, 189, 240, 0.4); 
 }
+
 </style>
