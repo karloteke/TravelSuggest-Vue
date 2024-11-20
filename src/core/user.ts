@@ -5,3 +5,9 @@ export interface User{
     points: number
     role: string
 }
+
+export interface UserUpdate {
+    userName: string;
+    password?: string;
+    email: string;
+  }

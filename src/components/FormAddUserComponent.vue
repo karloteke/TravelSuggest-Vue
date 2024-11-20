@@ -1,55 +1,98 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useUserStore } from '@/stores/userStore';
+import { ref } from 'vue'
+import { useUserStore } from '@/stores/userStore'
+import type { VForm } from 'vuetify/components'
+import router from '@/router';
 
-const successAlert = ref(false); 
-const showModal = ref(false);
-const { addUser, findUserName } = useUserStore();
+const successAlert = ref(false)
+const modal = ref(false) 
+const formRef = ref<VForm | null>(null)
+const { addUser, findUserName } = useUserStore()
 
 const userData = ref({
   userName: '',
   email: '',
   password: '',
-  points: 0
-});
+  points: 0,
+})
+
+// Validaciones
+const rules = {
+  required: (value: string) => !!value || 'Este campo es obligatorio.',
+  email: (value: string) => {
+    const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return pattern.test(value) || 'El correo electrónico no es válido.'
+  },
+  minLength: (length: number) => {
+    return (value: string) =>
+      (value && value.length >= length) || `Debe tener al menos ${length} caracteres.`
+  },
+}
+
+const userNameRules = [rules.required]
+const emailRules = [rules.required, rules.email]
+const passwordRules = [rules.required, rules.minLength(6)]
 
 const handleSubmit = async () => {
-  if (!userData.value.userName || !userData.value.email || !userData.value.password) {
-    showModal.value = true; // Mostrar modal si faltan campos
-    return; 
+
+  const validationResult = formRef.value?.validate();   // Validar el formulario y capturar el resultado
+  
+  // Extraer el valor booleano si validationResult es un objeto
+  const isValid = typeof validationResult === 'object' ? (await validationResult).valid : validationResult;
+  
+  if (!isValid) {
+    return;
   }
 
+  // Verificar si el nombre de usuario ya existe
   const existingUserName = findUserName(userData.value.userName);
+  console.log('Nombre de usuario existente:', existingUserName);
+
   if (existingUserName) {
-    alert('Ese nombre de usuario ya existe.');
-    return; 
+    modal.value = true;
+    return;
   }
 
+  // Crear el nuevo usuario
   const newUser = {
-    id: 0, 
+    id: 0,
     userName: userData.value.userName,
     email: userData.value.email,
     password: userData.value.password,
     points: 0,
-    role: 'user' 
+    role: 'user',
   };
-  
-  await addUser(newUser);
-  
-  // Resetear valores del formulario
-  userData.value = { userName: '', email: '', password: '', points: 0 };
-  successAlert.value = true;
-  setTimeout(() => {
-    successAlert.value = false;
-  }, 2000);
+
+  try {
+    await addUser(newUser);
+    console.log('Usuario añadido exitosamente.');
+
+    // Resetear el formulario 
+    formRef.value?.reset();
+
+    // Mostrar alerta de éxito
+    successAlert.value = true;
+
+    setTimeout(() => {
+      successAlert.value = false;
+      router.push('/users');
+    }, 3000);
+  } catch (error) {
+    console.error('Error al añadir el usuario:', error);
+  }
 };
 </script>
 
 <template>
   <div class="container-form">
     <v-sheet class="mx-auto form-container" width="450">
-      <h2 class="form-title">Crear Nuevo Usuario</h2>
-      <v-form @submit.prevent="handleSubmit">
+      <div class="form-header">
+        <v-col cols="12" class="text-center mb-2">
+          <img src="@/assets/logo.png" alt="Logo" style="max-height: 80px; margin-right: 12px;">
+        </v-col>
+        <h2 class="form-title">Registro de Usuario</h2>
+      </div>
+      <v-form ref="formRef" @submit.prevent="handleSubmit">
         <v-text-field
           v-model="userData.userName"
           label="Nombre de usuario"
@@ -57,6 +100,7 @@ const handleSubmit = async () => {
           outlined
           dense
           required
+          :rules="userNameRules"
         ></v-text-field>
 
         <v-text-field
@@ -66,6 +110,7 @@ const handleSubmit = async () => {
           outlined
           dense
           required
+          :rules="emailRules"
         ></v-text-field>
 
         <v-text-field
@@ -75,7 +120,7 @@ const handleSubmit = async () => {
           outlined
           dense
           required
-          type="password"
+          :rules="passwordRules"
         ></v-text-field>
 
         <v-btn class="submit-button" type="submit" block color="#05a4c8">Crear usuario</v-btn>
@@ -83,21 +128,24 @@ const handleSubmit = async () => {
     </v-sheet>
   </div>
 
-  <!-- Modal para mensaje de campos incompletos -->
-  <v-dialog v-model="showModal" max-width="290">
-    <v-card>
-      <v-card-title class="headline">Campos incompletos</v-card-title>
-      <v-card-text>Por favor, complete todos los campos.</v-card-text>
-      <v-card-actions>
-        <v-btn color="primary" @click="showModal = false">Cerrar</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
-
   <!-- Alerta de éxito -->
   <v-alert v-model="successAlert" type="success" dismissible class="success-alert">
     Usuario creado correctamente.
   </v-alert>
+
+  <!-- Modal para nombre de usuario duplicado -->
+  <v-dialog v-model="modal" max-width="400">
+  <v-card>
+    <v-card-title class="headline">Nombre de Usuario Existente</v-card-title>
+    <v-card-text>
+      El nombre de usuario "{{ userData.userName }}" ya existe. Por favor, elige otro nombre.
+    </v-card-text>
+    <v-card-actions>
+      <v-spacer></v-spacer>
+      <v-btn color="primary" @click="modal = false">Cerrar</v-btn>
+    </v-card-actions>
+  </v-card>
+</v-dialog>
 </template>
 
 <style scoped>
@@ -114,14 +162,14 @@ const handleSubmit = async () => {
   padding: 30px;
   border-radius: 12px;
   background-color: rgba(255, 255, 255, 0.98);
-  box-shadow: 0 6px 18px rgba(13, 111, 229, 0.2); 
+  box-shadow: 0 6px 18px rgba(13, 111, 229, 0.2);
 }
 
 .form-title {
   font-size: 26px;
   font-family: Georgia, 'Times New Roman', Times, serif;
   font-weight: bold;
-  color: #4a90e2; 
+  color: #4a90e2;
   text-align: center;
   margin-bottom: 20px;
   font-family: 'Open Sans', sans-serif;
@@ -132,13 +180,15 @@ const handleSubmit = async () => {
   font-size: 16px;
   font-weight: bold;
   color: white;
-  background-color: #05a4c8; 
-  transition: background 0.3s, box-shadow 0.3s;
+  background-color: #05a4c8;
+  transition:
+    background 0.3s,
+    box-shadow 0.3s;
 }
 
 .submit-button:hover {
-  background: linear-gradient(135deg, #0d6fe5, #05a4c8); 
-  box-shadow: 0 4px 12px rgba(5, 164, 200, 0.3); 
+  background: linear-gradient(135deg, #0d6fe5, #05a4c8);
+  box-shadow: 0 4px 12px rgba(5, 164, 200, 0.3);
 }
 
 .success-alert {
@@ -147,12 +197,10 @@ const handleSubmit = async () => {
   right: 20px;
   width: 300px;
   z-index: 1000;
-  background-color: #00e194; 
+  background-color: #00e194;
   color: white;
   font-weight: bold;
   font-size: 16px;
-  box-shadow: 0 4px 8px rgba(0, 225, 148, 0.4); 
+  box-shadow: 0 4px 8px rgba(0, 225, 148, 0.4);
 }
-
-
 </style>
