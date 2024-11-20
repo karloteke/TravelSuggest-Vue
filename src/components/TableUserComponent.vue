@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { useUserStore } from '@/stores/userStore'; 
 import { useRouter } from 'vue-router';
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
+
+
+const userStore = useUserStore();
 
 const { users, deleteUser } = useUserStore();
 const router = useRouter();
@@ -11,6 +14,11 @@ const currentPage = ref(1);
 // Estado del modal de confirmación de eliminación
 const deleteConfirmDialog = ref(false); 
 const userToDelete = ref<number | null>(null); // ID del usuario a eliminar
+
+// Cargar usuarios al montar el componente
+onMounted(async () => {
+  await userStore.fetchAll();
+});
 
 const handleAddUser = () => {
   router.push('/add-user');
@@ -184,28 +192,6 @@ const changePage = (page: number) => {
   padding: 5px;
 }
 
-/* .icon-button.edit {
-  color: #0d6fe5;
-}
-
-.icon-button.edit:hover {
-  color: #0d6fe5;
-  background-color: rgba(13, 111, 229, 0.1);
-  border-radius: 50%;
-  transition: background-color 0.3s;
-} */
-
-.icon-button.delete {
-  color: #f4978e;
-}
-
-.icon-button.delete:hover {
-  color: #f4978e;
-  background-color: rgba(244, 151, 142, 0.1);
-  border-radius: 50%;
-  transition: background-color 0.3s;
-}
-
 .pagination-container {
   display: flex;
   justify-content: center;
@@ -249,5 +235,4 @@ const changePage = (page: number) => {
   color: #ffffff; 
   box-shadow: 0 6px 12px rgba(102, 189, 240, 0.4); 
 }
-
 </style>

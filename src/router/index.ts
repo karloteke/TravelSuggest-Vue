@@ -4,6 +4,7 @@ import TipsView from '../views/TipsView.vue';
 import DestinationView from '@/views/DestinationView.vue';
 import UserListView from '@/views/UserListView.vue';
 import FormAddUserComponent from '../components/FormAddUserComponent.vue';
+import EditUserComponent from '@/components/EditUserComponent.vue';
 import AddDestinationView from '@/views/AddDestinationView.vue';
 import SuggestionView from '@/views/SuggestionView.vue';
 import AddSuggestionView from '@/views/AddSuggestionView.vue';
@@ -31,6 +32,12 @@ const router = createRouter({
       name: 'addUser',
       component: FormAddUserComponent
     },
+    { 
+      path: '/edit-user/:userId',
+      name: 'editUser',
+      component: EditUserComponent,
+      props: true, // Permite pasar params como props al componente
+    },
     {
       path: '/destinations',
       name: 'destinations',
@@ -51,7 +58,6 @@ const router = createRouter({
       name: 'addSuggestion',
       component: AddSuggestionView
     },
-
   ],
 })
 
