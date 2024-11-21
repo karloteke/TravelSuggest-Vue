@@ -8,4 +8,12 @@ export interface Destination {
     userId: number
 }
 
+export interface DestinationUpdate {
+    cityName: string
+    description: string
+    season: string
+    isPopular: boolean
+    category: string
+  }
+
 
