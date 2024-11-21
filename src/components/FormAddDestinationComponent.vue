@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useDestinationStore } from '@/stores/destinationStore'
+import type { VForm } from 'vuetify/components'
+import router from '@/router';
 
-const showModal = ref(false)
+const formRef = ref<VForm | null>(null) // Referencia al formulario
 const successAlert = ref(false)
 const { addDestination } = useDestinationStore()
 
@@ -16,19 +18,28 @@ const destinationData = ref({
 
 const userId = ref('')
 
+// Reglas de validación
+const rules = {
+  required: (value: string) => !!value || 'Este campo es obligatorio.',
+}
+
+const cityNameRules = [rules.required]
+const descriptionRules = [rules.required]
+const seasonRules = [rules.required]
+const categoryRules = [rules.required]
+const userIdRules = [rules.required]
+
 const handleSubmit = async () => {
-  if (
-    !destinationData.value.cityName ||
-    !destinationData.value.description ||
-    !destinationData.value.season ||
-    !destinationData.value.category ||
-    !userId.value
-  ) {
-    showModal.value = true
+  const validationResult = formRef.value?.validate()
+
+  // Validar el formulario y capturar el resultado
+  const isValid = typeof validationResult === 'object' ? (await validationResult).valid : validationResult
+  
+  if (!isValid) {
     return
   }
 
-  // Crear objeto de destino
+  // Crear el nuevo destino
   const newDestination = {
     id: 0,
     cityName: destinationData.value.cityName,
@@ -49,13 +60,19 @@ const handleSubmit = async () => {
     isPopular: false,
     category: '',
   }
-  userId.value = ''
+
+  // Resetear el formulario 
+  formRef.value?.reset();
+
+  // Mostrar alerta de éxito
+  successAlert.value = true;
 
   // Mostrar alerta de éxito
   successAlert.value = true
   setTimeout(() => {
     successAlert.value = false
-  }, 2000)
+    router.push("/destinations")
+  }, 3000)
 }
 </script>
 
@@ -63,13 +80,14 @@ const handleSubmit = async () => {
   <div class="container-form">
     <v-sheet class="mx-auto form-container" width="450">
       <h2 class="form-title">Crear Nuevo Destino</h2>
-      <v-form @submit.prevent="handleSubmit">
+      <v-form ref="formRef" @submit.prevent="handleSubmit">
         <v-text-field
           v-model="destinationData.cityName"
           placeholder="Nombre de la ciudad"
           prepend-icon="mdi-city"
           required
           outlined
+          :rules="cityNameRules"
         ></v-text-field>
 
         <v-textarea
@@ -79,6 +97,7 @@ const handleSubmit = async () => {
           required
           outlined
           rows="3"
+          :rules="descriptionRules"
         ></v-textarea>
 
         <v-select
@@ -88,6 +107,7 @@ const handleSubmit = async () => {
           prepend-icon="mdi-weather-partly-cloudy"
           required
           outlined
+          :rules="seasonRules"
         ></v-select>
 
         <v-select
@@ -97,12 +117,13 @@ const handleSubmit = async () => {
           prepend-icon="mdi-tag-outline"
           required
           outlined
+          :rules="categoryRules"
         ></v-select>
 
         <v-checkbox
           v-model="destinationData.isPopular"
           label="¿Es popular?"
-          prepend-icon="mdi-heart-outline"
+          prepend-icon="mdi-fire"
           class="popular-checkbox"
         ></v-checkbox>
 
@@ -112,22 +133,12 @@ const handleSubmit = async () => {
           prepend-icon="mdi-account"
           required
           outlined
+          :rules="userIdRules"
         ></v-text-field>
 
         <v-btn class="submit-button" type="submit" block color="#05a4c8">Crear Destino</v-btn>
       </v-form>
     </v-sheet>
-
-    <!-- Modal de alerta de campos incompletos -->
-    <v-dialog v-model="showModal" max-width="290">
-      <v-card>
-        <v-card-title class="headline">Campos incompletos</v-card-title>
-        <v-card-text>Por favor, complete todos los campos.</v-card-text>
-        <v-card-actions>
-          <v-btn color="primary" @click="showModal = false">Cerrar</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
 
     <!-- Alerta de éxito -->
     <v-alert v-model="successAlert" type="success" dismissible class="success-alert">

@@ -6,6 +6,7 @@ import UserListView from '@/views/UserListView.vue';
 import FormAddUserComponent from '../components/FormAddUserComponent.vue';
 import EditUserComponent from '@/components/EditUserComponent.vue';
 import AddDestinationView from '@/views/AddDestinationView.vue';
+import EditDestinationComponent from '@/components/EditDestinationComponent.vue';
 import SuggestionView from '@/views/SuggestionView.vue';
 import AddSuggestionView from '@/views/AddSuggestionView.vue';
 
@@ -47,6 +48,11 @@ const router = createRouter({
       path: '/add-destination',
       name: 'addDestination',
       component: AddDestinationView
+    },
+    { 
+      path: '/edit-destination/:destinationId',
+      name: 'editDestination',
+      component: EditDestinationComponent,
     },
     { 
       path: '/suggestions',
