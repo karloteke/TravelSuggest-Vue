@@ -8,3 +8,10 @@ export interface Suggestion {
     created_at: string;
     userId: number;
 }
+
+export interface SuggestionUpdate {
+    title: string
+    description: string
+    price: number
+    rating: number
+  }

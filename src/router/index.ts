@@ -3,12 +3,13 @@ import HomeView from '../views/HomeView.vue';
 import TipsView from '../views/TipsView.vue';
 import DestinationView from '@/views/DestinationView.vue';
 import UserListView from '@/views/UserListView.vue';
-import FormAddUserComponent from '../components/FormAddUserComponent.vue';
-import EditUserComponent from '@/components/EditUserComponent.vue';
+import AddUserView from '@/views/AddUserView.vue';
+import EditUserView from '@/views/EditUserView.vue';
 import AddDestinationView from '@/views/AddDestinationView.vue';
-import EditDestinationComponent from '@/components/EditDestinationComponent.vue';
+import EditDestinationView from '@/views/EditDestinationView.vue';
 import SuggestionView from '@/views/SuggestionView.vue';
 import AddSuggestionView from '@/views/AddSuggestionView.vue';
+import EditSuggestionView from '@/views/EditSuggestionView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -31,12 +32,12 @@ const router = createRouter({
     { 
       path: '/add-user',
       name: 'addUser',
-      component: FormAddUserComponent
+      component: AddUserView
     },
     { 
       path: '/edit-user/:userId',
       name: 'editUser',
-      component: EditUserComponent,
+      component: EditUserView,
       props: true, // Permite pasar params como props al componente
     },
     {
@@ -52,7 +53,7 @@ const router = createRouter({
     { 
       path: '/edit-destination/:destinationId',
       name: 'editDestination',
-      component: EditDestinationComponent,
+      component: EditDestinationView,
     },
     { 
       path: '/suggestions',
@@ -63,6 +64,11 @@ const router = createRouter({
       path: '/add-suggestion',
       name: 'addSuggestion',
       component: AddSuggestionView
+    },
+    { 
+      path: '/edit-suggestion/:suggestionId',
+      name: 'editSuggestion',
+      component: EditSuggestionView,
     },
   ],
 })
