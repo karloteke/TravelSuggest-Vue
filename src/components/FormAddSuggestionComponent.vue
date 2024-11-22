@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useSuggestionStore } from '@/stores/suggestionStore'
+import type { VForm } from 'vuetify/components'
+import router from '@/router';
 
-const showModal = ref(false)
+const formRef = ref<VForm | null>(null)
 const successAlert = ref(false)
 const { addSuggestion } = useSuggestionStore()
 
@@ -16,16 +18,28 @@ const suggestionData = ref({
 const userId = ref('');
 const destinationId = ref('');
 
+// Reglas de validación
+const rules = {
+  required: (value: string) => !!value || 'Este campo es obligatorio.',
+  numeric: (value: string) => !isNaN(Number(value)) || 'Este campo debe ser numérico.',
+  minValue: (min: number) => (value: string) => Number(value) >= min || `El valor debe ser mayor o igual a ${min}.`,
+  maxValue: (max: number) => (value: string) => Number(value) <= max || `El valor debe ser menor o igual a ${max}.`,
+}
+
+const titleRules = [rules.required]
+const descriptionRules = [rules.required]
+const priceRules = [rules.required, rules.numeric, rules.minValue(0)]
+const ratingRules = [rules.required, rules.numeric, rules.minValue(1), rules.maxValue(5)]
+const userIdRules = [rules.required, rules.numeric]
+const destinationIdRules = [rules.required, rules.numeric]
+
 const handleSubmit = async () => {
-  if (
-    !suggestionData.value.title ||
-    !suggestionData.value.description ||
-    !suggestionData.value.price ||
-    !suggestionData.value.rating ||
-    !userId.value ||
-    !destinationId.value
-  ) {
-    showModal.value = true
+  const validationResult = formRef.value?.validate()
+
+  // Validar el formulario y capturar el resultado
+  const isValid = typeof validationResult === 'object' ? (await validationResult).valid : validationResult
+  
+  if (!isValid) {
     return
   }
 
@@ -52,11 +66,18 @@ const handleSubmit = async () => {
   userId.value = ''; 
   destinationId.value = '';
 
+  // Resetear el formulario 
+  formRef.value?.reset();
+
+  // Mostrar alerta de éxito
+  successAlert.value = true;
+
   // Mostrar alerta de éxito
   successAlert.value = true
   setTimeout(() => {
     successAlert.value = false
-  }, 2000)
+    router.push("/suggestions")
+  }, 3000)
 }
 </script>
 
@@ -64,13 +85,14 @@ const handleSubmit = async () => {
   <div class="container-form">
     <v-sheet class="mx-auto form-container" width="450">
       <h2 class="form-title">Crear Nueva Experiencia</h2>
-      <v-form @submit.prevent="handleSubmit">
+      <v-form ref="formRef" @submit.prevent="handleSubmit">
         <v-text-field
           v-model="suggestionData.title"
           placeholder="Título"
           prepend-icon="mdi-pencil"
           required
           outlined
+          :rules="titleRules"
         ></v-text-field>
 
         <v-textarea
@@ -80,6 +102,7 @@ const handleSubmit = async () => {
           required
           outlined
           rows="3"
+          :rules="descriptionRules"
         ></v-textarea>
 
         <v-text-field
@@ -89,6 +112,7 @@ const handleSubmit = async () => {
           placeholder="Ej: 23.45"
           required
           outlined
+          :rules="priceRules"
         ></v-text-field>
 
         <v-select
@@ -99,6 +123,7 @@ const handleSubmit = async () => {
           required
           outlined
           class="select-rating"
+          :rules="ratingRules"
         ></v-select>
 
         <v-text-field
@@ -107,6 +132,7 @@ const handleSubmit = async () => {
           prepend-icon="mdi-map-marker"
           required
           outlined
+          :rules="destinationIdRules"
         ></v-text-field>
 
         <v-text-field
@@ -115,26 +141,16 @@ const handleSubmit = async () => {
           prepend-icon="mdi-account"
           required
           outlined
+          :rules="userIdRules"
         ></v-text-field>
 
-        <v-btn class="submit-button" type="submit" block color="#05a4c8">Crear Sugerencia</v-btn>
+        <v-btn class="submit-button" type="submit" block color="#05a4c8">Crear Experiencia</v-btn>
       </v-form>
     </v-sheet>
 
-    <!-- Modal de alerta de campos incompletos -->
-    <v-dialog v-model="showModal" max-width="290">
-      <v-card>
-        <v-card-title class="headline">Campos incompletos</v-card-title>
-        <v-card-text>Por favor, complete todos los campos.</v-card-text>
-        <v-card-actions>
-          <v-btn color="primary" @click="showModal = false">Cerrar</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
     <!-- Alerta de éxito -->
     <v-alert v-model="successAlert" type="success" dismissible class="success-alert">
-      Sugerencia creada correctamente.
+      Experiencia creada correctamente.
     </v-alert>
   </div>
 </template>

@@ -98,14 +98,14 @@ const getStars = (rating: number) => {
             <v-card class="mx-auto my-4 custom-card" outlined>
               <v-card-title class="title-suggestion">{{ suggestion.title }}</v-card-title>
               <v-card-subtitle class="subtitle"
-                ><v-icon small>mdi-card-account-details-outline</v-icon>
+                ><v-icon small>mdi-account</v-icon>
                 {{ suggestion.id }}</v-card-subtitle
               >
               <v-card-text class="details-text">
-                <p class="mt-4"><v-icon small>mdi-information-outline</v-icon> {{ suggestion.description }}</p>
+                <p class="mt-4"><v-icon small>mdi-text-box-outline</v-icon> {{ suggestion.description }}</p>
                 <p class="mt-4">
-                  <v-icon small>mdi-cash</v-icon>
-                  {{ suggestion.price }} €
+                  <v-icon small>mdi-currency-eur</v-icon>
+                  {{ suggestion.price }} 
                 </p>
                 <p class="mt-4"><v-icon small>mdi-calendar</v-icon> {{ formatDate(suggestion.created_at) }}</p>
 
