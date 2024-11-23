@@ -16,4 +16,11 @@ export interface DestinationUpdate {
     category: string
   }
 
+export interface DestinationQueryParameters {
+    cityName?: string;
+    season?: string;
+    category?: string;
+    userId?: number;
+    isPopular?: boolean;
+  }
 

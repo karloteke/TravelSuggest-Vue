@@ -197,10 +197,5 @@ const handleSubmit = async () => {
   right: 20px;
   width: 300px;
   z-index: 1000;
-  background-color: #00e194;
-  color: white;
-  font-weight: bold;
-  font-size: 16px;
-  box-shadow: 0 4px 8px rgba(0, 225, 148, 0.4);
 }
 </style>

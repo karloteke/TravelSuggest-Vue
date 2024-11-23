@@ -1,4 +1,4 @@
-import type { Destination } from '@/core/destination'
+import type { Destination, DestinationQueryParameters } from '@/core/destination'
 import { defineStore } from 'pinia'
 import { reactive } from 'vue'
 
@@ -106,6 +106,40 @@ export const useDestinationStore = defineStore('destinations', () => {
     }
   }
 
+  async function fetchDestinations(filters: DestinationQueryParameters = {}) {
+    try {
+      // Construir parámetros de consulta a partir de filtros
+      const queryParams = new URLSearchParams()
+
+      if (filters.cityName) queryParams.append('cityName', filters.cityName)
+      if (filters.season) queryParams.append('season', filters.season)
+      if (filters.category) queryParams.append('category', filters.category)
+      if (typeof filters.isPopular === 'boolean') {
+        queryParams.append('isPopular', filters.isPopular.toString())
+      }
+
+      // Hacer la solicitud con los filtros aplicados
+      const response = await fetch(`http://localhost:5146/Destination?${queryParams.toString()}`)
+
+      if (response.ok) {
+        // Si la respuesta es exitosa, procesa los datos
+        const destinationsData: Destination[] = await response.json()
+        destinations.splice(0, destinations.length, ...destinationsData)
+
+        return destinationsData.length === 0 ? 'noResults' : 'success'
+      } else if (response.status === 404) {
+        destinations.splice(0, destinations.length) // Si no se encontraron resultados, vacía el array
+        return 'noResults'
+      } else {
+        throw new Error('No se pudo obtener la lista de destinos')
+      }
+    } catch (error) {
+      console.error('Error al obtener destinos:', error)
+      destinations.splice(0, destinations.length) // Aseguramos que los destinos queden vacíos
+      return 'error' // Retorna 'error' para casos graves
+    }
+  }
+
   return {
     destinations,
     fetchAllDestinations,
@@ -114,5 +148,6 @@ export const useDestinationStore = defineStore('destinations', () => {
     fetchDestinationById,
     updateDestination,
     deleteDestination,
+    fetchDestinations,
   }
 })
