@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { useDestinationStore } from '@/stores/destinationStore'
 import { useRouter } from 'vue-router'
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import DestinationFiltersComponent from '@/components/DestinationFiltersComponent.vue'
 
-const { destinations, deleteDestination } = useDestinationStore()
+const { destinations, deleteDestination, fetchDestinations } = useDestinationStore()
 const router = useRouter()
 const pageSize = 6
 const currentPage = ref(1)
@@ -11,6 +12,8 @@ const currentPage = ref(1)
 
 const deleteConfirmDialog = ref(false) // Estado del modal de confirmación de eliminación
 const destinationToDelete = ref<number | null>(null) // ID del destino a eliminar
+const showNoResultsAlert = ref(false) // Controla la visibilidad del mensaje de filtros no encontrados
+
 
 const handleAddDestination = () => {
   router.push('/add-destination')
@@ -83,8 +86,21 @@ const getCategoryIcon = (category: string) => {
     case 'Ocio':
       return 'mdi-party-popper'
     default:
-      return 'mdi-label-outline'
+      return 'mdi-tag-outline'
   }
+}
+
+// Cargar destinos al montar el componente
+onMounted(() => {
+  fetchDestinations() // Llamamos a fetchDestinations() para cargar los destinos inicialmente
+})
+
+// Manejador del evento no-results
+const handleNoResults = () => {
+  showNoResultsAlert.value = true
+  setTimeout(() => {
+    showNoResultsAlert.value = false
+  }, 3000)
 }
 </script>
 
@@ -106,11 +122,25 @@ const getCategoryIcon = (category: string) => {
       experiencias únicas.
     </p>
 
+     <!-- Componente de Filtros -->
+     <DestinationFiltersComponent @no-results="handleNoResults" />
+
     <div class="button-container">
       <button class="floating-add-button" @click="handleAddDestination">
         <v-icon>mdi-plus</v-icon> Añadir Destino
       </button>
     </div>
+
+    <!-- Mostrar el mensaje cuando no hay resultados -->
+    <v-alert
+      v-if="showNoResultsAlert"
+      type="info"
+      class="no-results-alert"
+      elevation="2"
+      dismissible
+    >
+      No se encontraron destinos que coincidan con los filtros aplicados.
+    </v-alert>
 
     <div class="card-container">
       <v-container fluid>
@@ -129,7 +159,7 @@ const getCategoryIcon = (category: string) => {
                 ><v-icon small>mdi-card-account-details-outline</v-icon> {{ destination.id }}</v-card-subtitle
               >
               <v-card-text class="details-text">
-                <p><v-icon small>mdi-information-outline</v-icon> {{ destination.description }}</p>
+                <p><v-icon small>mdi-text-box-outline</v-icon> {{ destination.description }}</p>
                 <p class="mt-4"><v-icon :icon="getSeasonIcon(destination.season)" small></v-icon> {{ destination.season }}</p>
                 <p class="mt-4">
                   <v-icon small>mdi-fire</v-icon> 
@@ -168,6 +198,7 @@ const getCategoryIcon = (category: string) => {
       </v-card-actions>
     </v-card>
   </v-dialog>
+
 </template>
 
 <style scoped>
@@ -283,16 +314,11 @@ const getCategoryIcon = (category: string) => {
   margin-bottom: 60px;
 }
 
-.success-alert {
+.no-results-alert {
   position: fixed;
-  top: 70px;
+  top: 85px;
   right: 20px;
   width: 300px;
-  box-shadow: 0 4px 12px rgba(154, 173, 255, 0.6);
   z-index: 1000;
-  background-color: #9aadff;
-  color: white;
-  font-weight: bold;
-  font-size: 16px;
 }
 </style>
