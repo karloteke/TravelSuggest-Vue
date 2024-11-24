@@ -1,12 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue';
 import TipsView from '../views/TipsView.vue';
-import DestinationView from '@/views/DestinationView.vue';
 import UserListView from '@/views/UserListView.vue';
 import AddUserView from '@/views/AddUserView.vue';
 import EditUserView from '@/views/EditUserView.vue';
+import DestinationView from '@/views/DestinationView.vue';
 import AddDestinationView from '@/views/AddDestinationView.vue';
 import EditDestinationView from '@/views/EditDestinationView.vue';
+import DestinationSuggestionsComponent from '../components/DestinationSuggestionsComponent.vue';
 import SuggestionView from '@/views/SuggestionView.vue';
 import AddSuggestionView from '@/views/AddSuggestionView.vue';
 import EditSuggestionView from '@/views/EditSuggestionView.vue';
@@ -38,7 +39,7 @@ const router = createRouter({
       path: '/edit-user/:userId',
       name: 'editUser',
       component: EditUserView,
-      props: true, // Permite pasar params como props al componente
+      props: true, // Permite pasar el Id como prop al componente
     },
     {
       path: '/destinations',
@@ -60,6 +61,12 @@ const router = createRouter({
       name: 'suggestions',
       component: SuggestionView
     },
+    {
+      path: '/destination/:id/suggestions',
+      name: 'DestinationSuggestions',
+      component: DestinationSuggestionsComponent,
+      props: true, // Esto permitirá pasar el ID como prop al componente
+    },    
     { 
       path: '/add-suggestion',
       name: 'addSuggestion',

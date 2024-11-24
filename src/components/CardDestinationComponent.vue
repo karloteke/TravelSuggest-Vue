@@ -23,6 +23,10 @@ const editDestination = (destinationId: number) => {
   router.push(`/edit-destination/${destinationId}`)
 }
 
+const viewDetails = (destinationId: number) => {
+  router.push(`/destination/${destinationId}/suggestions`)
+}
+
 // Función para abrir el modal de confirmación de eliminación
 const openDeleteConfirmDialog = (destinationId: number) => {
   destinationToDelete.value = destinationId
@@ -131,7 +135,6 @@ const handleNoResults = () => {
       </button>
     </div>
 
-    <!-- Mostrar el mensaje cuando no hay resultados -->
     <v-alert
       v-if="showNoResultsAlert"
       type="info"
@@ -169,6 +172,9 @@ const handleNoResults = () => {
               </v-card-text>
 
               <v-card-actions class="actions-container">
+                <v-btn icon color="#4caf50" @click="viewDetails(destination.id)">
+                  <v-icon>mdi-eye</v-icon>
+                </v-btn>
                 <v-btn icon color="#05a4c8" @click="editDestination(destination.id)">
                   <v-icon>mdi-pencil</v-icon>
                 </v-btn>
