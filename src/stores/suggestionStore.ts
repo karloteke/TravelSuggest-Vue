@@ -1,4 +1,4 @@
-import type { Suggestion } from '@/core/suggestion'
+import type { Suggestion, SuggestionQueryParameters } from '@/core/suggestion'
 import { defineStore } from 'pinia'
 import { reactive } from 'vue'
 
@@ -133,6 +133,37 @@ export const useSuggestionStore = defineStore('suggestions', () => {
     }
   }
 
+  async function fetchSuggestions(filters: SuggestionQueryParameters = {}) {
+    try {
+      // Construir parámetros de consulta a partir de filtros
+      const queryParams = new URLSearchParams()
+
+      if (filters.minPrice !== undefined) queryParams.append('minPrice', String(filters.minPrice))
+      if (filters.maxPrice !== undefined) queryParams.append('maxPrice', String(filters.maxPrice))
+      if (filters.rating !== undefined) queryParams.append('rating', String(filters.rating))
+
+      // Hacer la solicitud con los filtros aplicados
+      const response = await fetch(`http://localhost:5146/Suggestion?${queryParams.toString()}`)
+
+      if (response.ok) {
+        // Si la respuesta es exitosa, procesa los datos
+        const suggestionData: Suggestion[] = await response.json()
+        suggestions.splice(0, suggestions.length, ...suggestionData)
+
+        return suggestionData.length === 0 ? 'noResults' : 'success'
+      } else if (response.status === 404) {
+        suggestions.splice(0, suggestions.length) // Si no se encontraron resultados, vacía el array
+        return 'noResults'
+      } else {
+        throw new Error('No se pudo obtener la lista de destinos')
+      }
+    } catch (error) {
+      console.error('Error al obtener destinos:', error)
+      suggestions.splice(0, suggestions.length) // Aseguramos que las experiencias queden vacías
+      return 'error' // Retorna 'error' para casos graves
+    }
+  }
+
   return {
     suggestions,
     fetchAllSuggestions,
@@ -141,6 +172,7 @@ export const useSuggestionStore = defineStore('suggestions', () => {
     fetchSuggestionById,
     updateSuggestion,
     deleteSuggestion,
-    fetchSuggestionsByDestinationId
+    fetchSuggestionsByDestinationId,
+    fetchSuggestions,
   }
 })

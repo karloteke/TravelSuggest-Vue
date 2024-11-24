@@ -14,4 +14,10 @@ export interface SuggestionUpdate {
     description: string
     price: number
     rating: number
-  }
+}
+
+export interface SuggestionQueryParameters {
+    minPrice?: number;
+    maxPrice?: number;
+    rating?: number;
+}
