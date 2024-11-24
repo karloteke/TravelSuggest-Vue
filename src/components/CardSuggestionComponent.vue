@@ -1,16 +1,18 @@
 <script setup lang="ts">
 import { useSuggestionStore } from '@/stores/suggestionStore'
 import { useRouter } from 'vue-router'
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { format } from 'date-fns'
+import SuggestionFiltersComponent from '@/components/SuggestionFiltersComponent.vue';
 
-const { suggestions, deleteSuggestion } = useSuggestionStore()
+const { suggestions, deleteSuggestion, fetchSuggestions } = useSuggestionStore()
 const router = useRouter()
 const pageSize = 6
 const currentPage = ref(1)
 
 const deleteConfirmDialog = ref(false) // Estado del modal de confirmación de eliminación
 const suggestionToDelete = ref<number | null>(null) // ID del destino a eliminar
+const showNoResultsAlert = ref(false) // Controla la visibilidad del mensaje de filtros no encontrados
 
 const handleAddSuggestion = () => {
   router.push('/add-suggestion')
@@ -26,7 +28,7 @@ const openDeleteConfirmDialog = (suggestionId: number) => {
   deleteConfirmDialog.value = true
 }
 
-// Función para confirmar e eliminar destino
+// Función para confirmar eliminar destino
 const confirmDeleteSuggestion = async () => {
   console.log("confirmDeleteSuggestion called");
   if (suggestionToDelete.value !== null) {
@@ -57,6 +59,19 @@ const getStars = (rating: number) => {
   const maxStars = 5
   return Array.from({ length: maxStars }, (_, index) => index < rating)
 }
+
+// Cargar sugerencias al montar el componente
+onMounted(() => {
+  fetchSuggestions() // Llamamos a fetchSuggestions() para cargar las sugerencias inicialmente
+})
+
+// Manejador del evento no-results
+const handleNoResults = () => {
+  showNoResultsAlert.value = true
+  setTimeout(() => {
+    showNoResultsAlert.value = false
+  }, 3000)
+}
 </script>
 
 <template>
@@ -77,6 +92,19 @@ const getStars = (rating: number) => {
       hasta packs de experiencias. Únete a nuestra comunidad y convierte tus aventuras en recuerdos
       compartidos.
     </p>
+
+    <!-- Componente de Filtros -->
+    <SuggestionFiltersComponent @no-results="handleNoResults" />
+
+    <v-alert
+      v-if="showNoResultsAlert"
+      type="info"
+      class="no-results-alert"
+      elevation="2"
+      dismissible
+    >
+      No se encontraron sugerencias que coincidan con los filtros aplicados.
+    </v-alert>
 
     <div class="button-container">
       <button class="floating-add-button" @click="handleAddSuggestion">
@@ -271,6 +299,14 @@ const getStars = (rating: number) => {
 .pagination-container {
   margin-top: 80px;
   margin-bottom: 60px;
+}
+
+.no-results-alert {
+  position: fixed;
+  top: 85px;
+  right: 20px;
+  width: 300px;
+  z-index: 1000;
 }
 
 </style>
