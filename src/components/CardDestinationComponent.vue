@@ -3,17 +3,21 @@ import { useDestinationStore } from '@/stores/destinationStore'
 import { useRouter } from 'vue-router'
 import { ref, computed, onMounted } from 'vue'
 import DestinationFiltersComponent from '@/components/DestinationFiltersComponent.vue'
+import { useLoginStore } from '@/stores/loginStore'
+
+const loginStore = useLoginStore()
+const isLoggedIn = computed(() => loginStore.isLoggedIn())
+const currentUserId = computed(() => loginStore.getUserId())
+const role = computed(() => loginStore.getRole())
 
 const { destinations, deleteDestination, fetchDestinations } = useDestinationStore()
 const router = useRouter()
 const pageSize = 6
 const currentPage = ref(1)
 
-
 const deleteConfirmDialog = ref(false) // Estado del modal de confirmación de eliminación
 const destinationToDelete = ref<number | null>(null) // ID del destino a eliminar
 const showNoResultsAlert = ref(false) // Controla la visibilidad del mensaje de filtros no encontrados
-
 
 const handleAddDestination = () => {
   router.push('/add-destination')
@@ -115,7 +119,7 @@ const handleNoResults = () => {
         <strong>Destinos compartidos por los viajeros de TravelSuggest</strong>
       </h1>
     </div>
-    
+
     <p class="description">
       Explora los destinos recomendados por nuestra comunidad de viajeros. Descubre lugares únicos y
       planifica tu próxima aventura de forma responsable. ¿Tienes un destino en mente? ¡Compártelo
@@ -126,11 +130,11 @@ const handleNoResults = () => {
       experiencias únicas.
     </p>
 
-     <!-- Componente de Filtros -->
-     <DestinationFiltersComponent @no-results="handleNoResults" />
+    <!-- Componente de Filtros -->
+    <DestinationFiltersComponent @no-results="handleNoResults" />
 
     <div class="button-container">
-      <button class="floating-add-button" @click="handleAddDestination">
+      <button class="floating-add-button" @click="handleAddDestination" v-if="isLoggedIn">
         <v-icon>mdi-plus</v-icon> Añadir Destino
       </button>
     </div>
@@ -159,26 +163,43 @@ const handleNoResults = () => {
             <v-card class="mx-auto my-4 custom-card" outlined>
               <v-card-title class="title-destination">{{ destination.cityName }}</v-card-title>
               <v-card-subtitle class="subtitle"
-                ><v-icon small>mdi-card-account-details-outline</v-icon> {{ destination.id }}</v-card-subtitle
+                ><v-icon small>mdi-card-account-details-outline</v-icon>
+                {{ destination.id }}</v-card-subtitle
               >
               <v-card-text class="details-text">
                 <p><v-icon small>mdi-text-box-outline</v-icon> {{ destination.description }}</p>
-                <p class="mt-4"><v-icon :icon="getSeasonIcon(destination.season)" small></v-icon> {{ destination.season }}</p>
                 <p class="mt-4">
-                  <v-icon small>mdi-fire</v-icon> 
+                  <v-icon :icon="getSeasonIcon(destination.season)" small></v-icon>
+                  {{ destination.season }}
+                </p>
+                <p class="mt-4">
+                  <v-icon small>mdi-fire</v-icon>
                   {{ destination.isPopular ? 'Alta' : 'Normal' }}
                 </p>
-                <p class="mt-4"><v-icon :icon="getCategoryIcon(destination.category)" small></v-icon> {{ destination.category }}</p>
+                <p class="mt-4">
+                  <v-icon :icon="getCategoryIcon(destination.category)" small></v-icon>
+                  {{ destination.category }}
+                </p>
               </v-card-text>
 
               <v-card-actions class="actions-container">
                 <v-btn icon color="#4caf50" @click="viewDetails(destination.id)">
                   <v-icon>mdi-eye</v-icon>
                 </v-btn>
-                <v-btn icon color="#05a4c8" @click="editDestination(destination.id)">
+                <v-btn
+                  icon
+                  color="#05a4c8"
+                  @click="editDestination(destination.id)"
+                  v-if="isLoggedIn && (destination.userId === currentUserId || role === 'admin')"
+                >
                   <v-icon>mdi-pencil</v-icon>
                 </v-btn>
-                <v-btn icon color="#f4978e" @click="openDeleteConfirmDialog(destination.id)">
+                <v-btn
+                  icon
+                  color="#f4978e"
+                  @click="openDeleteConfirmDialog(destination.id)"
+                  v-if="isLoggedIn && (destination.userId === currentUserId || role === 'admin')"
+                >
                   <v-icon>mdi-delete</v-icon>
                 </v-btn>
               </v-card-actions>
@@ -204,7 +225,6 @@ const handleNoResults = () => {
       </v-card-actions>
     </v-card>
   </v-dialog>
-
 </template>
 
 <style scoped>
@@ -215,24 +235,24 @@ const handleNoResults = () => {
   background-image: url('/src/assets/fondo.jpg');
   min-height: 100vh;
   padding: 40px 20px;
-  margin: 0 auto; 
+  margin: 0 auto;
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
   width: 100%;
 }
 
-.section-title-container{
+.section-title-container {
   text-align: center;
 }
 
 .floating-add-button {
-  background-color: #ffffff; 
-  color: #4a90e2; 
+  background-color: #ffffff;
+  color: #4a90e2;
   font-size: 20px;
   padding: 10px 20px;
   border-radius: 50px;
-  box-shadow: 0 4px 12px rgba(5, 164, 200, 0.3); 
+  box-shadow: 0 4px 12px rgba(5, 164, 200, 0.3);
   cursor: pointer;
   border: none;
   display: flex;
@@ -240,20 +260,23 @@ const handleNoResults = () => {
   gap: 5px;
   margin-left: 30px;
   font-family: Georgia, 'Times New Roman', Times, serif;
-  transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+  transition:
+    background 0.3s,
+    color 0.3s,
+    box-shadow 0.3s;
 }
 
 .floating-add-button:hover {
-  background: linear-gradient(135deg, #62bff6, #66e2b7); 
-  color: #ffffff; 
-  box-shadow: 0 6px 12px rgba(102, 189, 240, 0.4); 
+  background: linear-gradient(135deg, #62bff6, #66e2b7);
+  color: #ffffff;
+  box-shadow: 0 6px 12px rgba(102, 189, 240, 0.4);
 }
 
 .section-title {
   font-size: 35px;
   font-family: Georgia, 'Times New Roman', Times, serif;
   font-weight: bold;
-  color:#4a90e2; 
+  color: #4a90e2;
   margin-top: 85px;
   margin-bottom: 20px;
   text-align: center;
@@ -285,16 +308,16 @@ const handleNoResults = () => {
   padding: 5px;
   font-family: 'Open Sans', sans-serif;
   box-shadow: 0 4px 12px rgba(13, 111, 229, 0.1);
-  max-width: 100%; 
+  max-width: 100%;
 }
 
 .title-destination {
   font-size: 28px;
   font-family: Georgia, 'Times New Roman', Times, serif;
   font-weight: bold;
-  color:#62bff6;
+  color: #62bff6;
   margin-bottom: 20px;
-  text-align: center;  
+  text-align: center;
 }
 
 .subtitle {

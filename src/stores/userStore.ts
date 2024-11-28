@@ -1,13 +1,25 @@
 import { defineStore } from 'pinia'
 import { reactive } from 'vue'
 import type { User, UserUpdate } from '@/core/user'
+import { useLoginStore } from './loginStore'
 
 export const useUserStore = defineStore('users', () => {
   const users = reactive<User[]>([])
+  const { getRole, getToken } = useLoginStore()
 
   async function fetchAll() {
     try {
-      const response = await fetch('http://localhost:5146/User')
+      const role = getRole()
+      if (role !== 'admin') {
+        throw new Error('No tienes permiso para ver la lista de usuarios')
+      }
+      const token = getToken()
+      const response = await fetch('https://localhost:7193/User', { 
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      })
 
       if (!response.ok) {
         throw new Error('No se pudo obtener la lista de usuarios')
@@ -16,8 +28,7 @@ export const useUserStore = defineStore('users', () => {
       const usersData = await response.json()
       console.log('Usuarios recibidos:', usersData)
 
-      // Actualiza el array reactivo de usuarios
-      users.splice(0, users.length, ...usersData)
+      users.splice(0, users.length, ...usersData) // Actualiza el array reactivo de usuarios
     } catch (error) {
       console.error('Error al obtener usuarios:', error)
     }
@@ -25,10 +36,12 @@ export const useUserStore = defineStore('users', () => {
 
   async function addUser(newUser: User) {
     try {
-      const response = await fetch('http://localhost:5146/User', {
+      const token = getToken(); 
+      const response = await fetch('https://localhost:7193/User', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(newUser),
       })
@@ -54,7 +67,7 @@ export const useUserStore = defineStore('users', () => {
   // Función para obtener un usuario por ID desde el servidor
   async function fetchUserById(userId: number): Promise<User | undefined> {
     try {
-      const response = await fetch(`http://localhost:5146/User/${userId}`)
+      const response = await fetch(`https://localhost:7193/User/${userId}`)
       if (!response.ok) {
         throw new Error('No se pudo obtener el usuario')
       }
@@ -68,9 +81,13 @@ export const useUserStore = defineStore('users', () => {
 
   async function updateUser(userId: number, payload: Partial<UserUpdate>) {
     try {
-      const response = await fetch(`http://localhost:5146/User/${userId}`, {
+      const token = getToken(); 
+      const response = await fetch(`https://localhost:7193/User/${userId}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json' 
+        },
         body: JSON.stringify(payload),
       })
 
@@ -86,9 +103,11 @@ export const useUserStore = defineStore('users', () => {
 
   async function deleteUser(userId: number) {
     try {
-      const response = await fetch(`http://localhost:5146/User/${userId}`, {
+      const token = getToken(); 
+      const response = await fetch(`https://localhost:7193/User/${userId}`, {
         method: 'DELETE',
         headers: {
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       })

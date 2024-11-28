@@ -1,13 +1,28 @@
 import type { Suggestion, SuggestionQueryParameters } from '@/core/suggestion'
 import { defineStore } from 'pinia'
 import { reactive } from 'vue'
+import { useLoginStore } from './loginStore'
 
 export const useSuggestionStore = defineStore('suggestions', () => {
   const suggestions = reactive<Suggestion[]>([])
+  const { getToken, getUserId } = useLoginStore()
 
   async function fetchAllSuggestions() {
     try {
-      const response = await fetch('http://localhost:5146/Suggestion')
+      const token = getToken()
+
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json',
+      }
+
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`
+      }
+
+      const response = await fetch('https://localhost:7193/Suggestion', {
+        method: 'GET',
+        headers,
+      })
 
       if (!response.ok) {
         throw new Error('No se pudo obtener la lista de sugerencias')
@@ -23,21 +38,37 @@ export const useSuggestionStore = defineStore('suggestions', () => {
     }
   }
 
-  async function addSuggestion(newSuggestion: Suggestion, destinationId: number) {
+  async function addSuggestion(newSuggestion: Partial<Suggestion>, destinationId: number) {
     try {
+      const token = getToken()
+      const userId = getUserId()
+
+      const suggestionPayload = {
+        ...newSuggestion,
+        userId: userId,
+      }
+
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json',
+      }
+
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`
+      }
+
       const response = await fetch(
-        `http://localhost:5146/Suggestion?destinationId=${destinationId}`,
+        `https://localhost:7193/Suggestion?destinationId=${destinationId}`,
         {
           method: 'POST',
           headers: {
+            Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(newSuggestion),
+          body: JSON.stringify(suggestionPayload),
         },
       )
 
       if (!response.ok) {
-        // Manejo detallado de errores de respuesta
         const errorText = await response.text()
         console.error(
           `Error al añadir la sugerencia: Código ${response.status}, Mensaje: ${errorText}`,
@@ -61,7 +92,19 @@ export const useSuggestionStore = defineStore('suggestions', () => {
   // Función para obtener una sugerencia por ID desde el servidor
   async function fetchSuggestionById(suggestionId: number): Promise<Suggestion | undefined> {
     try {
-      const response = await fetch(`http://localhost:5146/Suggestion/${suggestionId}`)
+      const token = getToken()
+      if (!token) {
+        throw new Error('No se encontró el token de autenticación')
+      }
+
+      const response = await fetch(`https://localhost:7193/Suggestion/${suggestionId}`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      })
+
       if (!response.ok) {
         throw new Error('No se pudo obtener la sugerencia')
       }
@@ -73,12 +116,15 @@ export const useSuggestionStore = defineStore('suggestions', () => {
     }
   }
 
-  // Función para actualizar una sugerencia
   async function updateSuggestion(suggestionId: number, payload: unknown) {
     try {
-      const response = await fetch(`http://localhost:5146/Suggestion/${suggestionId}`, {
+      const token = getToken()
+      const response = await fetch(`https://localhost:7193/Suggestion/${suggestionId}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify(payload),
       })
 
@@ -96,9 +142,11 @@ export const useSuggestionStore = defineStore('suggestions', () => {
   async function deleteSuggestion(suggestionId: number) {
     console.log('deleteSuggestion called with ID:', suggestionId)
     try {
-      const response = await fetch(`http://localhost:5146/Suggestion/${suggestionId}`, {
+      const token = getToken()
+      const response = await fetch(`https://localhost:7193/Suggestion/${suggestionId}`, {
         method: 'DELETE',
         headers: {
+          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       })
@@ -118,7 +166,7 @@ export const useSuggestionStore = defineStore('suggestions', () => {
   async function fetchSuggestionsByDestinationId(destinationId: number): Promise<Suggestion[]> {
     try {
       const response = await fetch(
-        `http://localhost:5146/Suggestion?destinationId=${destinationId}`,
+        `https://localhost:7193/Suggestion?destinationId=${destinationId}`,
       )
 
       if (!response.ok) {
@@ -143,7 +191,7 @@ export const useSuggestionStore = defineStore('suggestions', () => {
       if (filters.rating !== undefined) queryParams.append('rating', String(filters.rating))
 
       // Hacer la solicitud con los filtros aplicados
-      const response = await fetch(`http://localhost:5146/Suggestion?${queryParams.toString()}`)
+      const response = await fetch(`https://localhost:7193/Suggestion?${queryParams.toString()}`)
 
       if (response.ok) {
         // Si la respuesta es exitosa, procesa los datos

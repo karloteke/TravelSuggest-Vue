@@ -3,7 +3,13 @@ import { useSuggestionStore } from '@/stores/suggestionStore'
 import { useRouter } from 'vue-router'
 import { ref, computed, onMounted } from 'vue'
 import { format } from 'date-fns'
-import SuggestionFiltersComponent from '@/components/SuggestionFiltersComponent.vue';
+import SuggestionFiltersComponent from '@/components/SuggestionFiltersComponent.vue'
+import { useLoginStore } from '@/stores/loginStore'
+
+const loginStore = useLoginStore()
+const isLoggedIn = computed(() => loginStore.isLoggedIn())
+const currentUserId = computed(() => loginStore.getUserId())
+const role = computed(() => loginStore.getRole())
 
 const { suggestions, deleteSuggestion, fetchSuggestions } = useSuggestionStore()
 const router = useRouter()
@@ -30,7 +36,7 @@ const openDeleteConfirmDialog = (suggestionId: number) => {
 
 // Función para confirmar eliminar destino
 const confirmDeleteSuggestion = async () => {
-  console.log("confirmDeleteSuggestion called");
+  console.log('confirmDeleteSuggestion called')
   if (suggestionToDelete.value !== null) {
     await deleteSuggestion(suggestionToDelete.value)
     deleteConfirmDialog.value = false
@@ -107,7 +113,7 @@ const handleNoResults = () => {
     </v-alert>
 
     <div class="button-container">
-      <button class="floating-add-button" @click="handleAddSuggestion">
+      <button class="floating-add-button" @click="handleAddSuggestion" v-if="isLoggedIn">
         <v-icon>mdi-plus</v-icon> Añadir Experiencia
       </button>
     </div>
@@ -126,16 +132,19 @@ const handleNoResults = () => {
             <v-card class="mx-auto my-4 custom-card" outlined>
               <v-card-title class="title-suggestion">{{ suggestion.title }}</v-card-title>
               <v-card-subtitle class="subtitle"
-                ><v-icon small>mdi-account</v-icon>
-                {{ suggestion.id }}</v-card-subtitle
+                ><v-icon small>mdi-account</v-icon> {{ suggestion.userId }}</v-card-subtitle
               >
               <v-card-text class="details-text">
-                <p class="mt-4"><v-icon small>mdi-text-box-outline</v-icon> {{ suggestion.description }}</p>
+                <p class="mt-4">
+                  <v-icon small>mdi-text-box-outline</v-icon> {{ suggestion.description }}
+                </p>
                 <p class="mt-4">
                   <v-icon small>mdi-currency-eur</v-icon>
-                  {{ suggestion.price }} 
+                  {{ suggestion.price }}
                 </p>
-                <p class="mt-4"><v-icon small>mdi-calendar</v-icon> {{ formatDate(suggestion.created_at) }}</p>
+                <p class="mt-4">
+                  <v-icon small>mdi-calendar</v-icon> {{ formatDate(suggestion.created_at) }}
+                </p>
 
                 <!-- Renderizar estrellas según la puntuación -->
                 <p class="mt-4">
@@ -145,15 +154,24 @@ const handleNoResults = () => {
                     </v-icon>
                   </span>
                 </p>
-
                 <v-card-actions class="actions-container">
-                <v-btn icon color="#05a4c8" @click="editSuggestion(suggestion.id)">
-                  <v-icon>mdi-pencil</v-icon>
-                </v-btn>
-                <v-btn icon color="#f4978e" @click="openDeleteConfirmDialog(suggestion.id)">
-                  <v-icon>mdi-delete</v-icon>
-                </v-btn>
-              </v-card-actions>
+                  <v-btn
+                    icon
+                    color="#05a4c8"
+                    @click="editSuggestion(suggestion.id)"
+                    v-if="isLoggedIn && (suggestion.userId === currentUserId || role === 'admin')"
+                  >
+                    <v-icon>mdi-pencil</v-icon>
+                  </v-btn>
+                  <v-btn
+                    icon
+                    color="#f4978e"
+                    @click="openDeleteConfirmDialog(suggestion.id)"
+                    v-if="isLoggedIn && (suggestion.userId === currentUserId || role === 'admin')"
+                  >
+                    <v-icon>mdi-delete</v-icon>
+                  </v-btn>
+                </v-card-actions>
               </v-card-text>
             </v-card>
           </v-col>
@@ -187,7 +205,7 @@ const handleNoResults = () => {
   background-image: url('/src/assets/fondo.jpg');
   min-height: 100vh;
   padding: 40px 20px;
-  margin: 0 auto; 
+  margin: 0 auto;
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -202,19 +220,19 @@ const handleNoResults = () => {
   font-size: 35px;
   font-family: Georgia, 'Times New Roman', Times, serif;
   font-weight: bold;
-  color: #4a90e2; 
+  color: #4a90e2;
   margin-top: 85px;
   margin-bottom: 20px;
   text-align: center;
 }
 
 .floating-add-button {
-  background-color: #ffffff; 
-  color: #4a90e2; 
+  background-color: #ffffff;
+  color: #4a90e2;
   font-size: 20px;
   padding: 10px 20px;
   border-radius: 50px;
-  box-shadow: 0 4px 12px rgba(5, 164, 200, 0.3); 
+  box-shadow: 0 4px 12px rgba(5, 164, 200, 0.3);
   cursor: pointer;
   border: none;
   display: flex;
@@ -222,17 +240,20 @@ const handleNoResults = () => {
   gap: 5px;
   margin-left: 30px;
   font-family: Georgia, 'Times New Roman', Times, serif;
-  transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+  transition:
+    background 0.3s,
+    color 0.3s,
+    box-shadow 0.3s;
 }
 
 .floating-add-button:hover {
-  background: linear-gradient(135deg, #62bff6, #66e2b7); 
-  color: #ffffff; 
-  box-shadow: 0 6px 12px rgba(102, 189, 240, 0.4); 
+  background: linear-gradient(135deg, #62bff6, #66e2b7);
+  color: #ffffff;
+  box-shadow: 0 6px 12px rgba(102, 189, 240, 0.4);
 }
 
 .title-suggestion {
-  color:#62bff6; 
+  color: #62bff6;
   font-weight: bold;
   font-family: Georgia, 'Times New Roman', Times, serif;
   font-size: 28px;
@@ -266,8 +287,8 @@ const handleNoResults = () => {
   flex-direction: column;
   padding: 5px;
   font-family: 'Open Sans', sans-serif;
-  box-shadow: 0 4px 12px rgba(13, 111, 229, 0.1); 
-  max-width: 100%; 
+  box-shadow: 0 4px 12px rgba(13, 111, 229, 0.1);
+  max-width: 100%;
 }
 
 .subtitle {
@@ -283,11 +304,11 @@ const handleNoResults = () => {
 }
 
 .star-filled {
-  color: #FFD700; /* Estrellas rellenas en amarillo */
+  color: #ffd700; /* Estrellas rellenas en amarillo */
 }
 
 .star-empty {
-  color: #C0C0C0; /* Estrellas vacías en gris claro */
+  color: #c0c0c0; /* Estrellas vacías en gris claro */
 }
 
 .actions-container {
@@ -308,5 +329,4 @@ const handleNoResults = () => {
   width: 300px;
   z-index: 1000;
 }
-
 </style>

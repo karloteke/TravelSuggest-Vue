@@ -1,122 +1,101 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
+import { useRouter } from 'vue-router'
+import { useLoginStore } from '@/stores/loginStore'
+import { computed } from 'vue'
 
-const router = useRouter();
+const router = useRouter()
+const { isLoggedIn, logout, getRole } = useLoginStore()
+const role = computed(() => getRole())
 
-// Función para navegar a cualquier ruta
-function navigateTo(route: string) {
-  router.push({ name: route });
+const navigateTo = (route: string) => {
+  router.push(route)
 }
 
-// Función para redirigir a la ruta de añadir usuario
-function navigateToAddUser() {
-  router.push('/add-user'); 
-}
-
-// Función para manejar el login
-function login() {
-  console.log('Iniciar Sesión clickeado');
-}
-
-// Función para manejar el login
-function logout() {
-  console.log('Cerrar Sesión clickeado');
-}
-
-// Definición de los elementos del menú
 interface MenuItem {
-  title: string;
-  route: string;
-  icon: string;
+  text: string
+  route: string
+  icon: string
 }
 
-const menuItems: MenuItem[] = [
-  { title: 'Inicio', route: 'home', icon: 'mdi-home' },
-  { title: 'Usuarios', route: 'users', icon: 'mdi-account-group' },
-  { title: 'Destinos', route: 'destinations', icon: 'mdi-map-marker' },
-  { title: 'Sugerencias', route: 'suggestions', icon: 'mdi-lightbulb' },
-  { title: 'Consejos para un Viaje Responsable', route: 'tips', icon: 'mdi-earth' },
-];
+const commonMenuItems: MenuItem[] = [
+  { text: 'Inicio', route: '/', icon: 'mdi-home' },
+  { text: 'Destinos', route: '/destinations', icon: 'mdi-map-marker' },
+  { text: 'Sugerencias', route: '/suggestions', icon: 'mdi-lightbulb' },
+  { text: 'Consejos para un Viaje Responsable', route: '/tips', icon: 'mdi-earth' },
+]
+
+const adminMenuItems: MenuItem[] = [{ text: 'Usuarios', route: 'users', icon: 'mdi-account-group' }]
+
+const menuItems = computed(() => {
+  if (isLoggedIn()) {
+    if (role.value === 'admin') {
+      return [...commonMenuItems, ...adminMenuItems]
+    } else {
+      return [...commonMenuItems]
+    }
+  }
+  // Usuarios no autenticados
+  return commonMenuItems
+})
 </script>
 
 <template>
-  <v-app-bar app color="white" elevated height="100px">
-    <!-- Menú Hamburguesa y Logo -->
-    <div class="d-flex align-center" style="margin: 0 20px;">
-      <v-menu offset-y rounded transition="scale-transition" min-width="250">
-        <template #activator="{ props }">
-          <v-btn
-            icon
-            color="#0d6fe5"
-            v-bind="props"
-            class="menu-button"
-            style="font-size: 28px; padding: 10px;"
-          >
-            <v-icon style="font-size: 36px;">mdi-menu</v-icon>
-          </v-btn>
-        </template>
-        <v-sheet class="dropdown-menu" elevation="8" rounded>
-          <v-list dense>
-            <v-divider class="mb-2 mt-2"></v-divider>
-            <v-list-item
-              v-for="item in menuItems"
-              :key="item.route"
-              @click="navigateTo(item.route)"
-              class="dropdown-item"
-            >
-              <v-list-item-icon>
-                <v-icon>{{ item.icon }}</v-icon>
-              </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-title>{{ item.title }}</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-            <v-divider></v-divider>
-          </v-list>
-        </v-sheet>
-      </v-menu>
-      <v-toolbar-title>
-        <img src="@/assets/logo.png" class="design-logo" alt="Logo" />
-      </v-toolbar-title>
-    </div>
+  <v-app-bar color="white" height="100px">
+    <!-- Menú desplegable -->
+    <v-menu offset-y :close-on-content-click="true" ref="menuRef">
+      <template #activator="{ props }">
+        <v-btn icon v-bind="props" class="menu-button">
+          <v-icon style="font-size: 36px">mdi-menu</v-icon>
+        </v-btn>
+      </template>
+      <v-list style="min-width: 200px; background-color: #2b3c56">
+        <v-list-item
+          v-for="(item, index) in menuItems"
+          :key="index"
+          @click="() => navigateTo(item.route)"
+          class="menu-item"
+        >
+          <div style="display: flex; align-items: center; color: white">
+            <v-icon style="color: white; margin-right: 10px">{{ item.icon }}</v-icon>
+            <span style="color: white">{{ item.text }}</span>
+          </div>
+        </v-list-item>
+      </v-list>
+    </v-menu>
+
+    <!-- Logo -->
+    <v-toolbar-title class="ml-3">
+      <img src="@/assets/logo.png" class="design-logo" alt="Logo" />
+    </v-toolbar-title>
 
     <v-spacer></v-spacer>
 
-    <!-- Íconos de Registrar e Iniciar Sesión -->
-    <v-col cols="auto" class="d-flex">
-      <v-btn
-        icon
-        color="#0d6fe5"
-        @click="navigateToAddUser"
-        class="icon-button mr-3"
-      >
-        <v-icon style="font-size: 28px;">mdi-account-plus</v-icon> 
+    <!-- Botones de Registrarse e Iniciar Sesión/Cerrar Sesión -->
+    <div class="button-group">
+      <router-link to="/add-user" v-if="!isLoggedIn()">
+        <v-btn class="custom-btn" :elevation="3" color="#0d6fe5">
+          <v-icon left>mdi-account-plus</v-icon>
+          Registrarse
+        </v-btn>
+      </router-link>
+      <router-link to="/login" v-if="!isLoggedIn()">
+        <v-btn class="custom-btn" :elevation="3" color="#0d6fe5" style="margin-left: 10px">
+          <v-icon left>mdi-login</v-icon>
+          Iniciar sesión
+        </v-btn>
+      </router-link>
+      <v-btn v-if="isLoggedIn()" @click="logout" class="custom-btn" :elevation="3" color="#0d6fe5">
+        <v-icon left>mdi-logout</v-icon>
+        Cerrar sesión
       </v-btn>
-      <v-btn
-        icon
-        color="#0d6fe5"
-        @click="login"
-        class="icon-button mr-3"
-      >
-        <v-icon style="font-size: 28px;">mdi-login</v-icon> 
-      </v-btn>
-      <v-btn
-        icon
-        color="#0d6fe5"
-        @click="logout"
-        class="icon-button mr-3"
-      >
-        <v-icon style="font-size: 28px;">mdi-logout</v-icon> 
-      </v-btn>
-    </v-col>
+    </div>
   </v-app-bar>
 </template>
-
 
 <style scoped>
 .design-logo {
   max-height: 70px;
-  margin-right: 5px; 
+  margin-right: 5px;
 }
 
 .v-app-bar {
@@ -126,36 +105,43 @@ const menuItems: MenuItem[] = [
 .v-btn {
   text-transform: none;
   font-weight: bold;
+  margin-right: 13px;
 }
 
 .v-btn:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-.menu-button {
-  margin-right: 8px; 
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 18px 0;
 }
 
-.dropdown-menu {
-  padding: 10px 0;
-  background-color: #f9f9f9;
-  border-radius: 8px;
+.v-list {
+  padding: 0;
 }
 
-.dropdown-item {
-  transition: background-color 0.2s ease;
+.v-list-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: white;
 }
 
-.dropdown-item:hover {
-  background-color: #e0f2f1;
+.v-list-item-icon {
+  margin-right: 10px;
 }
 
 .v-list-item-title {
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 500;
+  color: white;
 }
 
-.icon-button {
-  margin-right: 15px; /* Ajusta el valor según lo necesites */
+.button-group {
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
-
 </style>
