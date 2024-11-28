@@ -16,8 +16,6 @@ const destinationData = ref({
   category: '',
 })
 
-const userId = ref('')
-
 // Reglas de validación
 const rules = {
   required: (value: string) => !!value || 'Este campo es obligatorio.',
@@ -27,7 +25,6 @@ const cityNameRules = [rules.required]
 const descriptionRules = [rules.required]
 const seasonRules = [rules.required]
 const categoryRules = [rules.required]
-const userIdRules = [rules.required]
 
 const handleSubmit = async () => {
   const validationResult = formRef.value?.validate()
@@ -47,10 +44,9 @@ const handleSubmit = async () => {
     season: destinationData.value.season,
     isPopular: destinationData.value.isPopular,
     category: destinationData.value.category,
-    userId: Number(userId.value),
   }
 
-  await addDestination(newDestination, Number(userId.value))
+  await addDestination(newDestination)
 
   // Limpiar los campos después de agregar el destino
   destinationData.value = {
@@ -126,15 +122,6 @@ const handleSubmit = async () => {
           prepend-icon="mdi-fire"
           class="popular-checkbox"
         ></v-checkbox>
-
-        <v-text-field
-          v-model="userId"
-          placeholder="ID del Usuario"
-          prepend-icon="mdi-account"
-          required
-          outlined
-          :rules="userIdRules"
-        ></v-text-field>
 
         <v-btn class="submit-button" type="submit" block color="#05a4c8">Crear Destino</v-btn>
       </v-form>

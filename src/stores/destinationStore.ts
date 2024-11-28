@@ -1,13 +1,28 @@
 import type { Destination, DestinationQueryParameters } from '@/core/destination'
 import { defineStore } from 'pinia'
 import { reactive } from 'vue'
+import { useLoginStore } from './loginStore'
 
 export const useDestinationStore = defineStore('destinations', () => {
   const destinations = reactive<Destination[]>([])
+  const loginStore = useLoginStore()
+  const { getToken, getUserId} = loginStore
 
   async function fetchAllDestinations() {
     try {
-      const response = await fetch('http://localhost:5146/Destination')
+      const token = getToken()
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json',
+      }
+
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`
+      }
+
+      const response = await fetch('https://localhost:7193/Destination', {
+        method: 'GET',
+        headers,
+      })
 
       if (!response.ok) {
         throw new Error('No se pudo obtener la lista de destinos')
@@ -16,18 +31,21 @@ export const useDestinationStore = defineStore('destinations', () => {
       const destinationsData = await response.json()
       console.log('Destinos recibidos:', destinationsData)
 
-      // Actualiza el array reactivo de destinos
-      destinations.splice(0, destinations.length, ...destinationsData)
+      destinations.splice(0, destinations.length, ...destinationsData) // Actualiza el array reactivo de destinos
     } catch (error) {
       console.error('Error al obtener destinos:', error)
     }
   }
 
-  async function addDestination(newDestination: Destination, userId: number) {
+  async function addDestination(newDestination: Partial<Destination>) {
     try {
-      const response = await fetch(`http://localhost:5146/Destination?userId=${userId}`, {
+      const token = getToken()
+      const userId = getUserId()
+
+      const response = await fetch(`https://localhost:7193/Destination?userId=${userId}`, {
         method: 'POST',
         headers: {
+          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(newDestination),
@@ -55,7 +73,19 @@ export const useDestinationStore = defineStore('destinations', () => {
   // Función para obtener un destino por ID desde el servidor
   async function fetchDestinationById(destinationId: number): Promise<Destination | undefined> {
     try {
-      const response = await fetch(`http://localhost:5146/Destination/${destinationId}`)
+      const token = getToken()
+      if (!token) {
+        throw new Error('No se encontró el token de autenticación')
+      }
+
+      const response = await fetch(`https://localhost:7193/Destination/${destinationId}`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      })
+
       if (!response.ok) {
         throw new Error('No se pudo obtener el usuario')
       }
@@ -67,19 +97,28 @@ export const useDestinationStore = defineStore('destinations', () => {
     }
   }
 
-  async function updateDestination(destinationId: number, payload: unknown) {
+  async function updateDestination(destinationId: number, payload: Partial<Destination>) {
     try {
-      const response = await fetch(`http://localhost:5146/Destination/${destinationId}`, {
+      const token = getToken()
+      const response = await fetch(`https://localhost:7193/Destination/${destinationId}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify(payload),
       })
 
       if (!response.ok) {
         throw new Error('Error al actualizar el destino')
       }
-
-      console.log('Destino actualizado:', await response.json())
+      
+      const updatedDestination: Destination = await response.json()
+      const index = destinations.findIndex(d => d.id === destinationId)
+      if (index !== -1) {
+        destinations[index] = updatedDestination
+      }
+      console.log('Destino actualizado:', updatedDestination)
     } catch (error) {
       console.error('Error en updateDestination:', error)
     }
@@ -87,16 +126,22 @@ export const useDestinationStore = defineStore('destinations', () => {
 
   async function deleteDestination(destinationId: number) {
     try {
-      const response = await fetch(`http://localhost:5146/Destination/${destinationId}`, {
+      const token = getToken()
+      const response = await fetch(`https://localhost:7193/Destination/${destinationId}`, {
         method: 'DELETE',
         headers: {
+          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       })
 
       if (response.ok) {
         console.log(`Destino con ID ${destinationId} borrado satisfactoriamente`)
-        await fetchAllDestinations()
+        // await fetchAllDestinations()
+        const index = destinations.findIndex(d => d.id === destinationId)
+        if (index !== -1) {
+          destinations.splice(index, 1)
+        }
       } else {
         const errorMessage = await response.text()
         console.error('Fallo al borrar el destino:', errorMessage)
@@ -119,7 +164,7 @@ export const useDestinationStore = defineStore('destinations', () => {
       }
 
       // Hacer la solicitud con los filtros aplicados
-      const response = await fetch(`http://localhost:5146/Destination?${queryParams.toString()}`)
+      const response = await fetch(`https://localhost:7193/Destination?${queryParams.toString()}`)
 
       if (response.ok) {
         // Si la respuesta es exitosa, procesa los datos

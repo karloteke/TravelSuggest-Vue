@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useSuggestionStore } from '@/stores/suggestionStore'
 import type { VForm } from 'vuetify/components'
-import router from '@/router';
+import router from '@/router'
 
 const formRef = ref<VForm | null>(null)
 const successAlert = ref(false)
@@ -15,30 +15,31 @@ const suggestionData = ref({
   rating: '',
 })
 
-const userId = ref('');
-const destinationId = ref('');
+const destinationId = ref('')
 
 // Reglas de validación
 const rules = {
   required: (value: string) => !!value || 'Este campo es obligatorio.',
   numeric: (value: string) => !isNaN(Number(value)) || 'Este campo debe ser numérico.',
-  minValue: (min: number) => (value: string) => Number(value) >= min || `El valor debe ser mayor o igual a ${min}.`,
-  maxValue: (max: number) => (value: string) => Number(value) <= max || `El valor debe ser menor o igual a ${max}.`,
+  minValue: (min: number) => (value: string) =>
+    Number(value) >= min || `El valor debe ser mayor o igual a ${min}.`,
+  maxValue: (max: number) => (value: string) =>
+    Number(value) <= max || `El valor debe ser menor o igual a ${max}.`,
 }
 
 const titleRules = [rules.required]
 const descriptionRules = [rules.required]
 const priceRules = [rules.required, rules.numeric, rules.minValue(0)]
 const ratingRules = [rules.required, rules.numeric, rules.minValue(1), rules.maxValue(5)]
-const userIdRules = [rules.required, rules.numeric]
 const destinationIdRules = [rules.required, rules.numeric]
 
 const handleSubmit = async () => {
   const validationResult = formRef.value?.validate()
 
   // Validar el formulario y capturar el resultado
-  const isValid = typeof validationResult === 'object' ? (await validationResult).valid : validationResult
-  
+  const isValid =
+    typeof validationResult === 'object' ? (await validationResult).valid : validationResult
+
   if (!isValid) {
     return
   }
@@ -51,11 +52,10 @@ const handleSubmit = async () => {
     price: Number(suggestionData.value.price),
     rating: Number(suggestionData.value.rating),
     created_at: '',
-    userId: Number(userId.value),
   }
 
   await addSuggestion(newSuggestion, Number(destinationId.value))
-  
+
   // Limpiar los campos
   suggestionData.value = {
     title: '',
@@ -63,20 +63,20 @@ const handleSubmit = async () => {
     price: '',
     rating: '',
   }
-  userId.value = ''; 
-  destinationId.value = '';
 
-  // Resetear el formulario 
-  formRef.value?.reset();
+  destinationId.value = ''
+
+  // Resetear el formulario
+  formRef.value?.reset()
 
   // Mostrar alerta de éxito
-  successAlert.value = true;
+  successAlert.value = true
 
   // Mostrar alerta de éxito
   successAlert.value = true
   setTimeout(() => {
     successAlert.value = false
-    router.push("/suggestions")
+    router.push('/suggestions')
   }, 3000)
 }
 </script>
@@ -135,15 +135,6 @@ const handleSubmit = async () => {
           :rules="destinationIdRules"
         ></v-text-field>
 
-        <v-text-field
-          v-model="userId"
-          placeholder="ID del Usuario"
-          prepend-icon="mdi-account"
-          required
-          outlined
-          :rules="userIdRules"
-        ></v-text-field>
-
         <v-btn class="submit-button" type="submit" block color="#05a4c8">Crear Experiencia</v-btn>
       </v-form>
     </v-sheet>
@@ -168,7 +159,7 @@ const handleSubmit = async () => {
   font-size: 26px;
   font-family: Georgia, 'Times New Roman', Times, serif;
   font-weight: bold;
-  color:  #4a90e2; 
+  color: #4a90e2;
   text-align: center;
   margin-bottom: 20px;
   font-family: 'Open Sans', sans-serif;
@@ -186,13 +177,15 @@ const handleSubmit = async () => {
   font-size: 16px;
   font-weight: bold;
   color: white;
-  background-color: #05a4c8; 
-  transition: background 0.3s, box-shadow 0.3s;
+  background-color: #05a4c8;
+  transition:
+    background 0.3s,
+    box-shadow 0.3s;
 }
 
 .submit-button:hover {
-  background: linear-gradient(135deg, #0d6fe5, #05a4c8); 
-  box-shadow: 0 4px 12px rgba(5, 164, 200, 0.3); 
+  background: linear-gradient(135deg, #0d6fe5, #05a4c8);
+  box-shadow: 0 4px 12px rgba(5, 164, 200, 0.3);
 }
 
 .success-alert {
