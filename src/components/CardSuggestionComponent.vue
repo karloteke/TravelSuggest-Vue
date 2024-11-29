@@ -20,10 +20,6 @@ const deleteConfirmDialog = ref(false) // Estado del modal de confirmación de e
 const suggestionToDelete = ref<number | null>(null) // ID del destino a eliminar
 const showNoResultsAlert = ref(false) // Controla la visibilidad del mensaje de filtros no encontrados
 
-const handleAddSuggestion = () => {
-  router.push('/add-suggestion')
-}
-
 const editSuggestion = (suggestionId: number) => {
   router.push(`/edit-suggestion/${suggestionId}`)
 }
@@ -112,12 +108,6 @@ const handleNoResults = () => {
       No se encontraron sugerencias que coincidan con los filtros aplicados.
     </v-alert>
 
-    <div class="button-container">
-      <button class="floating-add-button" @click="handleAddSuggestion" v-if="isLoggedIn">
-        <v-icon>mdi-plus</v-icon> Añadir Experiencia
-      </button>
-    </div>
-
     <div class="card-container">
       <v-container fluid>
         <v-row>
@@ -155,22 +145,35 @@ const handleNoResults = () => {
                   </span>
                 </p>
                 <v-card-actions class="actions-container">
-                  <v-btn
-                    icon
-                    color="#05a4c8"
-                    @click="editSuggestion(suggestion.id)"
-                    v-if="isLoggedIn && (suggestion.userId === currentUserId || role === 'admin')"
-                  >
-                    <v-icon>mdi-pencil</v-icon>
-                  </v-btn>
-                  <v-btn
-                    icon
-                    color="#f4978e"
-                    @click="openDeleteConfirmDialog(suggestion.id)"
-                    v-if="isLoggedIn && (suggestion.userId === currentUserId || role === 'admin')"
-                  >
-                    <v-icon>mdi-delete</v-icon>
-                  </v-btn>
+                  <v-tooltip bottom>
+                    <template #activator="{ props }">
+                      <v-btn
+                        icon
+                        color="#05a4c8"
+                        @click="editSuggestion(suggestion.id)"
+                        v-if="isLoggedIn && (suggestion.userId === currentUserId || role === 'admin')"
+                        v-bind="props"
+                      >
+                        <v-icon>mdi-pencil</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Edita esta experiencia</span>
+                  </v-tooltip>
+
+                  <v-tooltip bottom>
+                    <template #activator="{ props }">
+                      <v-btn
+                        icon
+                        color="#f4978e"
+                        @click="openDeleteConfirmDialog(suggestion.id)"
+                        v-if="isLoggedIn && (suggestion.userId === currentUserId || role === 'admin')"
+                        v-bind="props"
+                      >
+                        <v-icon>mdi-delete</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Borra esta experencia</span>
+                  </v-tooltip>
                 </v-card-actions>
               </v-card-text>
             </v-card>
@@ -224,32 +227,6 @@ const handleNoResults = () => {
   margin-top: 85px;
   margin-bottom: 20px;
   text-align: center;
-}
-
-.floating-add-button {
-  background-color: #ffffff;
-  color: #4a90e2;
-  font-size: 20px;
-  padding: 10px 20px;
-  border-radius: 50px;
-  box-shadow: 0 4px 12px rgba(5, 164, 200, 0.3);
-  cursor: pointer;
-  border: none;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin-left: 30px;
-  font-family: Georgia, 'Times New Roman', Times, serif;
-  transition:
-    background 0.3s,
-    color 0.3s,
-    box-shadow 0.3s;
-}
-
-.floating-add-button:hover {
-  background: linear-gradient(135deg, #62bff6, #66e2b7);
-  color: #ffffff;
-  box-shadow: 0 6px 12px rgba(102, 189, 240, 0.4);
 }
 
 .title-suggestion {

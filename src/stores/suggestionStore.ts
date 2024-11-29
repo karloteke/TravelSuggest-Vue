@@ -60,10 +60,7 @@ export const useSuggestionStore = defineStore('suggestions', () => {
         `https://localhost:7193/Suggestion?destinationId=${destinationId}`,
         {
           method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
+          headers,
           body: JSON.stringify(suggestionPayload),
         },
       )

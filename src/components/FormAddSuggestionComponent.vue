@@ -1,12 +1,49 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref} from 'vue'
 import { useSuggestionStore } from '@/stores/suggestionStore'
+import { useDestinationStore } from '@/stores/destinationStore'
+import { useRoute, useRouter } from 'vue-router'
 import type { VForm } from 'vuetify/components'
-import router from '@/router'
+
 
 const formRef = ref<VForm | null>(null)
 const successAlert = ref(false)
-const { addSuggestion } = useSuggestionStore()
+
+const suggestionStore = useSuggestionStore()
+const destinationStore = useDestinationStore()
+
+const { addSuggestion } = suggestionStore
+const { fetchDestinationById } = destinationStore
+
+const route = useRoute()
+const router = useRouter()
+
+// Obtener destinationId de los parámetros de la ruta
+const destinationId = ref<number | null>(null)
+if (route.params.destinationId) {
+  destinationId.value = Number(route.params.destinationId)
+} else {
+  console.error('destinationId no proporcionado en los parámetros de la ruta')
+  router.push('/destinations')
+}
+
+// Obtener el nombre del destino
+const destinationName = ref('')
+
+// Cargar el nombre del destino al montar el componente
+onMounted(async () => {
+  if (destinationId.value !== null) {
+    try {
+      const destination = await fetchDestinationById(destinationId.value)
+      // const destination = { id: destinationId.value, cityName: 'Ciudad Ejemplo' }
+      // console.log('Destino recibido:', destination)
+      destinationName.value = destination?.cityName || 'Destino desconocido'
+    } catch (error) {
+      console.error('Error al obtener el destino:', error)
+      destinationName.value = 'Destino desconocido'
+    }
+  }
+})
 
 const suggestionData = ref({
   title: '',
@@ -15,7 +52,6 @@ const suggestionData = ref({
   rating: '',
 })
 
-const destinationId = ref('')
 
 // Reglas de validación
 const rules = {
@@ -31,7 +67,7 @@ const titleRules = [rules.required]
 const descriptionRules = [rules.required]
 const priceRules = [rules.required, rules.numeric, rules.minValue(0)]
 const ratingRules = [rules.required, rules.numeric, rules.minValue(1), rules.maxValue(5)]
-const destinationIdRules = [rules.required, rules.numeric]
+// const destinationIdRules = [rules.required, rules.numeric]
 
 const handleSubmit = async () => {
   const validationResult = formRef.value?.validate()
@@ -54,7 +90,12 @@ const handleSubmit = async () => {
     created_at: '',
   }
 
-  await addSuggestion(newSuggestion, Number(destinationId.value))
+  if (!destinationId.value) {
+    console.error('destinationId es inválido o no está definido')
+    return
+  }
+
+    await addSuggestion(newSuggestion, Number(destinationId.value))
 
   // Limpiar los campos
   suggestionData.value = {
@@ -63,8 +104,6 @@ const handleSubmit = async () => {
     price: '',
     rating: '',
   }
-
-  destinationId.value = ''
 
   // Resetear el formulario
   formRef.value?.reset()
@@ -84,7 +123,7 @@ const handleSubmit = async () => {
 <template>
   <div class="container-form">
     <v-sheet class="mx-auto form-container" width="450">
-      <h2 class="form-title">Crear Nueva Experiencia</h2>
+      <h2 class="form-title">Crear nueva experiencia para {{ destinationName }}</h2>
       <v-form ref="formRef" @submit.prevent="handleSubmit">
         <v-text-field
           v-model="suggestionData.title"
@@ -125,15 +164,6 @@ const handleSubmit = async () => {
           class="select-rating"
           :rules="ratingRules"
         ></v-select>
-
-        <v-text-field
-          v-model="destinationId"
-          placeholder="ID del Destino"
-          prepend-icon="mdi-map-marker"
-          required
-          outlined
-          :rules="destinationIdRules"
-        ></v-text-field>
 
         <v-btn class="submit-button" type="submit" block color="#05a4c8">Crear Experiencia</v-btn>
       </v-form>
