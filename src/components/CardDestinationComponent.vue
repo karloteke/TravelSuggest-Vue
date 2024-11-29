@@ -31,6 +31,10 @@ const viewDetails = (destinationId: number) => {
   router.push(`/destination/${destinationId}/suggestions`)
 }
 
+const addSuggestion = (destinationId: number) => {
+  router.push({ name: 'AddSuggestion', params: { destinationId } })
+}
+
 // Función para abrir el modal de confirmación de eliminación
 const openDeleteConfirmDialog = (destinationId: number) => {
   destinationToDelete.value = destinationId
@@ -183,25 +187,62 @@ const handleNoResults = () => {
               </v-card-text>
 
               <v-card-actions class="actions-container">
-                <v-btn icon color="#4caf50" @click="viewDetails(destination.id)">
-                  <v-icon>mdi-eye</v-icon>
-                </v-btn>
-                <v-btn
-                  icon
-                  color="#05a4c8"
-                  @click="editDestination(destination.id)"
-                  v-if="isLoggedIn && (destination.userId === currentUserId || role === 'admin')"
-                >
-                  <v-icon>mdi-pencil</v-icon>
-                </v-btn>
-                <v-btn
-                  icon
-                  color="#f4978e"
-                  @click="openDeleteConfirmDialog(destination.id)"
-                  v-if="isLoggedIn && (destination.userId === currentUserId || role === 'admin')"
-                >
-                  <v-icon>mdi-delete</v-icon>
-                </v-btn>
+                <v-tooltip bottom>
+                  <template #activator="{ props }">
+                    <v-btn icon color="#4caf50" @click="viewDetails(destination.id)" v-bind="props">
+                      <v-icon>mdi-eye</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Ver las experiencias para este destino</span>
+                </v-tooltip>
+
+                <v-tooltip bottom>
+                  <template #activator="{ props }">
+                    <v-btn
+                      color="#ff9800"
+                      @click="addSuggestion(destination.id)"
+                      v-if="isLoggedIn"
+                      v-bind="props"
+                    >
+                      <v-icon left>mdi-plus</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Añade una experiencia para este destino</span>
+                </v-tooltip>
+
+                <v-tooltip bottom>
+                  <template #activator="{ props }">
+                    <v-btn
+                      icon
+                      color="#05a4c8"
+                      @click="editDestination(destination.id)"
+                      v-if="
+                        isLoggedIn && (destination.userId === currentUserId || role === 'admin')
+                      "
+                      v-bind="props"
+                    >
+                      <v-icon>mdi-pencil</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Edita este destino</span>
+                </v-tooltip>
+
+                <v-tooltip bottom>
+                  <template #activator="{ props }">
+                    <v-btn
+                      icon
+                      color="#f4978e"
+                      @click="openDeleteConfirmDialog(destination.id)"
+                      v-if="
+                        isLoggedIn && (destination.userId === currentUserId || role === 'admin')
+                      "
+                      v-bind="props"
+                    >
+                      <v-icon>mdi-delete</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Borra este destino</span>
+                </v-tooltip>
               </v-card-actions>
             </v-card>
           </v-col>

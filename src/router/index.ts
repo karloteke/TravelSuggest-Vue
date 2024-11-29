@@ -73,10 +73,11 @@ const router = createRouter({
       component: DestinationSuggestionsComponent,
       props: true, // Esto permitirá pasar el ID como prop al componente
     },    
-    { 
-      path: '/add-suggestion',
-      name: 'addSuggestion',
-      component: AddSuggestionView
+    {
+      path: '/add-suggestion/:destinationId',
+      name: 'AddSuggestion',
+      component: AddSuggestionView,
+      props: true,
     },
     { 
       path: '/edit-suggestion/:suggestionId',

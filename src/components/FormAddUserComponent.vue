@@ -75,7 +75,7 @@ const handleSubmit = async () => {
 
     setTimeout(() => {
       successAlert.value = false;
-      router.push('/users');
+      router.push('/');
     }, 3000);
   } catch (error) {
     console.error('Error al añadir el usuario:', error);
