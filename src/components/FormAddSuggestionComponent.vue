@@ -192,7 +192,6 @@ const handleSubmit = async () => {
   color: #4a90e2;
   text-align: center;
   margin-bottom: 20px;
-  font-family: 'Open Sans', sans-serif;
 }
 
 .form-container {

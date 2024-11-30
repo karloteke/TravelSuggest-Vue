@@ -43,8 +43,9 @@ onMounted(async () => {
 <template>
   <div class="container">
     <h1 class="section-title">
-      Experiencias en
-      <span v-if="destination">{{ destination.cityName }}</span>
+      <span v-if="destination">
+        Experiencias en {{ destination.cityName }}
+      </span>
     </h1>
 
     <v-alert

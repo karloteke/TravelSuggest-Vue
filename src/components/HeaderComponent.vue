@@ -4,34 +4,42 @@ import { useLoginStore } from '@/stores/loginStore'
 import { computed } from 'vue'
 
 const router = useRouter()
-const { isLoggedIn, logout, getRole } = useLoginStore()
+const { isLoggedIn, logout, getRole, getUserId } = useLoginStore()
 const role = computed(() => getRole())
+const currentUserId = computed(() => getUserId())
 
-const navigateTo = (route: string) => {
+const navigateTo = (route: string | Record<string, unknown>) => {
   router.push(route)
 }
 
 interface MenuItem {
   text: string
-  route: string
+  route: string | Record<string, unknown> // Puede ser una cadena o un objeto de ruta
   icon: string
 }
 
 const commonMenuItems: MenuItem[] = [
   { text: 'Inicio', route: '/', icon: 'mdi-home' },
   { text: 'Destinos', route: '/destinations', icon: 'mdi-map-marker' },
-  { text: 'Sugerencias', route: '/suggestions', icon: 'mdi-lightbulb' },
+  { text: 'Experiencias', route: '/suggestions', icon: 'mdi-lightbulb' },
   { text: 'Consejos para un Viaje Responsable', route: '/tips', icon: 'mdi-earth' },
 ]
 
 const adminMenuItems: MenuItem[] = [{ text: 'Usuarios', route: 'users', icon: 'mdi-account-group' }]
+const userMenuItems = computed(() => [
+  {
+    text: 'Editar mi Perfil',
+    route: { name: 'editUser', params: { userId: currentUserId.value } },
+    icon: 'mdi-account-edit',
+  },
+])
 
 const menuItems = computed(() => {
   if (isLoggedIn()) {
     if (role.value === 'admin') {
       return [...commonMenuItems, ...adminMenuItems]
     } else {
-      return [...commonMenuItems]
+      return [...commonMenuItems, ...userMenuItems.value]
     }
   }
   // Usuarios no autenticados
