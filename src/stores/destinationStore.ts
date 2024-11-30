@@ -6,7 +6,7 @@ import { useLoginStore } from './loginStore'
 export const useDestinationStore = defineStore('destinations', () => {
   const destinations = reactive<Destination[]>([])
   const loginStore = useLoginStore()
-  const { getToken, getUserId} = loginStore
+  const { getToken, getUserId } = loginStore
 
   async function fetchAllDestinations() {
     try {
@@ -74,16 +74,19 @@ export const useDestinationStore = defineStore('destinations', () => {
   async function fetchDestinationById(destinationId: number): Promise<Destination | undefined> {
     try {
       const token = getToken()
-      if (!token) {
-        throw new Error('No se encontró el token de autenticación')
+      console.log('Token en fetchDestinationById:', token)
+
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json',
+      }
+
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`
       }
 
       const response = await fetch(`https://localhost:7193/Destination/${destinationId}`, {
         method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
+        headers,
       })
 
       if (!response.ok) {
@@ -112,9 +115,9 @@ export const useDestinationStore = defineStore('destinations', () => {
       if (!response.ok) {
         throw new Error('Error al actualizar el destino')
       }
-      
+
       const updatedDestination: Destination = await response.json()
-      const index = destinations.findIndex(d => d.id === destinationId)
+      const index = destinations.findIndex((d) => d.id === destinationId)
       if (index !== -1) {
         destinations[index] = updatedDestination
       }
@@ -137,8 +140,7 @@ export const useDestinationStore = defineStore('destinations', () => {
 
       if (response.ok) {
         console.log(`Destino con ID ${destinationId} borrado satisfactoriamente`)
-        // await fetchAllDestinations()
-        const index = destinations.findIndex(d => d.id === destinationId)
+        const index = destinations.findIndex((d) => d.id === destinationId)
         if (index !== -1) {
           destinations.splice(index, 1)
         }

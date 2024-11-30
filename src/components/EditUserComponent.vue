@@ -1,14 +1,21 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useUserStore } from '@/stores/userStore'
+import { useLoginStore } from '@/stores/loginStore'
 import type { UserUpdate } from '@/core/user'
 
 const route = useRoute()
 const router = useRouter()
 const userStore = useUserStore()
+const loginStore = useLoginStore()
+
 const userId = Number(route.params.userId)
 const successAlert = ref(false)
+
+// Obtener el rol y el userId del usuario logueado
+const currentUserId = computed(() => loginStore.getUserId())
+const userRole = computed(() => loginStore.getRole())
 
 // Estado del usuario
 const user = ref<UserUpdate | null>(null)
@@ -32,6 +39,11 @@ const passwordRules = [rules.optionalPassword]
 
 // Cargar el usuario al montar el componente
 onMounted(async () => {
+  if (userRole.value !== 'admin' && userId !== currentUserId.value) {
+    router.push('/')
+    return
+  }
+
   let existingUser = userStore.getUserById(userId)
   if (existingUser) {
     user.value = {
@@ -72,7 +84,7 @@ const submitForm = async () => {
 
     setTimeout(() => {
       successAlert.value = false
-      router.push('/users')
+      router.push('/')
     }, 3000)
   }
 }

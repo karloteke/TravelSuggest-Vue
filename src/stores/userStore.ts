@@ -5,7 +5,7 @@ import { useLoginStore } from './loginStore'
 
 export const useUserStore = defineStore('users', () => {
   const users = reactive<User[]>([])
-  const { getRole, getToken } = useLoginStore()
+  const { getRole, getToken, getUserId } = useLoginStore()
 
   async function fetchAll() {
     try {
@@ -14,10 +14,10 @@ export const useUserStore = defineStore('users', () => {
         throw new Error('No tienes permiso para ver la lista de usuarios')
       }
       const token = getToken()
-      const response = await fetch('https://localhost:7193/User', { 
+      const response = await fetch('https://localhost:7193/User', {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       })
 
@@ -36,13 +36,17 @@ export const useUserStore = defineStore('users', () => {
 
   async function addUser(newUser: User) {
     try {
-      const token = getToken(); 
+      const token = getToken()
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json',
+      }
+
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`
+      }
       const response = await fetch('https://localhost:7193/User', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
+        headers,
         body: JSON.stringify(newUser),
       })
 
@@ -67,7 +71,19 @@ export const useUserStore = defineStore('users', () => {
   // Función para obtener un usuario por ID desde el servidor
   async function fetchUserById(userId: number): Promise<User | undefined> {
     try {
-      const response = await fetch(`https://localhost:7193/User/${userId}`)
+      const token = getToken()
+      if (!token) {
+        throw new Error('No se encontró el token de autenticación')
+      }
+
+      const response = await fetch(`https://localhost:7193/User/${userId}`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      })
+
       if (!response.ok) {
         throw new Error('No se pudo obtener el usuario')
       }
@@ -81,12 +97,19 @@ export const useUserStore = defineStore('users', () => {
 
   async function updateUser(userId: number, payload: Partial<UserUpdate>) {
     try {
-      const token = getToken(); 
+      const token = getToken()
+      const role = getRole()
+      const currentUserId = getUserId()
+
+      if (role !== 'admin' && userId !== currentUserId) {
+        throw new Error('No tienes permiso para actualizar este usuario')
+      }
+
       const response = await fetch(`https://localhost:7193/User/${userId}`, {
         method: 'PUT',
-        headers: { 
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json' 
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(payload),
       })
@@ -103,11 +126,16 @@ export const useUserStore = defineStore('users', () => {
 
   async function deleteUser(userId: number) {
     try {
-      const token = getToken(); 
+      const role = getRole()
+      if (role !== 'admin') {
+        throw new Error('No tienes permiso para borrar usuarios')
+      }
+
+      const token = getToken()
       const response = await fetch(`https://localhost:7193/User/${userId}`, {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       })

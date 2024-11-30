@@ -2,12 +2,18 @@
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/userStore'
 import type { VForm } from 'vuetify/components'
-import router from '@/router';
+import router from '@/router'
 
 const successAlert = ref(false)
-const modal = ref(false) 
+const modal = ref(false)
 const formRef = ref<VForm | null>(null)
 const { addUser, findUserName } = useUserStore()
+
+const showPassword = ref(false)
+
+const togglePasswordVisibility = () => {
+  showPassword.value = !showPassword.value
+}
 
 const userData = ref({
   userName: '',
@@ -34,23 +40,23 @@ const emailRules = [rules.required, rules.email]
 const passwordRules = [rules.required, rules.minLength(6)]
 
 const handleSubmit = async () => {
+  const validationResult = formRef.value?.validate() // Validar el formulario y capturar el resultado
 
-  const validationResult = formRef.value?.validate();   // Validar el formulario y capturar el resultado
-  
   // Extraer el valor booleano si validationResult es un objeto
-  const isValid = typeof validationResult === 'object' ? (await validationResult).valid : validationResult;
-  
+  const isValid =
+    typeof validationResult === 'object' ? (await validationResult).valid : validationResult
+
   if (!isValid) {
-    return;
+    return
   }
 
   // Verificar si el nombre de usuario ya existe
-  const existingUserName = findUserName(userData.value.userName);
-  console.log('Nombre de usuario existente:', existingUserName);
+  const existingUserName = findUserName(userData.value.userName)
+  console.log('Nombre de usuario existente:', existingUserName)
 
   if (existingUserName) {
-    modal.value = true;
-    return;
+    modal.value = true
+    return
   }
 
   // Crear el nuevo usuario
@@ -61,26 +67,26 @@ const handleSubmit = async () => {
     password: userData.value.password,
     points: 0,
     role: 'user',
-  };
+  }
 
   try {
-    await addUser(newUser);
-    console.log('Usuario añadido exitosamente.');
+    await addUser(newUser)
+    console.log('Usuario añadido exitosamente.')
 
-    // Resetear el formulario 
-    formRef.value?.reset();
+    // Resetear el formulario
+    formRef.value?.reset()
 
     // Mostrar alerta de éxito
-    successAlert.value = true;
+    successAlert.value = true
 
     setTimeout(() => {
-      successAlert.value = false;
-      router.push('/');
-    }, 3000);
+      successAlert.value = false
+      router.push('/')
+    }, 3000)
   } catch (error) {
-    console.error('Error al añadir el usuario:', error);
+    console.error('Error al añadir el usuario:', error)
   }
-};
+}
 </script>
 
 <template>
@@ -88,7 +94,7 @@ const handleSubmit = async () => {
     <v-sheet class="mx-auto form-container" width="450">
       <div class="form-header">
         <v-col cols="12" class="text-center mb-2">
-          <img src="@/assets/logo.png" alt="Logo" style="max-height: 80px; margin-right: 12px;">
+          <img src="@/assets/logo.png" alt="Logo" style="max-height: 80px; margin-right: 12px" />
         </v-col>
         <h2 class="form-title">Registro de Usuario</h2>
       </div>
@@ -115,14 +121,22 @@ const handleSubmit = async () => {
 
         <v-text-field
           v-model="userData.password"
+          :type="showPassword ? 'text' : 'password'"
           label="Contraseña"
           prepend-icon="mdi-lock-outline"
+          append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
           outlined
           dense
           required
           :rules="passwordRules"
-        ></v-text-field>
-
+          @click:append="togglePasswordVisibility"
+        >
+          <template #append>
+            <v-icon @click="togglePasswordVisibility" class="cursor-pointer" color="grey">
+              {{ showPassword ? 'mdi-eye' : 'mdi-eye-off' }}
+            </v-icon>
+          </template>
+        </v-text-field>
         <v-btn class="submit-button" type="submit" block color="#05a4c8">Crear usuario</v-btn>
       </v-form>
     </v-sheet>
@@ -135,17 +149,17 @@ const handleSubmit = async () => {
 
   <!-- Modal para nombre de usuario duplicado -->
   <v-dialog v-model="modal" max-width="400">
-  <v-card>
-    <v-card-title class="headline">Nombre de Usuario Existente</v-card-title>
-    <v-card-text>
-      El nombre de usuario "{{ userData.userName }}" ya existe. Por favor, elige otro nombre.
-    </v-card-text>
-    <v-card-actions>
-      <v-spacer></v-spacer>
-      <v-btn color="primary" @click="modal = false">Cerrar</v-btn>
-    </v-card-actions>
-  </v-card>
-</v-dialog>
+    <v-card>
+      <v-card-title class="headline">Nombre de Usuario Existente</v-card-title>
+      <v-card-text>
+        El nombre de usuario "{{ userData.userName }}" ya existe. Por favor, elige otro nombre.
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="primary" @click="modal = false">Cerrar</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <style scoped>

@@ -10,6 +10,12 @@ const router = useRouter()
 const username = ref('')
 const password = ref('')
 
+const showPassword = ref(false)
+
+const togglePasswordVisibility = () => {
+  showPassword.value = !showPassword.value
+}
+
 async function handleLogin() {
   try {
     await login({ userName: username.value, password: password.value })
@@ -48,13 +54,21 @@ async function handleLogin() {
 
         <v-text-field
           v-model="password"
-          type="password" 
+          :type="showPassword ? 'text' : 'password'"
           label="Contraseña"
           prepend-icon="mdi-lock-outline"
+          append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
           outlined
           dense
           required
-        ></v-text-field>
+          @click:append="togglePasswordVisibility"
+        >
+          <template #append>
+            <v-icon @click="togglePasswordVisibility" class="cursor-pointer" color="grey">
+              {{ showPassword ? 'mdi-eye' : 'mdi-eye-off' }}
+            </v-icon>
+          </template>
+        </v-text-field>
 
         <v-btn class="submit-button" block type="submit"> Iniciar sesión </v-btn>
       </v-form>
