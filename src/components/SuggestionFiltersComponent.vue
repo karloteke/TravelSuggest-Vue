@@ -43,7 +43,7 @@ const applyFilters = async () => {
 
 <template>
   <v-card class="pa-3 mb-3 filter-card">
-    <h3 class="filter-title">Filtrar Sugerencias</h3>
+    <h3 class="filter-title">Filtrar Experiencias</h3>
 
     <v-form @submit.prevent="applyFilters">
       <v-row class="filter-row" justify="center" align="center">

@@ -35,7 +35,7 @@ onMounted(async () => {
   if (suggestions.value.length === 0) {
     setTimeout(() => {
       router.push('/destinations')
-    }, 3000)
+    }, 2000)
   }
 })
 </script>
@@ -43,9 +43,7 @@ onMounted(async () => {
 <template>
   <div class="container">
     <h1 class="section-title">
-      <span v-if="destination">
-        Experiencias en {{ destination.cityName }}
-      </span>
+      <span v-if="destination"> Experiencias en {{ destination.cityName }} </span>
     </h1>
 
     <v-alert
@@ -73,6 +71,7 @@ onMounted(async () => {
               <v-card-subtitle class="subtitle"
                 ><v-icon small>mdi-account</v-icon> {{ suggestion.id }}</v-card-subtitle
               >
+
               <v-card-text class="details-text">
                 <p class="mt-4">
                   <v-icon small>mdi-text-box-outline</v-icon> {{ suggestion.description }}
@@ -135,7 +134,8 @@ onMounted(async () => {
   color: #62bff6;
   font-weight: bold;
   font-family: Georgia, 'Times New Roman', Times, serif;
-  font-size: 28px;
+  padding-top: 25px;
+  font-size: 35px;
   white-space: normal;
   word-wrap: break-word;
   text-align: center;

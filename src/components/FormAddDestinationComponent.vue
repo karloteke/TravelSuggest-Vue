@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useDestinationStore } from '@/stores/destinationStore'
 import type { VForm } from 'vuetify/components'
-import router from '@/router';
+import router from '@/router'
 
 const formRef = ref<VForm | null>(null) // Referencia al formulario
 const successAlert = ref(false)
@@ -15,6 +15,37 @@ const destinationData = ref({
   isPopular: false,
   category: '',
 })
+
+// Variable para la imagen en Base64
+const imageBase64 = ref<string | null>(null)
+
+// Referencia al input de archivo
+const fileInput = ref<HTMLInputElement | null>(null)
+
+// Función para disparar el input de archivo
+const triggerFileInput = () => {
+  fileInput.value?.click()
+}
+
+// Manejo del cambio de archivo
+const onFileChange = (event: Event) => {
+  const file = (event.target as HTMLInputElement).files?.[0]
+  if (file) {
+    if (!file.type.startsWith('image/')) {
+      alert('Por favor, selecciona un archivo de imagen.')
+      return
+    }
+
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => {
+      imageBase64.value = reader.result as string
+    }
+    reader.onerror = (error) => {
+      console.error('Error al leer el archivo:', error)
+    }
+  }
+}
 
 // Reglas de validación
 const rules = {
@@ -30,8 +61,9 @@ const handleSubmit = async () => {
   const validationResult = formRef.value?.validate()
 
   // Validar el formulario y capturar el resultado
-  const isValid = typeof validationResult === 'object' ? (await validationResult).valid : validationResult
-  
+  const isValid =
+    typeof validationResult === 'object' ? (await validationResult).valid : validationResult
+
   if (!isValid) {
     return
   }
@@ -44,6 +76,7 @@ const handleSubmit = async () => {
     season: destinationData.value.season,
     isPopular: destinationData.value.isPopular,
     category: destinationData.value.category,
+    imageBase64: imageBase64.value,
   }
 
   await addDestination(newDestination)
@@ -57,18 +90,18 @@ const handleSubmit = async () => {
     category: '',
   }
 
-  // Resetear el formulario 
-  formRef.value?.reset();
+  // Resetear el formulario
+  formRef.value?.reset()
 
   // Mostrar alerta de éxito
-  successAlert.value = true;
+  successAlert.value = true
 
   // Mostrar alerta de éxito
   successAlert.value = true
   setTimeout(() => {
     successAlert.value = false
-    router.push("/destinations")
-  }, 3000)
+    router.push('/destinations')
+  }, 2000)
 }
 </script>
 
@@ -123,6 +156,34 @@ const handleSubmit = async () => {
           class="popular-checkbox"
         ></v-checkbox>
 
+        <div class="image-upload-container">
+          <v-icon
+            color="primary"
+            large
+            class="clickable-icon"
+            @click="triggerFileInput"
+            aria-label="Subir Imagen"
+          >
+            mdi-camera-plus
+          </v-icon>
+          <input
+            ref="fileInput"
+            type="file"
+            accept="image/*"
+            style="display: none"
+            @change="onFileChange"
+          />
+        </div>
+
+        <!-- Vista previa de la imagen -->
+        <v-img
+          v-if="imageBase64"
+          :src="imageBase64"
+          class="image-preview"
+          max-height="200"
+          contain
+        ></v-img>
+
         <v-btn class="submit-button" type="submit" block color="#05a4c8">Crear Destino</v-btn>
       </v-form>
     </v-sheet>
@@ -144,9 +205,9 @@ const handleSubmit = async () => {
 }
 
 .form-title {
-  font-size: 26px;
+  font-size: 30px;
   font-weight: bold;
-  color:#4a90e2; 
+  color: #4a90e2;
   text-align: center;
   margin-bottom: 20px;
 }
@@ -158,18 +219,50 @@ const handleSubmit = async () => {
   box-shadow: 0 6px 18px rgba(90, 103, 216, 0.3);
 }
 
+.image-upload-container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-bottom: 40px;
+  cursor: pointer;
+}
+
+.clickable-icon {
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+  font-size: 35px;
+}
+
+.clickable-icon:hover {
+  transform: scale(1.2);
+}
+
+.image-upload-text {
+  margin-left: 10px;
+  color: #4a90e2;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.image-preview {
+  margin-bottom: 40px;
+  border-radius: 8px;
+}
+
 .submit-button {
   margin-top: 20px;
   font-size: 16px;
   font-weight: bold;
   color: white;
-  background-color: #05a4c8; 
-  transition: background 0.3s, box-shadow 0.3s;
+  background-color: #05a4c8;
+  transition:
+    background 0.3s,
+    box-shadow 0.3s;
 }
 
 .submit-button:hover {
-  background: linear-gradient(135deg, #0d6fe5, #05a4c8); 
-  box-shadow: 0 4px 12px rgba(5, 164, 200, 0.3); 
+  background: linear-gradient(135deg, #0d6fe5, #05a4c8);
+  box-shadow: 0 4px 12px rgba(5, 164, 200, 0.3);
 }
 
 .success-alert {

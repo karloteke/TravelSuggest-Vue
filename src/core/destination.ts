@@ -6,6 +6,7 @@ export interface Destination {
     isPopular: boolean
     category: string
     userId: number
+    imageBase64: string | null
 }
 
 export interface DestinationUpdate {
@@ -14,6 +15,7 @@ export interface DestinationUpdate {
     season: string
     isPopular: boolean
     category: string
+    imageBase64: string | null
   }
 
 export interface DestinationQueryParameters {

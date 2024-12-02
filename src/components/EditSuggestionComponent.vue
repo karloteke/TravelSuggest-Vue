@@ -78,7 +78,7 @@ const submitForm = async () => {
     setTimeout(() => {
       successAlert.value = false
       router.push('/suggestions')
-    }, 3000)
+    }, 2000)
   }
 }
 </script>
@@ -160,7 +160,7 @@ const submitForm = async () => {
 }
 
 .form-title {
-  font-size: 26px;
+  font-size: 30px;
   font-family: 'Open Sans', sans-serif;
   font-weight: bold;
   color: #4a90e2;
