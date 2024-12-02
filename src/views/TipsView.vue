@@ -4,7 +4,7 @@
 
 <template>
   <div class="tips-container">
-    <h1>Consejos para un viaje responsable</h1>
+    <h1>CONSEJOS PARA UN VIAJE RESPONSABLE</h1>
     <p class="intro">
       En TravelSuggest, nos apasiona hacer que los viajes sean inolvidables, pero también responsables. Por eso, hemos creado esta sección para compartir simples, pero efectivos consejos que pueden ayudarte a reducir tu impacto ambiental. ¡Un viaje consciente es un viaje mejor!
     </p>
@@ -61,11 +61,11 @@
   }
 
   h1 {
-    font-size: 35px;
+    font-size: 32px;
     font-weight: bold;
     color:#4a90e2; 
     text-align: center;
-    margin-top: 45px;
+    margin-top: 70px;
     margin-bottom: 20px;
     font-family: Georgia, 'Times New Roman', Times, serif;
   }

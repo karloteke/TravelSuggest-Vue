@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { onMounted, ref} from 'vue'
+import { onMounted, ref } from 'vue'
 import { useSuggestionStore } from '@/stores/suggestionStore'
 import { useDestinationStore } from '@/stores/destinationStore'
 import { useRoute, useRouter } from 'vue-router'
 import type { VForm } from 'vuetify/components'
-
 
 const formRef = ref<VForm | null>(null)
 const successAlert = ref(false)
@@ -35,8 +34,6 @@ onMounted(async () => {
   if (destinationId.value !== null) {
     try {
       const destination = await fetchDestinationById(destinationId.value)
-      // const destination = { id: destinationId.value, cityName: 'Ciudad Ejemplo' }
-      // console.log('Destino recibido:', destination)
       destinationName.value = destination?.cityName || 'Destino desconocido'
     } catch (error) {
       console.error('Error al obtener el destino:', error)
@@ -52,7 +49,6 @@ const suggestionData = ref({
   rating: '',
 })
 
-
 // Reglas de validación
 const rules = {
   required: (value: string) => !!value || 'Este campo es obligatorio.',
@@ -67,7 +63,6 @@ const titleRules = [rules.required]
 const descriptionRules = [rules.required]
 const priceRules = [rules.required, rules.numeric, rules.minValue(0)]
 const ratingRules = [rules.required, rules.numeric, rules.minValue(1), rules.maxValue(5)]
-// const destinationIdRules = [rules.required, rules.numeric]
 
 const handleSubmit = async () => {
   const validationResult = formRef.value?.validate()
@@ -82,12 +77,10 @@ const handleSubmit = async () => {
 
   // Crear objeto de sugerencia
   const newSuggestion = {
-    id: 0,
     title: suggestionData.value.title,
     description: suggestionData.value.description,
     price: Number(suggestionData.value.price),
     rating: Number(suggestionData.value.rating),
-    created_at: '',
   }
 
   if (!destinationId.value) {
@@ -95,7 +88,7 @@ const handleSubmit = async () => {
     return
   }
 
-    await addSuggestion(newSuggestion, Number(destinationId.value))
+  await addSuggestion(newSuggestion, Number(destinationId.value))
 
   // Limpiar los campos
   suggestionData.value = {
@@ -116,7 +109,7 @@ const handleSubmit = async () => {
   setTimeout(() => {
     successAlert.value = false
     router.push('/suggestions')
-  }, 3000)
+  }, 2000)
 }
 </script>
 
@@ -186,7 +179,7 @@ const handleSubmit = async () => {
 }
 
 .form-title {
-  font-size: 26px;
+  font-size: 30px;
   font-family: Georgia, 'Times New Roman', Times, serif;
   font-weight: bold;
   color: #4a90e2;
@@ -215,6 +208,37 @@ const handleSubmit = async () => {
 .submit-button:hover {
   background: linear-gradient(135deg, #0d6fe5, #05a4c8);
   box-shadow: 0 4px 12px rgba(5, 164, 200, 0.3);
+}
+
+.image-upload-container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 30px;
+  margin-bottom: 50px;
+  cursor: pointer;
+}
+
+.clickable-icon {
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+  font-size: 35px;
+}
+
+.clickable-icon:hover {
+  transform: scale(1.2);
+}
+
+.image-upload-text {
+  margin-left: 10px;
+  color: #4a90e2;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.image-preview {
+  margin-bottom: 40px;
+  border-radius: 8px;
 }
 
 .success-alert {

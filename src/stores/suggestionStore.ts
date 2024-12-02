@@ -89,17 +89,21 @@ export const useSuggestionStore = defineStore('suggestions', () => {
   // Función para obtener una sugerencia por ID desde el servidor
   async function fetchSuggestionById(suggestionId: number): Promise<Suggestion | undefined> {
     try {
+ 
       const token = getToken()
-      if (!token) {
-        throw new Error('No se encontró el token de autenticación')
+      console.log('Token en fetchSuggestionById:', token)
+
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json',
+      }
+
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`
       }
 
       const response = await fetch(`https://localhost:7193/Suggestion/${suggestionId}`, {
         method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
+        headers,
       })
 
       if (!response.ok) {

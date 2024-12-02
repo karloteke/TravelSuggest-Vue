@@ -82,7 +82,7 @@ const handleSubmit = async () => {
     setTimeout(() => {
       successAlert.value = false
       router.push('/')
-    }, 3000)
+    }, 2000)
   } catch (error) {
     console.error('Error al añadir el usuario:', error)
   }
@@ -180,7 +180,7 @@ const handleSubmit = async () => {
 }
 
 .form-title {
-  font-size: 26px;
+  font-size: 30px;
   font-family: Georgia, 'Times New Roman', Times, serif;
   font-weight: bold;
   color: #4a90e2;

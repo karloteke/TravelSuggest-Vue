@@ -72,7 +72,7 @@ const handleNoResults = () => {
   showNoResultsAlert.value = true
   setTimeout(() => {
     showNoResultsAlert.value = false
-  }, 3000)
+  }, 2000)
 }
 </script>
 
@@ -80,7 +80,7 @@ const handleNoResults = () => {
   <div class="container">
     <div class="secction-title-container">
       <h1 class="section-title">
-        <strong>Experiencias compartidas por los viajeros de TravelSuggest</strong>
+        <strong>EXPERIENCIAS COMPARTIDAS POR LOS VIAJEROS DE TRAVELSUGGEST</strong>
       </h1>
     </div>
     <p class="description">
@@ -151,7 +151,9 @@ const handleNoResults = () => {
                         icon
                         color="#05a4c8"
                         @click="editSuggestion(suggestion.id)"
-                        v-if="isLoggedIn && (suggestion.userId === currentUserId || role === 'admin')"
+                        v-if="
+                          isLoggedIn && (suggestion.userId === currentUserId || role === 'admin')
+                        "
                         v-bind="props"
                       >
                         <v-icon>mdi-pencil</v-icon>
@@ -166,7 +168,9 @@ const handleNoResults = () => {
                         icon
                         color="#f4978e"
                         @click="openDeleteConfirmDialog(suggestion.id)"
-                        v-if="isLoggedIn && (suggestion.userId === currentUserId || role === 'admin')"
+                        v-if="
+                          isLoggedIn && (suggestion.userId === currentUserId || role === 'admin')
+                        "
                         v-bind="props"
                       >
                         <v-icon>mdi-delete</v-icon>
@@ -233,7 +237,8 @@ const handleNoResults = () => {
   color: #62bff6;
   font-weight: bold;
   font-family: Georgia, 'Times New Roman', Times, serif;
-  font-size: 28px;
+  padding-top: 25px;
+  font-size: 30px;
   white-space: normal;
   word-wrap: break-word;
   text-align: center;

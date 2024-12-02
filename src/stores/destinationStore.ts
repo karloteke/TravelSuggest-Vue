@@ -11,6 +11,7 @@ export const useDestinationStore = defineStore('destinations', () => {
   async function fetchAllDestinations() {
     try {
       const token = getToken()
+
       const headers: HeadersInit = {
         'Content-Type': 'application/json',
       }
@@ -90,7 +91,7 @@ export const useDestinationStore = defineStore('destinations', () => {
       })
 
       if (!response.ok) {
-        throw new Error('No se pudo obtener el usuario')
+        throw new Error('No se pudo obtener el destino')
       }
       const destinationData: Destination = await response.json()
       return destinationData

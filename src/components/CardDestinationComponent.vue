@@ -112,7 +112,7 @@ const handleNoResults = () => {
   showNoResultsAlert.value = true
   setTimeout(() => {
     showNoResultsAlert.value = false
-  }, 3000)
+  }, 2000)
 }
 </script>
 
@@ -120,7 +120,7 @@ const handleNoResults = () => {
   <div class="container">
     <div class="section-title-container">
       <h1 class="section-title">
-        <strong>Destinos compartidos por los viajeros de TravelSuggest</strong>
+        <strong>DESTINOS COMPARTIDOS POR LOS VIAJEROS DE TRAVELSUGGEST</strong>
       </h1>
     </div>
 
@@ -170,6 +170,15 @@ const handleNoResults = () => {
                 ><v-icon small>mdi-card-account-details-outline</v-icon>
                 {{ destination.id }}</v-card-subtitle
               >
+              <div class="image-wrapper">
+                <v-img
+                  :src="destination.imageBase64 || '/assets/default-image.jpg'"
+                  class="destination-image"
+                  cover
+                  alt="Imagen del destino"
+                ></v-img>
+              </div>
+
               <v-card-text class="details-text">
                 <p><v-icon small>mdi-text-box-outline</v-icon> {{ destination.description }}</p>
                 <p class="mt-4">
@@ -353,12 +362,15 @@ const handleNoResults = () => {
 }
 
 .title-destination {
-  font-size: 28px;
+  padding-top: 25px;
+  font-size: 35px;
   font-family: Georgia, 'Times New Roman', Times, serif;
   font-weight: bold;
   color: #62bff6;
   margin-bottom: 20px;
   text-align: center;
+  word-wrap: break-word;
+  white-space: normal;
 }
 
 .subtitle {
@@ -377,6 +389,18 @@ const handleNoResults = () => {
   display: flex;
   justify-content: space-around;
   margin-top: auto;
+}
+
+.image-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 250px;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .pagination-container {
