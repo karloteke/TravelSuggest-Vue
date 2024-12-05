@@ -20,7 +20,7 @@
       <v-col cols="12" class="text-center mb-4">
         <v-btn variant = "text" class="footer-link" @click="navigateTo('home')">Inicio</v-btn>
         <v-btn variant = "text" class="footer-link" @click="navigateTo('destinations')">Destinos</v-btn>
-        <v-btn variant = "text" class="footer-link" @click="navigateTo('suggestions')">Sugerencias</v-btn>
+        <v-btn variant = "text" class="footer-link" @click="navigateTo('suggestions')">Experiencias</v-btn>
         <v-btn variant = "text" class="footer-link" @click="navigateTo('tips')">Consejos para un viaje responsable</v-btn>
       </v-col>
 

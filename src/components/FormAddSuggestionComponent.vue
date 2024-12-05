@@ -106,9 +106,12 @@ const handleSubmit = async () => {
 
   // Mostrar alerta de éxito
   successAlert.value = true
+  
   setTimeout(() => {
     successAlert.value = false
-    router.push('/suggestions')
+    router.push('/suggestions').then(() => {
+      location.reload() // Recarga
+    })
   }, 2000)
 }
 </script>

@@ -44,11 +44,13 @@ const openDeleteConfirmDialog = (destinationId: number) => {
 // Función para confirmar e eliminar destino
 const confirmDeleteDestination = async () => {
   if (destinationToDelete.value !== null) {
-    await deleteDestination(destinationToDelete.value)
+    await deleteDestination(destinationToDelete.value) 
+    window.location.reload()
     deleteConfirmDialog.value = false
     destinationToDelete.value = null
   }
 }
+
 
 const totalPages = computed(() => Math.ceil(destinations.length / pageSize))
 
@@ -414,5 +416,11 @@ const handleNoResults = () => {
   right: 20px;
   width: 300px;
   z-index: 1000;
+}
+
+@media (max-width: 600px) {
+  .image-wrapper {
+    max-height: 150px;
+  }
 }
 </style>

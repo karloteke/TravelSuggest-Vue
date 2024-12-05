@@ -57,8 +57,8 @@ const applyFilters = async () => {
     <h3 class="filter-title">Filtrar Destinos</h3>
 
     <v-form @submit.prevent="applyFilters">
-      <v-row class="filter-row" justify="center" align="center">
-        <v-col cols="12" sm="2" md="2" class="d-flex justify-center">
+      <v-row class="filter-row" justify="center" align="center" wrap>
+        <v-col cols="12" sm="6" md="3" class="d-flex justify-center">
           <v-text-field
             v-model="filters.cityName"
             label="Nombre de destino"
@@ -67,7 +67,7 @@ const applyFilters = async () => {
           ></v-text-field>
         </v-col>
 
-        <v-col cols="12" sm="2" md="2" class="d-flex justify-center">
+        <v-col cols="12" sm="6" md="3" class="d-flex justify-center">
           <v-select
             v-model="filters.season"
             :items="seasons"
@@ -77,7 +77,7 @@ const applyFilters = async () => {
           ></v-select>
         </v-col>
 
-        <v-col cols="12" sm="2" md="2" class="d-flex justify-center">
+        <v-col cols="12" sm="6" md="3" class="d-flex justify-center">
           <v-select
             v-model="filters.isPopular"
             :items="popularityOptions"
@@ -89,7 +89,7 @@ const applyFilters = async () => {
           ></v-select>
         </v-col>
 
-        <v-col cols="12" sm="2" md="2" class="d-flex justify-center">
+        <v-col cols="12" sm="6" md="3" class="d-flex justify-center">
           <v-select
             v-model="filters.category"
             :items="categories"
@@ -99,10 +99,8 @@ const applyFilters = async () => {
           ></v-select>
         </v-col>
 
-        <v-col cols="12" sm="2" md="2" class="filter-button-container">
-          <v-btn color="#4a90e2" type="submit" class="filter-button">
-            Filtrar
-          </v-btn>
+        <v-col cols="12" sm="12" md="3" class="d-flex justify-center">
+          <v-btn color="#4a90e2" type="submit" class="filter-button"> Filtrar </v-btn>
         </v-col>
       </v-row>
     </v-form>
@@ -115,7 +113,7 @@ const applyFilters = async () => {
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   color: #ffffff;
-  width: 97%;
+  width: 100%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -129,6 +127,7 @@ const applyFilters = async () => {
   font-size: 32px;
   font-weight: bold;
   margin-bottom: 20px;
+  margin-top: 20px;
   text-align: center;
 }
 
@@ -136,8 +135,6 @@ const applyFilters = async () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 50px;
-  flex-wrap: wrap; /* Evita que los elementos se envuelvan en nuevas líneas */
 }
 
 .filter-button-container {
@@ -155,8 +152,9 @@ const applyFilters = async () => {
   transition:
     background 0.3s,
     box-shadow 0.3s;
-  width: 100%; 
+  width: 100%;
   max-width: 280px;
+  margin-bottom: 30px;
 }
 
 .filter-button:hover {

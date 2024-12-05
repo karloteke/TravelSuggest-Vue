@@ -12,6 +12,9 @@ const password = ref('')
 
 const showPassword = ref(false)
 
+// Estado para manejar la visibilidad del alert
+const showErrorAlert = ref(false)
+
 const togglePasswordVisibility = () => {
   showPassword.value = !showPassword.value
 }
@@ -23,12 +26,11 @@ async function handleLogin() {
     localStorage.setItem('username', username.value)
     localStorage.setItem('password', password.value)
     router.push('/') // Si el inicio de sesión es correcto, redirige a la página principal
-  } catch (error) {
-    if (error instanceof Error) {
-      alert('Credenciales incorrectas. Inténtalo de nuevo.')
-    } else {
-      alert('Error al iniciar sesión. Por favor, inténtalo de nuevo más tarde.')
-    }
+  } catch {
+    showErrorAlert.value = true
+    setTimeout(() => {
+      showErrorAlert.value = false
+    }, 3000)
   }
 }
 </script>
@@ -74,6 +76,11 @@ async function handleLogin() {
       </v-form>
     </v-sheet>
   </div>
+
+  <!-- Alert para mostrar el mensaje de error -->
+  <v-alert v-model="showErrorAlert" type="error" class="error-alert">
+    Credenciales incorrectos, revise los campos de nuevo.
+  </v-alert>
 </template>
 
 <style scoped>
@@ -115,5 +122,13 @@ async function handleLogin() {
 .submit-button:hover {
   background: linear-gradient(135deg, #0d6fe5, #05a4c8);
   box-shadow: 0 4px 12px rgba(5, 164, 200, 0.3);
+}
+
+.error-alert {
+  position: fixed;
+  top: 85px;
+  right: 20px;
+  width: 300px;
+  z-index: 1000;
 }
 </style>

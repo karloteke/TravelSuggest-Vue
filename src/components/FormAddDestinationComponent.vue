@@ -8,6 +8,7 @@ const formRef = ref<VForm | null>(null) // Referencia al formulario
 const successAlert = ref(false)
 const { addDestination } = useDestinationStore()
 
+
 const destinationData = ref({
   cityName: '',
   description: '',
@@ -98,9 +99,12 @@ const handleSubmit = async () => {
 
   // Mostrar alerta de éxito
   successAlert.value = true
+
   setTimeout(() => {
     successAlert.value = false
-    router.push('/destinations')
+    router.push('/destinations').then(() => {
+      location.reload() // Recarga
+    })
   }, 2000)
 }
 </script>
