@@ -22,7 +22,6 @@ const filters = ref<{
 const applyFilters = async () => {
   const appliedFilters: SuggestionQueryParameters = {}
 
-
   if (filters.value.minPrice !== null) {
     appliedFilters.minPrice = filters.value.minPrice
   }
@@ -47,21 +46,20 @@ const applyFilters = async () => {
 
     <v-form @submit.prevent="applyFilters">
       <v-row class="filter-row" justify="center" align="center">
-
-        <v-col cols="12" sm="2" md="2" class="d-flex justify-center">
+        <v-col cols="12" sm="4" md="3" class="d-flex justify-center">
           <v-text-field
             v-model="filters.minPrice"
-            :items= "priceRange"
+            :items="priceRange"
             label="Precio Mínimo"
             type="number"
             prepend-icon="mdi-currency-eur"
             clearable
           ></v-text-field>
         </v-col>
-        <v-col cols="12" sm="2" md="2" class="d-flex justify-center">
+        <v-col cols="12" sm="4" md="3" class="d-flex justify-center">
           <v-text-field
             v-model="filters.maxPrice"
-            :items= "priceRange"
+            :items="priceRange"
             label="Precio Máximo"
             type="number"
             prepend-icon="mdi-currency-eur"
@@ -69,7 +67,7 @@ const applyFilters = async () => {
           ></v-text-field>
         </v-col>
 
-        <v-col cols="12" sm="2" md="2" class="d-flex justify-center">
+        <v-col cols="12" sm="4" md="3" class="d-flex justify-center">
           <v-select
             v-model="filters.rating"
             :items="ratings"
@@ -80,10 +78,8 @@ const applyFilters = async () => {
         </v-col>
 
         <!-- Botón para aplicar filtros -->
-        <v-col cols="12" sm="2" md="2" class="filter-button-container">
-          <v-btn color="#4a90e2" type="submit" class="filter-button">
-            Filtrar
-          </v-btn>
+        <v-col cols="12" sm="4" md="3" class="d-flex justify-center">
+          <v-btn color="#4a90e2" type="submit" class="filter-button"> Filtrar </v-btn>
         </v-col>
       </v-row>
     </v-form>
@@ -96,7 +92,7 @@ const applyFilters = async () => {
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   color: #ffffff;
-  width: 97%;
+  max-width: 97%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -110,6 +106,7 @@ const applyFilters = async () => {
   font-size: 32px;
   font-weight: bold;
   margin-bottom: 20px;
+  margin-top: 20px;
   text-align: center;
 }
 
@@ -117,7 +114,6 @@ const applyFilters = async () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 70px;
   flex-wrap: wrap;
 }
 
@@ -136,7 +132,7 @@ const applyFilters = async () => {
   transition:
     background 0.3s,
     box-shadow 0.3s;
-  width: 100%; 
+  width: 100%;
   max-width: 280px;
 }
 
@@ -153,5 +149,11 @@ const applyFilters = async () => {
 .v-select {
   min-width: 220px;
   max-width: 280px;
+}
+
+@media (max-width: 950px) {
+  .filter-button {
+    margin-bottom: 20px;
+  }
 }
 </style>

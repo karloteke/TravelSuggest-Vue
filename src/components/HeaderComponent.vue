@@ -1,12 +1,21 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { useLoginStore } from '@/stores/loginStore'
-import { computed } from 'vue'
+import { computed, ref, onMounted } from 'vue'
+import { useUserStore } from '@/stores/userStore'
 
 const router = useRouter()
 const { isLoggedIn, logout, getRole, getUserId } = useLoginStore()
 const role = computed(() => getRole())
 const currentUserId = computed(() => getUserId())
+const userStore = useUserStore()
+
+const userPoints = ref<number | null>(null)
+
+// Obtener los puntos del usuario logueado
+onMounted(async () => {
+  userPoints.value = await userStore.getCurrentUserPoints()
+})
 
 const navigateTo = (route: string | Record<string, unknown>) => {
   router.push(route)
@@ -25,10 +34,15 @@ const commonMenuItems: MenuItem[] = [
   { text: 'Consejos para un Viaje Responsable', route: '/tips', icon: 'mdi-earth' },
 ]
 
+const authMenuItems: MenuItem[] = [
+  { text: 'Registrarse', route: '/add-user', icon: 'mdi-account-plus' },
+  { text: 'Iniciar sesión', route: '/login', icon: 'mdi-login' },
+]
+
 const adminMenuItems: MenuItem[] = [{ text: 'Usuarios', route: 'users', icon: 'mdi-account-group' }]
 const userMenuItems = computed(() => [
   {
-    text: 'Editar mi Perfil',
+    text: 'Editar Perfil',
     route: { name: 'editUser', params: { userId: currentUserId.value } },
     icon: 'mdi-account-edit',
   },
@@ -43,24 +57,29 @@ const menuItems = computed(() => {
     }
   }
   // Usuarios no autenticados
-  return commonMenuItems
+  return [...commonMenuItems, ...authMenuItems]
 })
 </script>
 
 <template>
   <v-app-bar color="white" height="100px">
-    <!-- Menú desplegable -->
+    <v-toolbar-title class="ml-10">
+      <img src="@/assets/logo.png" class="design-logo" alt="Logo" />
+    </v-toolbar-title>
+
+    <v-spacer></v-spacer>
+
     <v-menu offset-y :close-on-content-click="true" ref="menuRef">
       <template #activator="{ props }">
-        <v-btn icon v-bind="props" class="menu-button">
-          <v-icon style="font-size: 36px">mdi-menu</v-icon>
+        <v-btn icon v-bind="props" class="menu-button mr-10">
+          <v-icon style="font-size: 45px; color: rgb(79 121 184)">mdi-menu</v-icon>
         </v-btn>
       </template>
       <v-list style="min-width: 200px; background-color: #2b3c56">
         <v-list-item
           v-for="(item, index) in menuItems"
           :key="index"
-          @click="() => navigateTo(item.route)"
+          @click="item.route ? navigateTo(item.route) : null"
           class="menu-item"
         >
           <div style="display: flex; align-items: center; color: white">
@@ -68,56 +87,36 @@ const menuItems = computed(() => {
             <span style="color: white">{{ item.text }}</span>
           </div>
         </v-list-item>
+
+        <v-list-item v-if="isLoggedIn()" class="static-item">
+          <div style="display: flex; align-items: center; color: white">
+            <v-icon style="color: white; margin-right: 10px">mdi-star-outline</v-icon>
+            <span style="color: white"
+              >Mis Puntos: {{ userPoints !== null ? userPoints : 'Cargando...' }}</span
+            >
+          </div>
+        </v-list-item>
+
+        <!-- Separador y "Cerrar sesión" si el usuario está logueado -->
+        <v-divider v-if="isLoggedIn()"></v-divider>
+        <v-list-item v-if="isLoggedIn()" @click="logout">
+          <v-list-item-title><v-icon left>mdi-logout</v-icon>Cerrar sesión</v-list-item-title>
+        </v-list-item>
       </v-list>
     </v-menu>
-
-    <!-- Logo -->
-    <v-toolbar-title class="ml-3">
-      <img src="@/assets/logo.png" class="design-logo" alt="Logo" />
-    </v-toolbar-title>
-
-    <v-spacer></v-spacer>
-
-    <!-- Botones de Registrarse e Iniciar Sesión/Cerrar Sesión -->
-    <div class="button-group">
-      <router-link to="/add-user" v-if="!isLoggedIn()">
-        <v-btn class="custom-btn" :elevation="3" color="#0d6fe5">
-          <v-icon left>mdi-account-plus</v-icon>
-          Registrarse
-        </v-btn>
-      </router-link>
-      <router-link to="/login" v-if="!isLoggedIn()">
-        <v-btn class="custom-btn" :elevation="3" color="#0d6fe5" style="margin-left: 10px">
-          <v-icon left>mdi-login</v-icon>
-          Iniciar sesión
-        </v-btn>
-      </router-link>
-      <v-btn v-if="isLoggedIn()" @click="logout" class="custom-btn" :elevation="3" color="#0d6fe5">
-        <v-icon left>mdi-logout</v-icon>
-        Cerrar sesión
-      </v-btn>
-    </div>
   </v-app-bar>
 </template>
 
 <style scoped>
 .design-logo {
   max-height: 70px;
-  margin-right: 5px;
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
 }
 
-.v-app-bar {
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.v-btn {
-  text-transform: none;
-  font-weight: bold;
-  margin-right: 13px;
-}
-
-.v-btn:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+.v-toolbar-title {
+  margin: 0px;
 }
 
 .menu-item {
@@ -126,30 +125,14 @@ const menuItems = computed(() => {
   padding: 18px 0;
 }
 
-.v-list {
-  padding: 0;
-}
-
 .v-list-item {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
   color: white;
 }
 
-.v-list-item-icon {
-  margin-right: 10px;
-}
-
-.v-list-item-title {
-  font-size: 20px;
-  font-weight: 500;
-  color: white;
-}
-
-.button-group {
-  display: flex;
-  align-items: center;
-  gap: 20px;
+@media (max-width: 600px) {
+  .design-logo {
+    height: 60px;
+    margin-left: 0px;
+  }
 }
 </style>

@@ -35,6 +35,7 @@ const confirmDeleteSuggestion = async () => {
   console.log('confirmDeleteSuggestion called')
   if (suggestionToDelete.value !== null) {
     await deleteSuggestion(suggestionToDelete.value)
+    window.location.reload()
     deleteConfirmDialog.value = false
     suggestionToDelete.value = null
   }

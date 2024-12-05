@@ -105,17 +105,18 @@
 }
 
 .overlay-content h1 {
-  font-size: 45px;
+  font-size: 28px;
   color: #f0f0f0;
   font-family: Georgia, 'Times New Roman', Times, serif;
+  padding-top: 50px;
 }
 
 .overlay-content p {
-  font-size: 25px;
+  font-size: 23px;
   color: #e0e0e0;
 }
 
-.v-card-title{
+.v-card-title {
   text-align: center;
   color: #4a90e2;
 }
@@ -129,7 +130,7 @@
 }
 
 .description-content h2 {
-  font-size: 35px;
+  font-size: 32px;
   color: #4a90e2;
   margin-bottom: 15px;
   text-align: center;
@@ -170,7 +171,7 @@
 
 .points-box ul,
 .rewards-box ul {
-  text-align: left; 
+  text-align: left;
   list-style-type: none;
   padding: 0;
   font-family: 'Open Sans', sans-serif;
@@ -191,26 +192,26 @@
 }
 
 .rewards {
-  max-width: 85%; 
-  margin: 40px auto; 
-  padding: 20px; 
-  line-height: 1.8; 
-  font-family: 'Open Sans', sans-serif; 
+  max-width: 85%;
+  margin: 40px auto;
+  padding: 20px;
+  line-height: 1.8;
+  font-family: 'Open Sans', sans-serif;
   font-size: 18px;
 }
 
 .rewards p {
-  margin-bottom: 15px; 
+  margin-bottom: 15px;
 }
 
 .rewards ul {
-  list-style-type: none; 
-  padding: 0; 
+  list-style-type: none;
+  padding: 0;
 }
 
 .rewards li {
-  margin-bottom: 10px; 
-  line-height: 1.5; 
+  margin-bottom: 10px;
+  line-height: 1.5;
 }
 
 .rewards li::before {

@@ -157,6 +157,32 @@ export const useUserStore = defineStore('users', () => {
     return users.find((user: { userName: string }) => user.userName === userName)
   }
 
+  async function getCurrentUserPoints(): Promise<number | null> {
+    const currentUserId = getUserId() 
+
+    if (currentUserId === null) {
+      console.error('El ID del usuario es nulo.')
+      return null
+    }
+    // Busca en los datos locales
+    const user = getUserById(currentUserId)
+    if (user) {
+      return user.points // Retorna los puntos si está en el array `users`
+    }
+
+    // Si el usuario no está en el array local, obtiene sus datos del servidor
+    try {
+      const fetchedUser = await fetchUserById(currentUserId)
+      if (fetchedUser) {
+        return fetchedUser.points
+      }
+    } catch (error) {
+      console.error('Error al obtener los puntos del usuario logueado:', error)
+    }
+
+    return null
+  }
+
   return {
     users,
     fetchAll,
@@ -166,5 +192,6 @@ export const useUserStore = defineStore('users', () => {
     fetchUserById,
     deleteUser,
     findUserName,
+    getCurrentUserPoints,
   }
 })
