@@ -109,9 +109,7 @@ const handleSubmit = async () => {
   
   setTimeout(() => {
     successAlert.value = false
-    router.push('/suggestions').then(() => {
-      location.reload() // Recarga
-    })
+    window.location.href = '/suggestions'
   }, 2000)
 }
 </script>

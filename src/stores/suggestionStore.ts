@@ -73,9 +73,11 @@ export const useSuggestionStore = defineStore('suggestions', () => {
         throw new Error(`Error ${response.status}: ${errorText}`)
       }
 
-      const result = await response.json()
-      console.log('Sugerencia añadida satisfactoriamente:', result)
-      await fetchAllSuggestions() // Actualizar la lista de sugerencias
+      const createdSuggestion = await response.json()
+      console.log('Sugerencia añadida satisfactoriamente:', createdSuggestion)
+
+      suggestions.unshift(createdSuggestion) // Insertar la nueva sugerencia al inicio del array 
+
     } catch (error) {
       console.error('Error al añadir la sugerencia:', error)
     }
@@ -89,7 +91,6 @@ export const useSuggestionStore = defineStore('suggestions', () => {
   // Función para obtener una sugerencia por ID desde el servidor
   async function fetchSuggestionById(suggestionId: number): Promise<Suggestion | undefined> {
     try {
- 
       const token = getToken()
       console.log('Token en fetchSuggestionById:', token)
 

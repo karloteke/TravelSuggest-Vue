@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import { reactive } from 'vue'
 import { useLoginStore } from './loginStore'
 
+
 export const useDestinationStore = defineStore('destinations', () => {
   const destinations = reactive<Destination[]>([])
   const loginStore = useLoginStore()
@@ -56,7 +57,7 @@ export const useDestinationStore = defineStore('destinations', () => {
         const createdDestination = await response.json()
         console.log('Destino añadido satisfactoriamente:', createdDestination)
 
-        fetchAllDestinations() // Actualizar la lista de destinos
+        destinations.unshift(createdDestination) //Insertamos el destino al inicio del array actual 
       } else {
         const errorMessage = await response.text()
         console.error('Fallo al añadir el destino:', errorMessage)
@@ -145,6 +146,7 @@ export const useDestinationStore = defineStore('destinations', () => {
         if (index !== -1) {
           destinations.splice(index, 1)
         }
+
       } else {
         const errorMessage = await response.text()
         console.error('Fallo al borrar el destino:', errorMessage)

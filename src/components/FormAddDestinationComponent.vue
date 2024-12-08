@@ -2,7 +2,6 @@
 import { ref } from 'vue'
 import { useDestinationStore } from '@/stores/destinationStore'
 import type { VForm } from 'vuetify/components'
-import router from '@/router'
 
 const formRef = ref<VForm | null>(null) // Referencia al formulario
 const successAlert = ref(false)
@@ -102,9 +101,7 @@ const handleSubmit = async () => {
 
   setTimeout(() => {
     successAlert.value = false
-    router.push('/destinations').then(() => {
-      location.reload() // Recarga
-    })
+    window.location.href = '/destinations'
   }, 2000)
 }
 </script>
