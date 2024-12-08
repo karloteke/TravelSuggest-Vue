@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 import { useLoginStore } from '@/stores/loginStore'
 
 const { login } = useLoginStore()
-const router = useRouter()
+
 
 // Inicializar las referencias con valores vacíos
 const username = ref('')
@@ -25,7 +24,8 @@ async function handleLogin() {
     // Guardar nombre de usuario y contraseña en localStorage
     localStorage.setItem('username', username.value)
     localStorage.setItem('password', password.value)
-    router.push('/') // Si el inicio de sesión es correcto, redirige a la página principal
+    window.location.href = '/'; // Redirigir y recargar la página principal
+
   } catch {
     showErrorAlert.value = true
     setTimeout(() => {
