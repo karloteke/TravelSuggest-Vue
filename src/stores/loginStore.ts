@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from './userStore'
+import { API_BASE_URL } from '@/config'
 
 const getCurrentUserPoints = useUserStore
 
@@ -14,7 +15,7 @@ export const useLoginStore = defineStore('login', () => {
 
   async function login(credentials: { userName: string; password: string }) {
     try {
-      const response = await fetch('https://localhost:7193/Auth/login', {
+      const response = await fetch(`${API_BASE_URL}/Auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

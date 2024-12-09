@@ -2,12 +2,15 @@ import type { Destination, DestinationQueryParameters } from '@/core/destination
 import { defineStore } from 'pinia'
 import { reactive } from 'vue'
 import { useLoginStore } from './loginStore'
+import { API_BASE_URL } from '@/config'
+import { useUserStore } from './userStore'
 
 
 export const useDestinationStore = defineStore('destinations', () => {
   const destinations = reactive<Destination[]>([])
   const loginStore = useLoginStore()
   const { getToken, getUserId } = loginStore
+  const userStore = useUserStore()
 
   async function fetchAllDestinations() {
     try {
@@ -21,7 +24,7 @@ export const useDestinationStore = defineStore('destinations', () => {
         headers['Authorization'] = `Bearer ${token}`
       }
 
-      const response = await fetch('https://localhost:7193/Destination', {
+      const response = await fetch(`${API_BASE_URL}/Destination`, {
         method: 'GET',
         headers,
       })
@@ -44,7 +47,7 @@ export const useDestinationStore = defineStore('destinations', () => {
       const token = getToken()
       const userId = getUserId()
 
-      const response = await fetch(`https://localhost:7193/Destination?userId=${userId}`, {
+      const response = await fetch(`${API_BASE_URL}/Destination?userId=${userId}`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -58,6 +61,7 @@ export const useDestinationStore = defineStore('destinations', () => {
         console.log('Destino añadido satisfactoriamente:', createdDestination)
 
         destinations.unshift(createdDestination) //Insertamos el destino al inicio del array actual 
+        await userStore.fetchCurrentUser() // Actualiza los puntos del usuario
       } else {
         const errorMessage = await response.text()
         console.error('Fallo al añadir el destino:', errorMessage)
@@ -86,7 +90,7 @@ export const useDestinationStore = defineStore('destinations', () => {
         headers['Authorization'] = `Bearer ${token}`
       }
 
-      const response = await fetch(`https://localhost:7193/Destination/${destinationId}`, {
+      const response = await fetch(`${API_BASE_URL}/Destination/${destinationId}`, {
         method: 'GET',
         headers,
       })
@@ -105,7 +109,7 @@ export const useDestinationStore = defineStore('destinations', () => {
   async function updateDestination(destinationId: number, payload: Partial<Destination>) {
     try {
       const token = getToken()
-      const response = await fetch(`https://localhost:7193/Destination/${destinationId}`, {
+      const response = await fetch(`${API_BASE_URL}/Destination/${destinationId}`, {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -132,7 +136,7 @@ export const useDestinationStore = defineStore('destinations', () => {
   async function deleteDestination(destinationId: number) {
     try {
       const token = getToken()
-      const response = await fetch(`https://localhost:7193/Destination/${destinationId}`, {
+      const response = await fetch(`${API_BASE_URL}/Destination/${destinationId}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -146,6 +150,7 @@ export const useDestinationStore = defineStore('destinations', () => {
         if (index !== -1) {
           destinations.splice(index, 1)
         }
+        await userStore.fetchCurrentUser() // Actualiza los puntos del usuario
 
       } else {
         const errorMessage = await response.text()
@@ -169,7 +174,7 @@ export const useDestinationStore = defineStore('destinations', () => {
       }
 
       // Hacer la solicitud con los filtros aplicados
-      const response = await fetch(`https://localhost:7193/Destination?${queryParams.toString()}`)
+      const response = await fetch(`${API_BASE_URL}/Destination?${queryParams.toString()}`)
 
       if (response.ok) {
         // Si la respuesta es exitosa, procesa los datos
