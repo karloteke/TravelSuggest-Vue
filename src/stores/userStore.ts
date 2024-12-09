@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { reactive} from 'vue'
 import type { User, UserUpdate } from '@/core/user'
 import { useLoginStore } from './loginStore'
+import { API_BASE_URL } from '@/config'
 
 export const useUserStore = defineStore('users', () => {
   const users = reactive<User[]>([])
@@ -14,7 +15,7 @@ export const useUserStore = defineStore('users', () => {
         throw new Error('No tienes permiso para ver la lista de usuarios')
       }
       const token = getToken()
-      const response = await fetch('https://localhost:7193/User', {
+      const response = await fetch(`${API_BASE_URL}/User`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -44,7 +45,7 @@ export const useUserStore = defineStore('users', () => {
       if (token) {
         headers['Authorization'] = `Bearer ${token}`
       }
-      const response = await fetch('https://localhost:7193/User', {
+      const response = await fetch(`${API_BASE_URL}/User`, {
         method: 'POST',
         headers,
         body: JSON.stringify(newUser),
@@ -76,7 +77,7 @@ export const useUserStore = defineStore('users', () => {
         throw new Error('No se encontró el token de autenticación')
       }
 
-      const response = await fetch(`https://localhost:7193/User/${userId}`, {
+      const response = await fetch(`${API_BASE_URL}/User/${userId}`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -105,7 +106,7 @@ export const useUserStore = defineStore('users', () => {
         throw new Error('No tienes permiso para actualizar este usuario')
       }
 
-      const response = await fetch(`https://localhost:7193/User/${userId}`, {
+      const response = await fetch(`${API_BASE_URL}/User/${userId}`, {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -132,7 +133,7 @@ export const useUserStore = defineStore('users', () => {
       }
 
       const token = getToken()
-      const response = await fetch(`https://localhost:7193/User/${userId}`, {
+      const response = await fetch(`${API_BASE_URL}/User/${userId}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -157,30 +158,44 @@ export const useUserStore = defineStore('users', () => {
     return users.find((user: { userName: string }) => user.userName === userName)
   }
 
-  async function getCurrentUserPoints(): Promise<number | null> {
-    const currentUserId = getUserId() 
-
-    if (currentUserId === null) {
-      console.error('El ID del usuario es nulo.')
-      return null
-    }
-    // Busca en los datos locales
-    const user = getUserById(currentUserId)
-    if (user) {
-      return user.points // Retorna los puntos si está en el array `users`
-    }
-
-    // Si el usuario no está en el array local, obtiene sus datos del servidor
+   // Nueva función para obtener los datos del usuario actual
+   async function fetchCurrentUser() {
     try {
-      const fetchedUser = await fetchUserById(currentUserId)
-      if (fetchedUser) {
-        return fetchedUser.points
+      const userId = getUserId()
+      if (userId === null) {
+        throw new Error('No se encontró el ID del usuario')
+      }
+
+      const token = getToken()
+      if (!token) {
+        throw new Error('No se encontró el token de autenticación')
+      }
+
+      const response = await fetch(`${API_BASE_URL}/User/${userId}`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error('No se pudo obtener los datos del usuario')
+      }
+
+      const userData: User = await response.json()
+      console.log('Datos del usuario actual:', userData)
+
+      // Actualiza el usuario en el array reactivo
+      const userIndex = users.findIndex(u => u.id === userData.id)
+      if (userIndex !== -1) {
+        users[userIndex] = userData
+      } else {
+        users.push(userData)
       }
     } catch (error) {
-      console.error('Error al obtener los puntos del usuario logueado:', error)
+      console.error('Error al obtener los datos del usuario:', error)
     }
-
-    return null
   }
 
   return {
@@ -192,6 +207,6 @@ export const useUserStore = defineStore('users', () => {
     fetchUserById,
     deleteUser,
     findUserName,
-    getCurrentUserPoints,
+    fetchCurrentUser
   }
 })

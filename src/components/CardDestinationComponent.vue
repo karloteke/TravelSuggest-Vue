@@ -4,8 +4,11 @@ import { useRouter } from 'vue-router'
 import { ref, computed, onMounted } from 'vue'
 import DestinationFiltersComponent from '@/components/DestinationFiltersComponent.vue'
 import { useLoginStore } from '@/stores/loginStore'
+import { useUserStore } from '@/stores/userStore'; 
+
 
 const loginStore = useLoginStore()
+const userStore = useUserStore();
 const isLoggedIn = computed(() => loginStore.isLoggedIn())
 const currentUserId = computed(() => loginStore.getUserId())
 const role = computed(() => loginStore.getRole())
@@ -45,7 +48,8 @@ const openDeleteConfirmDialog = (destinationId: number) => {
 const confirmDeleteDestination = async () => {
   if (destinationToDelete.value !== null) {
     await deleteDestination(destinationToDelete.value) 
-    window.location.reload()
+    await fetchDestinations() // Actualiza la lista de destinos
+    await userStore.fetchCurrentUser() // Actualiza los puntos del usuario
     deleteConfirmDialog.value = false
     destinationToDelete.value = null
   }

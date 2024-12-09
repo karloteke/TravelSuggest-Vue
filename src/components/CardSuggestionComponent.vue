@@ -5,8 +5,10 @@ import { ref, computed, onMounted } from 'vue'
 import { format } from 'date-fns'
 import SuggestionFiltersComponent from '@/components/SuggestionFiltersComponent.vue'
 import { useLoginStore } from '@/stores/loginStore'
+import { useUserStore } from '@/stores/userStore'; 
 
 const loginStore = useLoginStore()
+const userStore = useUserStore();
 const isLoggedIn = computed(() => loginStore.isLoggedIn())
 const currentUserId = computed(() => loginStore.getUserId())
 const role = computed(() => loginStore.getRole())
@@ -35,7 +37,8 @@ const confirmDeleteSuggestion = async () => {
   console.log('confirmDeleteSuggestion called')
   if (suggestionToDelete.value !== null) {
     await deleteSuggestion(suggestionToDelete.value)
-    window.location.reload()
+    await fetchSuggestions()
+    await userStore.fetchCurrentUser() // Actualiza los puntos del usuario
     deleteConfirmDialog.value = false
     suggestionToDelete.value = null
   }

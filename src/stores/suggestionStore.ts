@@ -2,10 +2,13 @@ import type { Suggestion, SuggestionQueryParameters } from '@/core/suggestion'
 import { defineStore } from 'pinia'
 import { reactive } from 'vue'
 import { useLoginStore } from './loginStore'
+import { API_BASE_URL } from '@/config'
+import { useUserStore } from './userStore'
 
 export const useSuggestionStore = defineStore('suggestions', () => {
   const suggestions = reactive<Suggestion[]>([])
   const { getToken, getUserId } = useLoginStore()
+  const userStore = useUserStore()
 
   async function fetchAllSuggestions() {
     try {
@@ -19,7 +22,7 @@ export const useSuggestionStore = defineStore('suggestions', () => {
         headers['Authorization'] = `Bearer ${token}`
       }
 
-      const response = await fetch('https://localhost:7193/Suggestion', {
+      const response = await fetch(`${API_BASE_URL}/Suggestion`, {
         method: 'GET',
         headers,
       })
@@ -56,8 +59,7 @@ export const useSuggestionStore = defineStore('suggestions', () => {
         headers['Authorization'] = `Bearer ${token}`
       }
 
-      const response = await fetch(
-        `https://localhost:7193/Suggestion?destinationId=${destinationId}`,
+      const response = await fetch(`${API_BASE_URL}/Suggestion?destinationId=${destinationId}`,
         {
           method: 'POST',
           headers,
@@ -77,6 +79,7 @@ export const useSuggestionStore = defineStore('suggestions', () => {
       console.log('Sugerencia añadida satisfactoriamente:', createdSuggestion)
 
       suggestions.unshift(createdSuggestion) // Insertar la nueva sugerencia al inicio del array 
+      await userStore.fetchCurrentUser() // Actualiza los puntos del usuario
 
     } catch (error) {
       console.error('Error al añadir la sugerencia:', error)
@@ -102,7 +105,7 @@ export const useSuggestionStore = defineStore('suggestions', () => {
         headers['Authorization'] = `Bearer ${token}`
       }
 
-      const response = await fetch(`https://localhost:7193/Suggestion/${suggestionId}`, {
+      const response = await fetch(`${API_BASE_URL}/Suggestion/${suggestionId}`, {
         method: 'GET',
         headers,
       })
@@ -121,7 +124,7 @@ export const useSuggestionStore = defineStore('suggestions', () => {
   async function updateSuggestion(suggestionId: number, payload: unknown) {
     try {
       const token = getToken()
-      const response = await fetch(`https://localhost:7193/Suggestion/${suggestionId}`, {
+      const response = await fetch(`${API_BASE_URL}/Suggestion/${suggestionId}`, {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -145,7 +148,7 @@ export const useSuggestionStore = defineStore('suggestions', () => {
     console.log('deleteSuggestion called with ID:', suggestionId)
     try {
       const token = getToken()
-      const response = await fetch(`https://localhost:7193/Suggestion/${suggestionId}`, {
+      const response = await fetch(`${API_BASE_URL}/Suggestion/${suggestionId}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -156,6 +159,7 @@ export const useSuggestionStore = defineStore('suggestions', () => {
       if (response.ok) {
         console.log(`Sugerencia con ID ${suggestionId} borrado satisfactoriamente`)
         await fetchAllSuggestions()
+        await userStore.fetchCurrentUser() // Actualiza los puntos del usuario
       } else {
         const errorMessage = await response.text()
         console.error('Fallo al borrar la sugerencia:', errorMessage)
@@ -193,7 +197,7 @@ export const useSuggestionStore = defineStore('suggestions', () => {
       if (filters.rating !== undefined) queryParams.append('rating', String(filters.rating))
 
       // Hacer la solicitud con los filtros aplicados
-      const response = await fetch(`https://localhost:7193/Suggestion?${queryParams.toString()}`)
+      const response = await fetch(`${API_BASE_URL}/Suggestion?${queryParams.toString()}`)
 
       if (response.ok) {
         // Si la respuesta es exitosa, procesa los datos

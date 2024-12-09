@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { useLoginStore } from '@/stores/loginStore'
-import { computed, ref, onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useUserStore } from '@/stores/userStore'
 
 const router = useRouter()
@@ -10,11 +10,19 @@ const role = computed(() => getRole())
 const currentUserId = computed(() => getUserId())
 const userStore = useUserStore()
 
-const userPoints = ref<number | null>(null)
 
-// Obtener los puntos del usuario logueado
+// Obtener el usuario actual
+const currentUser = computed(() => {
+  const userId = currentUserId.value
+  return userStore.users.find(user => user.id === userId)
+})
+
+// Computed property para obtener los puntos del usuario
+const userPoints = computed(() => currentUser.value?.points || 0)
+
+// Al montar el componente, obtener los datos del usuario actual
 onMounted(async () => {
-  userPoints.value = await userStore.getCurrentUserPoints()
+  await userStore.fetchCurrentUser()
 })
 
 const navigateTo = (route: string | Record<string, unknown>) => {
@@ -91,9 +99,7 @@ const menuItems = computed(() => {
         <v-list-item v-if="isLoggedIn()" class="static-item">
           <div style="display: flex; align-items: center; color: white">
             <v-icon style="color: white; margin-right: 10px">mdi-star-outline</v-icon>
-            <span style="color: white"
-              >Mis Puntos: {{ userPoints !== null ? userPoints : 'Cargando...' }}</span
-            >
+              <span style="color: white">Mis Puntos: {{ userPoints }} </span>
           </div>
         </v-list-item>
 
