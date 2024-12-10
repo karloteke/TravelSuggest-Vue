@@ -1,45 +1,38 @@
-# travelsuggest
+# Travelsuggest 🌍
 
-This template should help get you started developing with Vue 3 in Vite.
+¡Bienvenido a Travelsuggest! Este proyecto utiliza Vue 3 para ofrecer una experiencia de usuario moderna y rápida, diseñada para explorar viajes de forma sencilla y eficiente.
 
-## Recommended IDE Setup
+## 🚀 Características
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- Interfaz de usuario intuitiva y adaptativa.
+- Destinos y experiencias personalizadas para viajes.
+- Configuración optimizada para desarrollo ágil.
+---
 
-## Type Support for `.vue` Imports in TS
+## 📦 Configuración del proyecto
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+### Clona este repositorio:
 
-## Customize configuration
+```sh
+git clone https://github.com/tu-usuario/travelsuggest.git
+cd travelsuggest
+```
 
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
+### Instala las dependencias:
 
 ```sh
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+### Inicia el servidor de desarrollo:
 
 ```sh
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+---
 
-```sh
-npm run build
-```
+## 📖 Documentación:
+Accede a la aplicación en tu navegador en http://localhost:5173
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
 
-```sh
-npm run test:unit
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
