@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { ref } from 'vue'
 import { useDestinationStore } from '@/stores/destinationStore'
 import type { DestinationQueryParameters } from '@/core/destination'
@@ -6,31 +6,28 @@ import type { DestinationQueryParameters } from '@/core/destination'
 const destinationStore = useDestinationStore()
 const emit = defineEmits(['no-results'])
 
-// Opciones disponibles
-const seasons = ['Verano', 'Primavera', 'Otoño', 'Invierno', 'Todas las estaciones']
-const categories = ['Playa', 'Montaña', 'Ciudad', 'Aventura', 'Cultural', 'Gastronomía', 'Ocio']
+const seasons = ['Verano', 'Primavera', 'Otono', 'Invierno', 'Todas las estaciones']
+const categories = ['Playa', 'Montana', 'Ciudad', 'Aventura', 'Cultural', 'Gastronomia', 'Ocio']
 const popularityOptions = [
-  { title: 'Alta', value: true },
-  { title: 'Normal', value: false },
+  { title: 'Alta', value: 'true' },
+  { title: 'Normal', value: 'false' },
 ]
 
-// Estado de los filtros
 const filters = ref<{
   cityName: string
-  season?: string
-  category?: string
-  isPopular?: boolean | null
+  season: string
+  category: string
+  isPopular: string
 }>({
   cityName: '',
-  season: undefined,
-  category: undefined,
-  isPopular: null,
+  season: '',
+  category: '',
+  isPopular: '',
 })
 
 const applyFilters = async () => {
   const appliedFilters: DestinationQueryParameters = {}
 
-  // Verificar que cityName sea una cadena antes de llamar a trim
   if (typeof filters.value.cityName === 'string' && filters.value.cityName.trim() !== '') {
     appliedFilters.cityName = filters.value.cityName.trim()
   }
@@ -40,8 +37,8 @@ const applyFilters = async () => {
   if (filters.value.category) {
     appliedFilters.category = filters.value.category
   }
-  if (typeof filters.value.isPopular === 'boolean') {
-    appliedFilters.isPopular = filters.value.isPopular
+  if (filters.value.isPopular !== '') {
+    appliedFilters.isPopular = filters.value.isPopular === 'true'
   }
 
   const result = await destinationStore.fetchDestinations(appliedFilters)
@@ -53,122 +50,64 @@ const applyFilters = async () => {
 </script>
 
 <template>
-  <v-card class="pa-3 mb-3 filter-card">
-    <h3 class="filter-title">Filtrar Destinos</h3>
+  <div class="bg-dark-card rounded-2xl p-6 md:p-8 mb-10 shadow-lg">
+    <h3 class="text-xl font-bold text-primary text-center mb-6">Filtrar Destinos</h3>
 
-    <v-form @submit.prevent="applyFilters">
-      <v-row class="filter-row" justify="center" align="center" wrap>
-        <v-col cols="12" sm="6" md="3" class="d-flex justify-center">
-          <v-text-field
-            v-model="filters.cityName"
-            label="Nombre de destino"
-            prepend-icon="mdi-city"
-            clearable
-          ></v-text-field>
-        </v-col>
+    <form @submit.prevent="applyFilters" class="space-y-4 md:space-y-0 md:flex md:flex-wrap md:items-end md:gap-4 md:justify-center">
+      <!-- City name -->
+      <div class="w-full md:w-52">
+        <label class="block text-xs font-medium text-gray-300 mb-1.5">Destino</label>
+        <input
+          v-model="filters.cityName"
+          type="text"
+          placeholder="Nombre..."
+          class="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all text-sm"
+        />
+      </div>
 
-        <v-col cols="12" sm="6" md="3" class="d-flex justify-center">
-          <v-select
-            v-model="filters.season"
-            :items="seasons"
-            label="Estación"
-            prepend-icon="mdi-weather-partly-cloudy"
-            clearable
-          ></v-select>
-        </v-col>
+      <!-- Season -->
+      <div class="w-full md:w-48">
+        <label class="block text-xs font-medium text-gray-300 mb-1.5">Estacion</label>
+        <select
+          v-model="filters.season"
+          class="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-xl text-white focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all text-sm appearance-none cursor-pointer"
+        >
+          <option value="" class="bg-dark-card">Todas</option>
+          <option v-for="s in seasons" :key="s" :value="s" class="bg-dark-card">{{ s }}</option>
+        </select>
+      </div>
 
-        <v-col cols="12" sm="6" md="3" class="d-flex justify-center">
-          <v-select
-            v-model="filters.isPopular"
-            :items="popularityOptions"
-            item-title="title"
-            item-value="value"
-            label="Popularidad"
-            prepend-icon="mdi-fire"
-            clearable
-          ></v-select>
-        </v-col>
+      <!-- Popularity -->
+      <div class="w-full md:w-48">
+        <label class="block text-xs font-medium text-gray-300 mb-1.5">Popularidad</label>
+        <select
+          v-model="filters.isPopular"
+          class="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-xl text-white focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all text-sm appearance-none cursor-pointer"
+        >
+          <option value="" class="bg-dark-card">Todas</option>
+          <option v-for="p in popularityOptions" :key="p.title" :value="p.value" class="bg-dark-card">{{ p.title }}</option>
+        </select>
+      </div>
 
-        <v-col cols="12" sm="6" md="3" class="d-flex justify-center">
-          <v-select
-            v-model="filters.category"
-            :items="categories"
-            label="Categoría"
-            prepend-icon="mdi-tag-outline"
-            clearable
-          ></v-select>
-        </v-col>
+      <!-- Category -->
+      <div class="w-full md:w-48">
+        <label class="block text-xs font-medium text-gray-300 mb-1.5">Categoria</label>
+        <select
+          v-model="filters.category"
+          class="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-xl text-white focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all text-sm appearance-none cursor-pointer"
+        >
+          <option value="" class="bg-dark-card">Todas</option>
+          <option v-for="c in categories" :key="c" :value="c" class="bg-dark-card">{{ c }}</option>
+        </select>
+      </div>
 
-        <v-col cols="12" sm="12" md="3" class="d-flex justify-center">
-          <v-btn color="#4a90e2" type="submit" class="filter-button"> Filtrar </v-btn>
-        </v-col>
-      </v-row>
-    </v-form>
-  </v-card>
+      <!-- Button -->
+      <button
+        type="submit"
+        class="w-full md:w-auto px-8 py-2.5 bg-gradient-to-r from-primary to-accent text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-primary/30 active:scale-95 transition-all duration-200 text-sm"
+      >
+        Filtrar
+      </button>
+    </form>
+  </div>
 </template>
-
-<style scoped>
-.filter-card {
-  background-color: #2b3c56;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  color: #ffffff;
-  width: 100%;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-items: center;
-  padding: 20px;
-}
-
-.filter-title {
-  color: #4a90e2;
-  font-size: 32px;
-  font-weight: bold;
-  margin-bottom: 20px;
-  margin-top: 20px;
-  text-align: center;
-}
-
-.filter-row {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.filter-button-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-top: 4px;
-}
-
-.filter-button {
-  font-size: 16px;
-  font-weight: bold;
-  color: white;
-  background-color: #05a4c8;
-  transition:
-    background 0.3s,
-    box-shadow 0.3s;
-  width: 100%;
-  max-width: 280px;
-  margin-bottom: 30px;
-}
-
-.filter-button:hover {
-  background: linear-gradient(135deg, #0d6fe5, #05a4c8);
-  box-shadow: 0 4px 12px rgba(5, 164, 200, 0.3);
-}
-
-.mb-3 {
-  margin-bottom: 50px !important;
-}
-
-.v-text-field,
-.v-select {
-  min-width: 220px;
-  max-width: 280px;
-}
-</style>

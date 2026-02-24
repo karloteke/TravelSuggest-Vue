@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { ref } from 'vue'
 import { useSuggestionStore } from '@/stores/suggestionStore'
 import type { SuggestionQueryParameters } from '@/core/suggestion'
@@ -6,30 +6,29 @@ import type { SuggestionQueryParameters } from '@/core/suggestion'
 const suggestionStore = useSuggestionStore()
 const emit = defineEmits(['no-results'])
 
-// Opciones de filtros
-const ratings = [1, 2, 3, 4, 5] // Puntuación de 1 a 5
-const priceRange = ref<{ min: number | null; max: number | null }>({ min: null, max: null })
+const ratings = [1, 2, 3, 4, 5]
+
 const filters = ref<{
-  rating?: number
-  minPrice?: number | null
-  maxPrice?: number | null
+  rating: string
+  minPrice: string
+  maxPrice: string
 }>({
-  rating: undefined,
-  minPrice: null,
-  maxPrice: null,
+  rating: '',
+  minPrice: '',
+  maxPrice: '',
 })
 
 const applyFilters = async () => {
   const appliedFilters: SuggestionQueryParameters = {}
 
-  if (filters.value.minPrice !== null) {
-    appliedFilters.minPrice = filters.value.minPrice
+  if (filters.value.minPrice !== '') {
+    appliedFilters.minPrice = Number(filters.value.minPrice)
   }
-  if (filters.value.maxPrice !== null) {
-    appliedFilters.maxPrice = filters.value.maxPrice
+  if (filters.value.maxPrice !== '') {
+    appliedFilters.maxPrice = Number(filters.value.maxPrice)
   }
-  if (filters.value.rating) {
-    appliedFilters.rating = filters.value.rating
+  if (filters.value.rating !== '') {
+    appliedFilters.rating = Number(filters.value.rating)
   }
 
   const result = await suggestionStore.fetchSuggestions(appliedFilters)
@@ -41,119 +40,51 @@ const applyFilters = async () => {
 </script>
 
 <template>
-  <v-card class="pa-3 mb-3 filter-card">
-    <h3 class="filter-title">Filtrar Experiencias</h3>
+  <div class="bg-dark-card rounded-2xl p-6 md:p-8 mb-10 shadow-lg">
+    <h3 class="text-xl font-bold text-primary text-center mb-6">Filtrar Experiencias</h3>
 
-    <v-form @submit.prevent="applyFilters">
-      <v-row class="filter-row" justify="center" align="center">
-        <v-col cols="12" sm="4" md="3" class="d-flex justify-center">
-          <v-text-field
-            v-model="filters.minPrice"
-            :items="priceRange"
-            label="Precio Mínimo"
-            type="number"
-            prepend-icon="mdi-currency-eur"
-            clearable
-          ></v-text-field>
-        </v-col>
-        <v-col cols="12" sm="4" md="3" class="d-flex justify-center">
-          <v-text-field
-            v-model="filters.maxPrice"
-            :items="priceRange"
-            label="Precio Máximo"
-            type="number"
-            prepend-icon="mdi-currency-eur"
-            clearable
-          ></v-text-field>
-        </v-col>
+    <form @submit.prevent="applyFilters" class="space-y-4 md:space-y-0 md:flex md:flex-wrap md:items-end md:gap-4 md:justify-center">
+      <!-- Min Price -->
+      <div class="w-full md:w-48">
+        <label class="block text-xs font-medium text-gray-300 mb-1.5">Precio Minimo</label>
+        <input
+          v-model="filters.minPrice"
+          type="number"
+          placeholder="0"
+          class="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all text-sm"
+        />
+      </div>
 
-        <v-col cols="12" sm="4" md="3" class="d-flex justify-center">
-          <v-select
-            v-model="filters.rating"
-            :items="ratings"
-            label="Puntuación"
-            prepend-icon="mdi-star"
-            clearable
-          ></v-select>
-        </v-col>
+      <!-- Max Price -->
+      <div class="w-full md:w-48">
+        <label class="block text-xs font-medium text-gray-300 mb-1.5">Precio Maximo</label>
+        <input
+          v-model="filters.maxPrice"
+          type="number"
+          placeholder="1000"
+          class="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all text-sm"
+        />
+      </div>
 
-        <!-- Botón para aplicar filtros -->
-        <v-col cols="12" sm="4" md="3" class="d-flex justify-center">
-          <v-btn color="#4a90e2" type="submit" class="filter-button"> Filtrar </v-btn>
-        </v-col>
-      </v-row>
-    </v-form>
-  </v-card>
+      <!-- Rating -->
+      <div class="w-full md:w-48">
+        <label class="block text-xs font-medium text-gray-300 mb-1.5">Puntuacion</label>
+        <select
+          v-model="filters.rating"
+          class="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-xl text-white focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all text-sm appearance-none cursor-pointer"
+        >
+          <option value="" class="bg-dark-card">Todas</option>
+          <option v-for="r in ratings" :key="r" :value="r" class="bg-dark-card">{{ r }} estrella{{ r > 1 ? 's' : '' }}</option>
+        </select>
+      </div>
+
+      <!-- Button -->
+      <button
+        type="submit"
+        class="w-full md:w-auto px-8 py-2.5 bg-gradient-to-r from-primary to-accent text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-primary/30 active:scale-95 transition-all duration-200 text-sm"
+      >
+        Filtrar
+      </button>
+    </form>
+  </div>
 </template>
-
-<style scoped>
-.filter-card {
-  background-color: #2b3c56;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  color: #ffffff;
-  max-width: 97%;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-items: center;
-  padding: 20px;
-}
-
-.filter-title {
-  color: #4a90e2;
-  font-size: 32px;
-  font-weight: bold;
-  margin-bottom: 20px;
-  margin-top: 20px;
-  text-align: center;
-}
-
-.filter-row {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.filter-button-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-top: 4px;
-}
-
-.filter-button {
-  font-size: 16px;
-  font-weight: bold;
-  color: white;
-  background-color: #05a4c8;
-  transition:
-    background 0.3s,
-    box-shadow 0.3s;
-  width: 100%;
-  max-width: 280px;
-}
-
-.filter-button:hover {
-  background: linear-gradient(135deg, #0d6fe5, #05a4c8);
-  box-shadow: 0 4px 12px rgba(5, 164, 200, 0.3);
-}
-
-.mb-3 {
-  margin-bottom: 50px !important;
-}
-
-.v-text-field,
-.v-select {
-  min-width: 220px;
-  max-width: 280px;
-}
-
-@media (max-width: 950px) {
-  .filter-button {
-    margin-bottom: 20px;
-  }
-}
-</style>

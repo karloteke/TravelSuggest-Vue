@@ -1,12 +1,10 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { ref } from 'vue'
 import { useDestinationStore } from '@/stores/destinationStore'
-import type { VForm } from 'vuetify/components'
 
-const formRef = ref<VForm | null>(null) // Referencia al formulario
 const successAlert = ref(false)
 const { addDestination } = useDestinationStore()
-
+const errors = ref<Record<string, string>>({})
 
 const destinationData = ref({
   cityName: '',
@@ -16,18 +14,13 @@ const destinationData = ref({
   category: '',
 })
 
-// Variable para la imagen en Base64
 const imageBase64 = ref<string | null>(null)
-
-// Referencia al input de archivo
 const fileInput = ref<HTMLInputElement | null>(null)
 
-// Función para disparar el input de archivo
 const triggerFileInput = () => {
   fileInput.value?.click()
 }
 
-// Manejo del cambio de archivo
 const onFileChange = (event: Event) => {
   const file = (event.target as HTMLInputElement).files?.[0]
   if (file) {
@@ -35,40 +28,26 @@ const onFileChange = (event: Event) => {
       alert('Por favor, selecciona un archivo de imagen.')
       return
     }
-
     const reader = new FileReader()
     reader.readAsDataURL(file)
     reader.onload = () => {
       imageBase64.value = reader.result as string
     }
-    reader.onerror = (error) => {
-      console.error('Error al leer el archivo:', error)
-    }
   }
 }
 
-// Reglas de validación
-const rules = {
-  required: (value: string) => !!value || 'Este campo es obligatorio.',
+const validate = () => {
+  errors.value = {}
+  if (!destinationData.value.cityName) errors.value.cityName = 'Este campo es obligatorio.'
+  if (!destinationData.value.description) errors.value.description = 'Este campo es obligatorio.'
+  if (!destinationData.value.season) errors.value.season = 'Este campo es obligatorio.'
+  if (!destinationData.value.category) errors.value.category = 'Este campo es obligatorio.'
+  return Object.keys(errors.value).length === 0
 }
-
-const cityNameRules = [rules.required]
-const descriptionRules = [rules.required]
-const seasonRules = [rules.required]
-const categoryRules = [rules.required]
 
 const handleSubmit = async () => {
-  const validationResult = formRef.value?.validate()
+  if (!validate()) return
 
-  // Validar el formulario y capturar el resultado
-  const isValid =
-    typeof validationResult === 'object' ? (await validationResult).valid : validationResult
-
-  if (!isValid) {
-    return
-  }
-
-  // Crear el nuevo destino
   const newDestination = {
     id: 0,
     cityName: destinationData.value.cityName,
@@ -81,22 +60,8 @@ const handleSubmit = async () => {
 
   await addDestination(newDestination)
 
-  // Limpiar los campos después de agregar el destino
-  destinationData.value = {
-    cityName: '',
-    description: '',
-    season: '',
-    isPopular: false,
-    category: '',
-  }
-
-  // Resetear el formulario
-  formRef.value?.reset()
-
-  // Mostrar alerta de éxito
-  successAlert.value = true
-
-  // Mostrar alerta de éxito
+  destinationData.value = { cityName: '', description: '', season: '', isPopular: false, category: '' }
+  imageBase64.value = null
   successAlert.value = true
 
   setTimeout(() => {
@@ -107,174 +72,91 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <div class="container-form">
-    <v-sheet class="mx-auto form-container" width="450">
-      <h2 class="form-title">Crear Nuevo Destino</h2>
-      <v-form ref="formRef" @submit.prevent="handleSubmit">
-        <v-text-field
-          v-model="destinationData.cityName"
-          placeholder="Nombre de la ciudad"
-          prepend-icon="mdi-city"
-          required
-          outlined
-          :rules="cityNameRules"
-        ></v-text-field>
+  <div class="min-h-[calc(100vh-5rem)] flex items-center justify-center px-4 py-12 bg-gradient-to-br from-gray-50 to-blue-50">
+    <div class="w-full max-w-lg">
+      <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
+        <h2 class="text-2xl font-bold text-center text-primary mb-8">Crear Nuevo Destino</h2>
 
-        <v-textarea
-          v-model="destinationData.description"
-          placeholder="Descripción"
-          prepend-icon="mdi-text-box-outline"
-          required
-          outlined
-          rows="3"
-          :rules="descriptionRules"
-        ></v-textarea>
+        <form @submit.prevent="handleSubmit" class="space-y-5">
+          <!-- City Name -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">Nombre de la ciudad</label>
+            <input v-model="destinationData.cityName" type="text" placeholder="Ej: Barcelona"
+              class="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all text-gray-800 bg-gray-50/50"
+              :class="errors.cityName ? 'border-red-300' : 'border-gray-200'" />
+            <p v-if="errors.cityName" class="mt-1 text-xs text-red-500">{{ errors.cityName }}</p>
+          </div>
 
-        <v-select
-          v-model="destinationData.season"
-          :items="['Verano', 'Primavera', 'Otoño', 'Invierno', 'Todas las estaciones']"
-          label="Mejor estación"
-          prepend-icon="mdi-weather-partly-cloudy"
-          required
-          outlined
-          :rules="seasonRules"
-        ></v-select>
+          <!-- Description -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">Descripcion</label>
+            <textarea v-model="destinationData.description" rows="3" placeholder="Describe el destino..."
+              class="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all text-gray-800 bg-gray-50/50 resize-none"
+              :class="errors.description ? 'border-red-300' : 'border-gray-200'"></textarea>
+            <p v-if="errors.description" class="mt-1 text-xs text-red-500">{{ errors.description }}</p>
+          </div>
 
-        <v-select
-          v-model="destinationData.category"
-          :items="['Playa', 'Montaña', 'Ciudad', 'Aventura', 'Cultural', 'Gastronomía', 'Ocio']"
-          label="Categoría"
-          prepend-icon="mdi-tag-outline"
-          required
-          outlined
-          :rules="categoryRules"
-        ></v-select>
+          <!-- Season -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">Mejor estacion</label>
+            <select v-model="destinationData.season"
+              class="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all text-gray-800 bg-gray-50/50 appearance-none cursor-pointer"
+              :class="errors.season ? 'border-red-300' : 'border-gray-200'">
+              <option value="">Seleccionar...</option>
+              <option v-for="s in ['Verano', 'Primavera', 'Otono', 'Invierno', 'Todas las estaciones']" :key="s" :value="s">{{ s }}</option>
+            </select>
+            <p v-if="errors.season" class="mt-1 text-xs text-red-500">{{ errors.season }}</p>
+          </div>
 
-        <v-checkbox
-          v-model="destinationData.isPopular"
-          label="¿Es popular?"
-          prepend-icon="mdi-fire"
-          class="popular-checkbox"
-        ></v-checkbox>
+          <!-- Category -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">Categoria</label>
+            <select v-model="destinationData.category"
+              class="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all text-gray-800 bg-gray-50/50 appearance-none cursor-pointer"
+              :class="errors.category ? 'border-red-300' : 'border-gray-200'">
+              <option value="">Seleccionar...</option>
+              <option v-for="c in ['Playa', 'Montana', 'Ciudad', 'Aventura', 'Cultural', 'Gastronomia', 'Ocio']" :key="c" :value="c">{{ c }}</option>
+            </select>
+            <p v-if="errors.category" class="mt-1 text-xs text-red-500">{{ errors.category }}</p>
+          </div>
 
-        <div class="image-upload-container">
-          <v-icon
-            color="primary"
-            large
-            class="clickable-icon"
-            @click="triggerFileInput"
-            aria-label="Subir Imagen"
-          >
-            mdi-camera-plus
-          </v-icon>
-          <input
-            ref="fileInput"
-            type="file"
-            accept="image/*"
-            style="display: none"
-            @change="onFileChange"
-          />
-        </div>
+          <!-- Popular checkbox -->
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input v-model="destinationData.isPopular" type="checkbox" class="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary/30" />
+            <span class="text-sm font-medium text-gray-700">Es popular?</span>
+          </label>
 
-        <!-- Vista previa de la imagen -->
-        <v-img
-          v-if="imageBase64"
-          :src="imageBase64"
-          class="image-preview"
-          max-height="200"
-          contain
-        ></v-img>
+          <!-- Image upload -->
+          <div class="flex flex-col items-center gap-3">
+            <button type="button" @click="triggerFileInput"
+              class="flex items-center gap-2 px-4 py-2 text-primary border border-primary/30 rounded-xl hover:bg-primary/5 transition-colors text-sm font-medium">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
+              </svg>
+              Subir imagen
+            </button>
+            <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="onFileChange" />
+            <img v-if="imageBase64" :src="imageBase64" class="max-h-48 rounded-xl object-contain" alt="Vista previa" />
+          </div>
 
-        <v-btn class="submit-button" type="submit" block color="#05a4c8">Crear Destino</v-btn>
-      </v-form>
-    </v-sheet>
-
-    <!-- Alerta de éxito -->
-    <v-alert v-model="successAlert" type="success" dismissible class="success-alert">
-      Destino creado correctamente.
-    </v-alert>
+          <!-- Submit -->
+          <button type="submit"
+            class="w-full py-3 bg-gradient-to-r from-primary to-accent text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-primary/25 active:scale-[0.98] transition-all duration-200">
+            Crear Destino
+          </button>
+        </form>
+      </div>
+    </div>
   </div>
+
+  <!-- Success alert -->
+  <transition enter-active-class="transition duration-300 ease-out" enter-from-class="opacity-0 translate-x-4" enter-to-class="opacity-100 translate-x-0" leave-active-class="transition duration-200 ease-in" leave-from-class="opacity-100" leave-to-class="opacity-0 translate-x-4">
+    <div v-if="successAlert" class="fixed top-24 right-5 z-50 flex items-center gap-3 px-5 py-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl shadow-lg max-w-sm">
+      <svg class="w-5 h-5 text-emerald-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+      </svg>
+      <p class="text-sm font-medium">Destino creado correctamente.</p>
+    </div>
+  </transition>
 </template>
-
-<style scoped>
-.container-form {
-  padding: 40px;
-  margin-top: 80px;
-  display: flex;
-  justify-content: center;
-  font-family: 'Open Sans', sans-serif;
-}
-
-.form-title {
-  font-size: 30px;
-  font-weight: bold;
-  color: #4a90e2;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.form-container {
-  padding: 30px;
-  border-radius: 12px;
-  background-color: rgba(255, 255, 255, 0.98);
-  box-shadow: 0 6px 18px rgba(90, 103, 216, 0.3);
-}
-
-.image-upload-container {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  margin-bottom: 40px;
-  cursor: pointer;
-}
-
-.clickable-icon {
-  cursor: pointer;
-  transition: transform 0.2s ease-in-out;
-  font-size: 35px;
-}
-
-.clickable-icon:hover {
-  transform: scale(1.2);
-}
-
-.image-upload-text {
-  margin-left: 10px;
-  color: #4a90e2;
-  font-weight: bold;
-  font-size: 16px;
-}
-
-.image-preview {
-  margin-bottom: 40px;
-  border-radius: 8px;
-}
-
-.submit-button {
-  margin-top: 20px;
-  font-size: 16px;
-  font-weight: bold;
-  color: white;
-  background-color: #05a4c8;
-  transition:
-    background 0.3s,
-    box-shadow 0.3s;
-}
-
-.submit-button:hover {
-  background: linear-gradient(135deg, #0d6fe5, #05a4c8);
-  box-shadow: 0 4px 12px rgba(5, 164, 200, 0.3);
-}
-
-.success-alert {
-  position: fixed;
-  top: 85px;
-  right: 20px;
-  width: 300px;
-  z-index: 1000;
-}
-
-.popular-checkbox .v-input--selection-controls__input {
-  font-size: 18px;
-}
-</style>

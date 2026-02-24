@@ -1,49 +1,20 @@
 <script setup lang="ts">
-import FooterComponent from '@/components/FooterComponent.vue';
-import HeaderComponent from '@/components/HeaderComponent.vue';
+import FooterComponent from '@/components/FooterComponent.vue'
+import HeaderComponent from '@/components/HeaderComponent.vue'
 </script>
 
 <template>
- <v-app class="app-layout">
-    <header>
-      <HeaderComponent></HeaderComponent>
+  <div class="flex flex-col min-h-screen bg-gray-50">
+    <header class="flex-shrink-0">
+      <HeaderComponent />
     </header>
 
-    <main class="main-content">
+    <main class="flex-1">
       <RouterView />
     </main>
 
-    <footer>
-      <FooterComponent></FooterComponent>
+    <footer class="flex-shrink-0">
+      <FooterComponent />
     </footer>
-  </v-app>
+  </div>
 </template>
-
-<style scoped>
-body, html {
-  margin: 0; 
-  padding: 0; 
-  overflow-x: hidden; 
-}
-
-.app-layout {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh; 
-  box-sizing: border-box; 
-}
-
-header {
-  flex: 0 0 auto; 
-}
-
-.main-content {
-  flex: 1; 
-  overflow: auto; 
-}
-
-footer {
-  flex: 0 0 auto;
-}
-
-</style>

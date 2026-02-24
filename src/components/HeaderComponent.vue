@@ -1,7 +1,7 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { useLoginStore } from '@/stores/loginStore'
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useUserStore } from '@/stores/userStore'
 
 const router = useRouter()
@@ -10,49 +10,56 @@ const role = computed(() => getRole())
 const currentUserId = computed(() => getUserId())
 const userStore = useUserStore()
 
+const menuOpen = ref(false)
 
-// Obtener el usuario actual
 const currentUser = computed(() => {
   const userId = currentUserId.value
   return userStore.users.find(user => user.id === userId)
 })
 
-// Computed property para obtener los puntos del usuario
 const userPoints = computed(() => currentUser.value?.points || 0)
 
-// Al montar el componente, obtener los datos del usuario actual
 onMounted(async () => {
   await userStore.fetchCurrentUser()
 })
 
 const navigateTo = (route: string | Record<string, unknown>) => {
+  menuOpen.value = false
   router.push(route)
+}
+
+const handleLogout = () => {
+  menuOpen.value = false
+  logout()
 }
 
 interface MenuItem {
   text: string
-  route: string | Record<string, unknown> // Puede ser una cadena o un objeto de ruta
+  route: string | Record<string, unknown>
   icon: string
 }
 
 const commonMenuItems: MenuItem[] = [
-  { text: 'Inicio', route: '/', icon: 'mdi-home' },
-  { text: 'Destinos', route: '/destinations', icon: 'mdi-map-marker' },
-  { text: 'Experiencias', route: '/suggestions', icon: 'mdi-lightbulb' },
-  { text: 'Consejos para un Viaje Responsable', route: '/tips', icon: 'mdi-earth' },
+  { text: 'Inicio', route: '/', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4' },
+  { text: 'Destinos', route: '/destinations', icon: 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z' },
+  { text: 'Experiencias', route: '/suggestions', icon: 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z' },
+  { text: 'Consejos', route: '/tips', icon: 'M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
 ]
 
 const authMenuItems: MenuItem[] = [
-  { text: 'Registrarse', route: '/add-user', icon: 'mdi-account-plus' },
-  { text: 'Iniciar sesión', route: '/login', icon: 'mdi-login' },
+  { text: 'Registrarse', route: '/add-user', icon: 'M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z' },
+  { text: 'Iniciar sesion', route: '/login', icon: 'M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1' },
 ]
 
-const adminMenuItems: MenuItem[] = [{ text: 'Usuarios', route: 'users', icon: 'mdi-account-group' }]
+const adminMenuItems: MenuItem[] = [
+  { text: 'Usuarios', route: 'users', icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z' },
+]
+
 const userMenuItems = computed(() => [
   {
     text: 'Editar Perfil',
     route: { name: 'editUser', params: { userId: currentUserId.value } },
-    icon: 'mdi-account-edit',
+    icon: 'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z',
   },
 ])
 
@@ -64,81 +71,109 @@ const menuItems = computed(() => {
       return [...commonMenuItems, ...userMenuItems.value]
     }
   }
-  // Usuarios no autenticados
   return [...commonMenuItems, ...authMenuItems]
 })
 </script>
 
 <template>
-  <v-app-bar color="white" height="100px">
-    <v-toolbar-title class="ml-10">
-      <img src="@/assets/logo.png" class="design-logo" alt="Logo" />
-    </v-toolbar-title>
+  <!-- Navbar -->
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        <!-- Logo -->
+        <router-link to="/" class="flex-shrink-0">
+          <img src="@/assets/logo.png" class="h-14 w-auto transition-transform hover:scale-105" alt="TravelSuggest" />
+        </router-link>
 
-    <v-spacer></v-spacer>
+        <!-- Desktop nav links -->
+        <div class="hidden md:flex items-center gap-1">
+          <router-link
+            v-for="(item, index) in menuItems"
+            :key="index"
+            :to="item.route as string"
+            class="px-4 py-2 rounded-xl text-sm font-medium text-gray-600 hover:text-primary hover:bg-primary/5 transition-all duration-200"
+            active-class="!text-primary !bg-primary/10"
+          >
+            {{ item.text }}
+          </router-link>
 
-    <v-menu offset-y :close-on-content-click="true" ref="menuRef">
-      <template #activator="{ props }">
-        <v-btn icon v-bind="props" class="menu-button mr-10">
-          <v-icon style="font-size: 45px; color: rgb(79 121 184)">mdi-menu</v-icon>
-        </v-btn>
-      </template>
-      <v-list style="min-width: 200px; background-color: #2b3c56">
-        <v-list-item
-          v-for="(item, index) in menuItems"
-          :key="index"
-          @click="item.route ? navigateTo(item.route) : null"
-          class="menu-item"
+          <template v-if="isLoggedIn()">
+            <div class="flex items-center gap-2 ml-2 px-3 py-1.5 bg-amber-50 rounded-full border border-amber-200">
+              <svg class="w-4 h-4 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+              </svg>
+              <span class="text-sm font-semibold text-amber-700">{{ userPoints }} pts</span>
+            </div>
+            <button
+              @click="handleLogout"
+              class="ml-2 px-4 py-2 rounded-xl text-sm font-medium text-red-500 hover:text-red-700 hover:bg-red-50 transition-all duration-200"
+            >
+              Cerrar sesion
+            </button>
+          </template>
+        </div>
+
+        <!-- Mobile menu button -->
+        <button
+          @click="menuOpen = !menuOpen"
+          class="md:hidden p-2 rounded-xl text-gray-500 hover:text-primary hover:bg-primary/5 transition-all"
         >
-          <div style="display: flex; align-items: center; color: white">
-            <v-icon style="color: white; margin-right: 10px">{{ item.icon }}</v-icon>
-            <span style="color: white">{{ item.text }}</span>
-          </div>
-        </v-list-item>
+          <svg v-if="!menuOpen" class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+          <svg v-else class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+    </div>
 
-        <v-list-item v-if="isLoggedIn()" class="static-item">
-          <div style="display: flex; align-items: center; color: white">
-            <v-icon style="color: white; margin-right: 10px">mdi-star-outline</v-icon>
-              <span style="color: white">Mis Puntos: {{ userPoints }} </span>
-          </div>
-        </v-list-item>
+    <!-- Mobile menu -->
+    <transition
+      enter-active-class="transition duration-200 ease-out"
+      enter-from-class="opacity-0 -translate-y-2"
+      enter-to-class="opacity-100 translate-y-0"
+      leave-active-class="transition duration-150 ease-in"
+      leave-from-class="opacity-100 translate-y-0"
+      leave-to-class="opacity-0 -translate-y-2"
+    >
+      <div v-if="menuOpen" class="md:hidden bg-white border-t border-gray-100 shadow-lg">
+        <div class="px-4 py-3 space-y-1">
+          <a
+            v-for="(item, index) in menuItems"
+            :key="index"
+            @click="navigateTo(item.route)"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:text-primary hover:bg-primary/5 transition-all cursor-pointer"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="item.icon"/>
+            </svg>
+            <span class="font-medium">{{ item.text }}</span>
+          </a>
 
-        <!-- Separador y "Cerrar sesión" si el usuario está logueado -->
-        <v-divider v-if="isLoggedIn()"></v-divider>
-        <v-list-item v-if="isLoggedIn()" @click="logout">
-          <v-list-item-title><v-icon left>mdi-logout</v-icon>Cerrar sesión</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-menu>
-  </v-app-bar>
+          <template v-if="isLoggedIn()">
+            <div class="flex items-center gap-2 px-4 py-3">
+              <svg class="w-5 h-5 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+              </svg>
+              <span class="text-sm font-semibold text-amber-700">Mis Puntos: {{ userPoints }}</span>
+            </div>
+            <hr class="border-gray-200 my-1">
+            <a
+              @click="handleLogout"
+              class="flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 transition-all cursor-pointer"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+              </svg>
+              <span class="font-medium">Cerrar sesion</span>
+            </a>
+          </template>
+        </div>
+      </div>
+    </transition>
+  </nav>
+
+  <!-- Spacer for fixed navbar -->
+  <div class="h-20"></div>
 </template>
-
-<style scoped>
-.design-logo {
-  max-height: 70px;
-  display: flex;
-  align-items: center;
-  margin-left: 10px;
-}
-
-.v-toolbar-title {
-  margin: 0px;
-}
-
-.menu-item {
-  display: flex;
-  align-items: center;
-  padding: 18px 0;
-}
-
-.v-list-item {
-  color: white;
-}
-
-@media (max-width: 600px) {
-  .design-logo {
-    height: 60px;
-    margin-left: 0px;
-  }
-}
-</style>

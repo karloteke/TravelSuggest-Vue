@@ -1,14 +1,13 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { useDestinationStore } from '@/stores/destinationStore'
 import { useRouter } from 'vue-router'
 import { ref, computed, onMounted } from 'vue'
 import DestinationFiltersComponent from '@/components/DestinationFiltersComponent.vue'
 import { useLoginStore } from '@/stores/loginStore'
-import { useUserStore } from '@/stores/userStore'; 
-
+import { useUserStore } from '@/stores/userStore'
 
 const loginStore = useLoginStore()
-const userStore = useUserStore();
+const userStore = useUserStore()
 const isLoggedIn = computed(() => loginStore.isLoggedIn())
 const currentUserId = computed(() => loginStore.getUserId())
 const role = computed(() => loginStore.getRole())
@@ -18,9 +17,9 @@ const router = useRouter()
 const pageSize = 6
 const currentPage = ref(1)
 
-const deleteConfirmDialog = ref(false) // Estado del modal de confirmación de eliminación
-const destinationToDelete = ref<number | null>(null) // ID del destino a eliminar
-const showNoResultsAlert = ref(false) // Controla la visibilidad del mensaje de filtros no encontrados
+const deleteConfirmDialog = ref(false)
+const destinationToDelete = ref<number | null>(null)
+const showNoResultsAlert = ref(false)
 
 const handleAddDestination = () => {
   router.push('/add-destination')
@@ -38,23 +37,20 @@ const addSuggestion = (destinationId: number) => {
   router.push({ name: 'AddSuggestion', params: { destinationId } })
 }
 
-// Función para abrir el modal de confirmación de eliminación
 const openDeleteConfirmDialog = (destinationId: number) => {
   destinationToDelete.value = destinationId
   deleteConfirmDialog.value = true
 }
 
-// Función para confirmar e eliminar destino
 const confirmDeleteDestination = async () => {
   if (destinationToDelete.value !== null) {
-    await deleteDestination(destinationToDelete.value) 
-    await fetchDestinations() // Actualiza la lista de destinos
-    await userStore.fetchCurrentUser() // Actualiza los puntos del usuario
+    await deleteDestination(destinationToDelete.value)
+    await fetchDestinations()
+    await userStore.fetchCurrentUser()
     deleteConfirmDialog.value = false
     destinationToDelete.value = null
   }
 }
-
 
 const totalPages = computed(() => Math.ceil(destinations.length / pageSize))
 
@@ -68,52 +64,34 @@ const changePage = (page: number) => {
   currentPage.value = page
 }
 
-// Iconos según estación del año
-const getSeasonIcon = (season: string) => {
+const getSeasonEmoji = (season: string) => {
   switch (season) {
-    case 'Verano':
-      return 'mdi-weather-sunny'
-    case 'Primavera':
-      return 'mdi-flower'
-    case 'Otoño':
-      return 'mdi-leaf-maple'
-    case 'Invierno':
-      return 'mdi-snowflake'
-    case 'Todas las estaciones del año':
-      return 'mdi-earth'
-    default:
-      return 'mdi-calendar'
+    case 'Verano': return '☀️'
+    case 'Primavera': return '🌸'
+    case 'Otoño': return '🍂'
+    case 'Invierno': return '❄️'
+    case 'Todas las estaciones del año': return '🌍'
+    default: return '📅'
   }
 }
 
-// Iconos según categoría
-const getCategoryIcon = (category: string) => {
+const getCategoryEmoji = (category: string) => {
   switch (category) {
-    case 'Playa':
-      return 'mdi-beach'
-    case 'Montaña':
-      return 'mdi-terrain'
-    case 'Ciudad':
-      return 'mdi-city'
-    case 'Aventura':
-      return 'mdi-hiking'
-    case 'Cultural':
-      return 'mdi-drama-masks'
-    case 'Gastronomía':
-      return 'mdi-silverware-fork-knife'
-    case 'Ocio':
-      return 'mdi-party-popper'
-    default:
-      return 'mdi-tag-outline'
+    case 'Playa': return '🏖️'
+    case 'Montaña': return '⛰️'
+    case 'Ciudad': return '🏙️'
+    case 'Aventura': return '🥾'
+    case 'Cultural': return '🎭'
+    case 'Gastronomia': return '🍴'
+    case 'Ocio': return '🎉'
+    default: return '🏷️'
   }
 }
 
-// Cargar destinos al montar el componente
 onMounted(() => {
-  fetchDestinations() // Llamamos a fetchDestinations() para cargar los destinos inicialmente
+  fetchDestinations()
 })
 
-// Manejador del evento no-results
 const handleNoResults = () => {
   showNoResultsAlert.value = true
   setTimeout(() => {
@@ -123,308 +101,182 @@ const handleNoResults = () => {
 </script>
 
 <template>
-  <div class="container">
-    <div class="section-title-container">
-      <h1 class="section-title">
-        <strong>DESTINOS COMPARTIDOS POR LOS VIAJEROS DE TRAVELSUGGEST</strong>
-      </h1>
-    </div>
+  <div class="min-h-screen bg-gradient-to-b from-gray-50 to-blue-50/30 py-12 px-4">
+    <div class="max-w-7xl mx-auto">
+      <!-- Header -->
+      <div class="text-center mb-10">
+        <h1 class="text-3xl md:text-4xl font-bold text-primary font-serif mb-4">
+          DESTINOS COMPARTIDOS POR LOS VIAJEROS
+        </h1>
+        <p class="max-w-3xl mx-auto text-gray-600 leading-relaxed">
+          Explora los destinos recomendados por nuestra comunidad de viajeros. Descubre lugares unicos y
+          planifica tu proxima aventura de forma responsable. Tienes un destino en mente? Compartelo
+          con nosotros! Registrate ahora y gana puntos por cada contribucion.
+        </p>
+      </div>
 
-    <p class="description">
-      Explora los destinos recomendados por nuestra comunidad de viajeros. Descubre lugares únicos y
-      planifica tu próxima aventura de forma responsable. ¿Tienes un destino en mente? ¡Compártelo
-      con nosotros y ayuda a otros a descubrirlo! ¡Regístrate ahora! Como miembro registrado, podrás
-      compartir tus propios destinos y sugerencias, ayudando a otros viajeros a tener experiencias
-      inolvidables. Cada contribución que hagas te otorgará puntos, y estos puntos se acumulan para
-      desbloquear recompensas especiales, como descuentos, artículos de viaje, o incluso paquetes de
-      experiencias únicas.
-    </p>
+      <!-- Filters -->
+      <DestinationFiltersComponent @no-results="handleNoResults" />
 
-    <!-- Componente de Filtros -->
-    <DestinationFiltersComponent @no-results="handleNoResults" />
+      <!-- Add button -->
+      <div class="flex justify-start mb-8" v-if="isLoggedIn">
+        <button
+          @click="handleAddDestination"
+          class="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary to-accent text-white font-semibold rounded-full shadow-md hover:shadow-lg hover:shadow-primary/25 active:scale-95 transition-all duration-200"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+          </svg>
+          Anadir Destino
+        </button>
+      </div>
 
-    <div class="button-container">
-      <button class="floating-add-button" @click="handleAddDestination" v-if="isLoggedIn">
-        <v-icon>mdi-plus</v-icon> Añadir Destino
-      </button>
-    </div>
+      <!-- No results alert -->
+      <transition enter-active-class="transition duration-300 ease-out" enter-from-class="opacity-0 translate-x-4" enter-to-class="opacity-100 translate-x-0" leave-active-class="transition duration-200 ease-in" leave-from-class="opacity-100" leave-to-class="opacity-0 translate-x-4">
+        <div v-if="showNoResultsAlert" class="fixed top-24 right-5 z-50 flex items-center gap-3 px-5 py-4 bg-blue-50 border border-blue-200 text-blue-700 rounded-xl shadow-lg max-w-sm">
+          <svg class="w-5 h-5 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+          </svg>
+          <p class="text-sm font-medium">No se encontraron destinos que coincidan con los filtros aplicados.</p>
+        </div>
+      </transition>
 
-    <v-alert
-      v-if="showNoResultsAlert"
-      type="info"
-      class="no-results-alert"
-      elevation="2"
-      dismissible
-    >
-      No se encontraron destinos que coincidan con los filtros aplicados.
-    </v-alert>
+      <!-- Cards Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div
+          v-for="destination in paginatedDestinations"
+          :key="destination.id"
+          class="group bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+        >
+          <!-- Image -->
+          <div class="relative h-56 overflow-hidden">
+            <img
+              :src="destination.imageBase64 || '/assets/default-image.jpg'"
+              :alt="destination.cityName"
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            <div class="absolute top-3 right-3 flex gap-2">
+              <span class="px-3 py-1 bg-white/90 backdrop-blur-sm text-xs font-semibold text-primary rounded-full">
+                {{ getCategoryEmoji(destination.category) }} {{ destination.category }}
+              </span>
+            </div>
+            <div v-if="destination.isPopular" class="absolute top-3 left-3">
+              <span class="px-3 py-1 bg-amber-400/90 backdrop-blur-sm text-xs font-bold text-white rounded-full flex items-center gap-1">
+                🔥 Popular
+              </span>
+            </div>
+          </div>
 
-    <div class="card-container">
-      <v-container fluid>
-        <v-row>
-          <v-col
-            cols="12"
-            md="6"
-            lg="4"
-            class="pa-4"
-            v-for="destination in paginatedDestinations"
-            :key="destination.id"
-          >
-            <v-card class="mx-auto my-4 custom-card" outlined>
-              <v-card-title class="title-destination">{{ destination.cityName }}</v-card-title>
-              <v-card-subtitle class="subtitle"
-                ><v-icon small>mdi-card-account-details-outline</v-icon>
-                {{ destination.id }}</v-card-subtitle
+          <!-- Content -->
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-gray-800 mb-1 group-hover:text-primary transition-colors">
+              {{ destination.cityName }}
+            </h3>
+            <p class="text-xs text-gray-400 mb-3">ID: {{ destination.id }}</p>
+
+            <p class="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">
+              {{ destination.description }}
+            </p>
+
+            <div class="flex items-center gap-4 text-sm text-gray-500 mb-5">
+              <span class="flex items-center gap-1">
+                {{ getSeasonEmoji(destination.season) }} {{ destination.season }}
+              </span>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex items-center gap-2 pt-4 border-t border-gray-100">
+              <button
+                @click="viewDetails(destination.id)"
+                class="flex-1 flex items-center justify-center gap-1.5 py-2.5 text-sm font-medium text-emerald-600 bg-emerald-50 rounded-xl hover:bg-emerald-100 transition-colors"
+                title="Ver experiencias"
               >
-              <div class="image-wrapper">
-                <v-img
-                  :src="destination.imageBase64 || '/assets/default-image.jpg'"
-                  class="destination-image"
-                  cover
-                  alt="Imagen del destino"
-                ></v-img>
-              </div>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                </svg>
+                Ver
+              </button>
 
-              <v-card-text class="details-text">
-                <p><v-icon small>mdi-text-box-outline</v-icon> {{ destination.description }}</p>
-                <p class="mt-4">
-                  <v-icon :icon="getSeasonIcon(destination.season)" small></v-icon>
-                  {{ destination.season }}
-                </p>
-                <p class="mt-4">
-                  <v-icon small>mdi-fire</v-icon>
-                  {{ destination.isPopular ? 'Alta' : 'Normal' }}
-                </p>
-                <p class="mt-4">
-                  <v-icon :icon="getCategoryIcon(destination.category)" small></v-icon>
-                  {{ destination.category }}
-                </p>
-              </v-card-text>
+              <button
+                v-if="isLoggedIn"
+                @click="addSuggestion(destination.id)"
+                class="flex-1 flex items-center justify-center gap-1.5 py-2.5 text-sm font-medium text-amber-600 bg-amber-50 rounded-xl hover:bg-amber-100 transition-colors"
+                title="Anadir experiencia"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                Exp.
+              </button>
 
-              <v-card-actions class="actions-container">
-                <v-tooltip bottom>
-                  <template #activator="{ props }">
-                    <v-btn icon color="#4caf50" @click="viewDetails(destination.id)" v-bind="props">
-                      <v-icon>mdi-eye</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Ver las experiencias para este destino</span>
-                </v-tooltip>
+              <button
+                v-if="isLoggedIn && (destination.userId === currentUserId || role === 'admin')"
+                @click="editDestination(destination.id)"
+                class="p-2.5 text-primary bg-primary/5 rounded-xl hover:bg-primary/10 transition-colors"
+                title="Editar destino"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                </svg>
+              </button>
 
-                <v-tooltip bottom>
-                  <template #activator="{ props }">
-                    <v-btn
-                      color="#ff9800"
-                      @click="addSuggestion(destination.id)"
-                      v-if="isLoggedIn"
-                      v-bind="props"
-                    >
-                      <v-icon left>mdi-plus</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Añade una experiencia para este destino</span>
-                </v-tooltip>
+              <button
+                v-if="isLoggedIn && (destination.userId === currentUserId || role === 'admin')"
+                @click="openDeleteConfirmDialog(destination.id)"
+                class="p-2.5 text-red-500 bg-red-50 rounded-xl hover:bg-red-100 transition-colors"
+                title="Eliminar destino"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
 
-                <v-tooltip bottom>
-                  <template #activator="{ props }">
-                    <v-btn
-                      icon
-                      color="#05a4c8"
-                      @click="editDestination(destination.id)"
-                      v-if="
-                        isLoggedIn && (destination.userId === currentUserId || role === 'admin')
-                      "
-                      v-bind="props"
-                    >
-                      <v-icon>mdi-pencil</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Edita este destino</span>
-                </v-tooltip>
-
-                <v-tooltip bottom>
-                  <template #activator="{ props }">
-                    <v-btn
-                      icon
-                      color="#f4978e"
-                      @click="openDeleteConfirmDialog(destination.id)"
-                      v-if="
-                        isLoggedIn && (destination.userId === currentUserId || role === 'admin')
-                      "
-                      v-bind="props"
-                    >
-                      <v-icon>mdi-delete</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Borra este destino</span>
-                </v-tooltip>
-              </v-card-actions>
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-container>
-    </div>
-
-    <div class="pagination-container">
-      <v-pagination v-model="currentPage" :length="totalPages" @input="changePage"></v-pagination>
+      <!-- Pagination -->
+      <div v-if="totalPages > 1" class="flex justify-center items-center gap-2 mt-16">
+        <button
+          v-for="page in totalPages"
+          :key="page"
+          @click="changePage(page)"
+          :class="[
+            'w-10 h-10 rounded-xl text-sm font-semibold transition-all duration-200',
+            currentPage === page
+              ? 'bg-primary text-white shadow-md shadow-primary/30'
+              : 'bg-white text-gray-600 border border-gray-200 hover:border-primary hover:text-primary'
+          ]"
+        >
+          {{ page }}
+        </button>
+      </div>
     </div>
   </div>
 
-  <!-- Modal de Confirmación de Eliminación -->
-  <v-dialog v-model="deleteConfirmDialog" max-width="400">
-    <v-card>
-      <v-card-title class="headline">Confirmar Eliminación</v-card-title>
-      <v-card-text> ¿Estás seguro de que deseas eliminar este destino? </v-card-text>
-      <v-card-actions>
-        <v-btn color="red" @click="confirmDeleteDestination">Sí, eliminar</v-btn>
-        <v-btn color="blue-grey" @click="deleteConfirmDialog = false">Cancelar</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+  <!-- Delete confirmation modal -->
+  <transition enter-active-class="transition duration-200 ease-out" enter-from-class="opacity-0" enter-to-class="opacity-100" leave-active-class="transition duration-150 ease-in" leave-from-class="opacity-100" leave-to-class="opacity-0">
+    <div v-if="deleteConfirmDialog" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" @click="deleteConfirmDialog = false"></div>
+      <div class="relative bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full">
+        <h3 class="text-xl font-bold text-gray-800 mb-2">Confirmar Eliminacion</h3>
+        <p class="text-gray-600 mb-6">Estas seguro de que deseas eliminar este destino?</p>
+        <div class="flex gap-3">
+          <button
+            @click="confirmDeleteDestination"
+            class="flex-1 py-2.5 bg-red-500 text-white font-semibold rounded-xl hover:bg-red-600 transition-colors"
+          >
+            Si, eliminar
+          </button>
+          <button
+            @click="deleteConfirmDialog = false"
+            class="flex-1 py-2.5 bg-gray-100 text-gray-700 font-semibold rounded-xl hover:bg-gray-200 transition-colors"
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+  </transition>
 </template>
-
-<style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
-
-.container {
-  box-sizing: border-box;
-  background-image: url('/src/assets/fondo.jpg');
-  min-height: 100vh;
-  padding: 40px 20px;
-  margin: 0 auto;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-  width: 100%;
-}
-
-.section-title-container {
-  text-align: center;
-}
-
-.floating-add-button {
-  background-color: #ffffff;
-  color: #4a90e2;
-  font-size: 20px;
-  padding: 10px 20px;
-  border-radius: 50px;
-  box-shadow: 0 4px 12px rgba(5, 164, 200, 0.3);
-  cursor: pointer;
-  border: none;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin-left: 30px;
-  font-family: Georgia, 'Times New Roman', Times, serif;
-  transition:
-    background 0.3s,
-    color 0.3s,
-    box-shadow 0.3s;
-}
-
-.floating-add-button:hover {
-  background: linear-gradient(135deg, #62bff6, #66e2b7);
-  color: #ffffff;
-  box-shadow: 0 6px 12px rgba(102, 189, 240, 0.4);
-}
-
-.section-title {
-  font-size: 35px;
-  font-family: Georgia, 'Times New Roman', Times, serif;
-  font-weight: bold;
-  color: #4a90e2;
-  margin-top: 85px;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-.description {
-  font-size: 18px;
-  color: #000000;
-  margin-bottom: 20px;
-  line-height: 1.6;
-  font-family: 'Open Sans', sans-serif;
-  padding: 40px 20px;
-}
-
-.button-container {
-  display: flex;
-  justify-content: left;
-  margin-bottom: 20px;
-  width: 90%;
-}
-
-.custom-card {
-  background-color: #ffffff;
-  border: 1px solid #05a4c8;
-  color: rgb(74, 74, 74);
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  padding: 5px;
-  font-family: 'Open Sans', sans-serif;
-  box-shadow: 0 4px 12px rgba(13, 111, 229, 0.1);
-  max-width: 100%;
-}
-
-.title-destination {
-  padding-top: 25px;
-  font-size: 35px;
-  font-family: Georgia, 'Times New Roman', Times, serif;
-  font-weight: bold;
-  color: #62bff6;
-  margin-bottom: 20px;
-  text-align: center;
-  word-wrap: break-word;
-  white-space: normal;
-}
-
-.subtitle {
-  color: #555;
-  font-size: 15px;
-  text-align: center;
-}
-
-.details-text p {
-  color: #333;
-  font-size: 16px;
-  font-family: 'Open Sans', sans-serif;
-}
-
-.actions-container {
-  display: flex;
-  justify-content: space-around;
-  margin-top: auto;
-}
-
-.image-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 250px;
-  padding-left: 10px;
-  padding-right: 10px;
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-
-.pagination-container {
-  margin-top: 80px;
-  margin-bottom: 60px;
-}
-
-.no-results-alert {
-  position: fixed;
-  top: 85px;
-  right: 20px;
-  width: 300px;
-  z-index: 1000;
-}
-
-@media (max-width: 600px) {
-  .image-wrapper {
-    max-height: 150px;
-  }
-}
-</style>

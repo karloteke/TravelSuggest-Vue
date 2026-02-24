@@ -1,65 +1,56 @@
-<script setup lang="ts">
-  import { useRouter } from 'vue-router';
+﻿<script setup lang="ts">
+import { useRouter } from 'vue-router'
 
-  const router = useRouter();
+const router = useRouter()
 
-  function navigateTo(route: string) {
-    router.push({ name: route });
-  }
+function navigateTo(route: string) {
+  router.push({ name: route })
+}
 </script>
 
-
 <template>
-  <v-footer class="footer">
-    <v-row justify="center" no-gutters>
-      <v-col cols="12" class="text-center mb-2">
-        <img src="@/assets/logo.png" alt="Logo" style="max-height: 80px; margin-right: 12px;">
-      </v-col>
+  <footer class="bg-gray-900 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="flex flex-col items-center gap-8">
+        <!-- Logo -->
+        <img src="@/assets/logo.png" alt="TravelSuggest" class="h-16 w-auto opacity-90 hover:opacity-100 transition-opacity" />
 
-      <!-- Enlaces de Navegación -->
-      <v-col cols="12" class="text-center mb-4">
-        <v-btn variant = "text" class="footer-link" @click="navigateTo('home')">Inicio</v-btn>
-        <v-btn variant = "text" class="footer-link" @click="navigateTo('destinations')">Destinos</v-btn>
-        <v-btn variant = "text" class="footer-link" @click="navigateTo('suggestions')">Experiencias</v-btn>
-        <v-btn variant = "text" class="footer-link" @click="navigateTo('tips')">Consejos para un viaje responsable</v-btn>
-      </v-col>
+        <!-- Nav links -->
+        <div class="flex flex-wrap justify-center gap-2">
+          <button
+            @click="navigateTo('home')"
+            class="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white rounded-lg hover:bg-white/10 transition-all duration-200"
+          >
+            Inicio
+          </button>
+          <button
+            @click="navigateTo('destinations')"
+            class="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white rounded-lg hover:bg-white/10 transition-all duration-200"
+          >
+            Destinos
+          </button>
+          <button
+            @click="navigateTo('suggestions')"
+            class="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white rounded-lg hover:bg-white/10 transition-all duration-200"
+          >
+            Experiencias
+          </button>
+          <button
+            @click="navigateTo('tips')"
+            class="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white rounded-lg hover:bg-white/10 transition-all duration-200"
+          >
+            Consejos
+          </button>
+        </div>
 
-      <!-- Derechos Reservados -->
-      <v-col cols="12" class="text-center mt-4">
-        <span class="footer-copy">&copy; {{ new Date().getFullYear() }} TravelSuggest. Todos los derechos reservados.</span>
-      </v-col>
-    </v-row>
-  </v-footer>
+        <!-- Divider -->
+        <div class="w-full max-w-md h-px bg-gradient-to-r from-transparent via-gray-600 to-transparent"></div>
+
+        <!-- Copyright -->
+        <p class="text-sm text-gray-400">
+          &copy; {{ new Date().getFullYear() }} TravelSuggest. Todos los derechos reservados.
+        </p>
+      </div>
+    </div>
+  </footer>
 </template>
-
-
-
-<style scoped>
-  .footer {
-    padding: 20px 0;
-    color: white;
-    text-align: center;
-    background-color: rgb(40, 40, 40)
-  }
-
-  .footer-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    font-family: Ro; 
-  }
-
-  .footer-link {
-    color: white;
-    font-weight: bold;
-    margin: 0 10px;
-  }
-
-  .footer-link:hover {
-    color: #05a4c8 
-  }
-
-  .footer-copy {
-    font-size: 0.875rem;
-    color: white;
-  }
-</style>

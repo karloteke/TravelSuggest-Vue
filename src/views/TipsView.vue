@@ -1,105 +1,90 @@
-<script setup lang="ts">
-
-</script>
-
-<template>
-  <div class="tips-container">
-    <h1>CONSEJOS PARA UN VIAJE RESPONSABLE</h1>
-    <p class="intro">
-      En TravelSuggest, nos apasiona hacer que los viajes sean inolvidables, pero también responsables. Por eso, hemos creado esta sección para compartir simples, pero efectivos consejos que pueden ayudarte a reducir tu impacto ambiental. ¡Un viaje consciente es un viaje mejor!
-    </p>
-
-    <section class="tip">
-      <h2>🚴‍♂️ Usa Transporte Público o Medios Ecológicos</h2>
-      <p>
-        Desplazarse en transporte público, en bicicleta o caminando es una excelente manera de reducir la huella de carbono. Al optar por estos medios, no solo cuidas el planeta, sino que también te permite vivir el destino de una forma más auténtica y cercana.
+﻿<template>
+  <div class="min-h-screen bg-gradient-to-b from-gray-50 to-white py-16 px-4">
+    <div class="max-w-3xl mx-auto">
+      <h1 class="text-3xl md:text-4xl font-bold text-primary text-center font-serif mb-4">
+        CONSEJOS PARA UN VIAJE RESPONSABLE
+      </h1>
+      <p class="text-center text-gray-500 mb-12 max-w-2xl mx-auto leading-relaxed">
+        En TravelSuggest, nos apasiona hacer que los viajes sean inolvidables, pero tambien responsables. Hemos creado esta seccion para compartir simples, pero efectivos consejos que pueden ayudarte a reducir tu impacto ambiental. Un viaje consciente es un viaje mejor!
       </p>
-    </section>
 
-    <section class="tip">
-      <h2>♻️ Reduce el Uso de Plásticos de un Solo Uso</h2>
-      <p>
-        Una de las formas más simples de cuidar el entorno es llevar contigo una botella de agua reutilizable y bolsas de tela. Esto reduce la cantidad de residuos plásticos y ayuda a mantener limpios los lugares que visitas. Cada pequeña acción cuenta para un planeta más limpio.
-      </p>
-    </section>
+      <div class="space-y-6">
+        <div class="group bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md hover:border-primary/20 transition-all duration-300">
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+              <span class="text-2xl">🚴</span>
+            </div>
+            <div>
+              <h2 class="text-lg font-bold text-gray-800 mb-2">Usa Transporte Publico o Medios Ecologicos</h2>
+              <p class="text-gray-600 leading-relaxed">
+                Desplazarse en transporte publico, en bicicleta o caminando es una excelente manera de reducir la huella de carbono. Al optar por estos medios, no solo cuidas el planeta, sino que tambien te permite vivir el destino de una forma mas autentica y cercana.
+              </p>
+            </div>
+          </div>
+        </div>
 
-    <section class="tip">
-      <h2>🐾 Respeta la Flora y Fauna Local</h2>
-      <p>
-        La naturaleza es el hogar de muchas especies y ecosistemas. Es fundamental no dejar basura, no arrancar plantas ni molestar a los animales. Sigue siempre las indicaciones de conservación y mantén una distancia prudente para proteger la biodiversidad.
-      </p>
-    </section>
+        <div class="group bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md hover:border-primary/20 transition-all duration-300">
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+              <span class="text-2xl">♻️</span>
+            </div>
+            <div>
+              <h2 class="text-lg font-bold text-gray-800 mb-2">Reduce el Uso de Plasticos de un Solo Uso</h2>
+              <p class="text-gray-600 leading-relaxed">
+                Una de las formas mas simples de cuidar el entorno es llevar contigo una botella de agua reutilizable y bolsas de tela. Esto reduce la cantidad de residuos plasticos y ayuda a mantener limpios los lugares que visitas. Cada pequena accion cuenta para un planeta mas limpio.
+              </p>
+            </div>
+          </div>
+        </div>
 
-    <section class="tip">
-      <h2>🛍️ Apoya a los Negocios Locales</h2>
-      <p>
-        Opta por alojarte en hospedajes familiares, comprar en tiendas locales y comer en restaurantes de la zona. Así, ayudas a las economías locales a prosperar y tienes una experiencia más auténtica y enriquecedora. Si compras recuerdos, elige productos artesanales hechos por los artesanos del lugar.
-      </p>
-    </section>
+        <div class="group bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md hover:border-primary/20 transition-all duration-300">
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+              <span class="text-2xl">🐾</span>
+            </div>
+            <div>
+              <h2 class="text-lg font-bold text-gray-800 mb-2">Respeta la Flora y Fauna Local</h2>
+              <p class="text-gray-600 leading-relaxed">
+                La naturaleza es el hogar de muchas especies y ecosistemas. Es fundamental no dejar basura, no arrancar plantas ni molestar a los animales. Sigue siempre las indicaciones de conservacion y manten una distancia prudente para proteger la biodiversidad.
+              </p>
+            </div>
+          </div>
+        </div>
 
-    <section class="tip">
-      <h2>🌐 Infórmate y Respeta la Cultura Local</h2>
-      <p>
-        Antes de llegar, toma un tiempo para conocer las costumbres y normas culturales. Aprender algunas frases en el idioma local, como “hola” y “gracias”, puede hacer una gran diferencia. Mostrar interés y respeto por la cultura local mejorará tu experiencia de viaje.
-      </p>
-    </section>
+        <div class="group bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md hover:border-primary/20 transition-all duration-300">
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 bg-rose-50 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+              <span class="text-2xl">🛍️</span>
+            </div>
+            <div>
+              <h2 class="text-lg font-bold text-gray-800 mb-2">Apoya a los Negocios Locales</h2>
+              <p class="text-gray-600 leading-relaxed">
+                Opta por alojarte en hospedajes familiares, comprar en tiendas locales y comer en restaurantes de la zona. Asi, ayudas a las economias locales a prosperar y tienes una experiencia mas autentica y enriquecedora. Si compras recuerdos, elige productos artesanales hechos por los artesanos del lugar.
+              </p>
+            </div>
+          </div>
+        </div>
 
-    <p class="closing">
-      En TravelSuggest, creemos que viajar es una oportunidad para descubrir y cuidar. Al seguir estos consejos, te unes a un movimiento de viajeros conscientes que ayudan a preservar el mundo para futuras generaciones. ¡Gracias por ser parte de este cambio!
-    </p>
+        <div class="group bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md hover:border-primary/20 transition-all duration-300">
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+              <span class="text-2xl">🌐</span>
+            </div>
+            <div>
+              <h2 class="text-lg font-bold text-gray-800 mb-2">Informate y Respeta la Cultura Local</h2>
+              <p class="text-gray-600 leading-relaxed">
+                Antes de llegar, toma un tiempo para conocer las costumbres y normas culturales. Aprender algunas frases en el idioma local, como "hola" y "gracias", puede hacer una gran diferencia. Mostrar interes y respeto por la cultura local mejorara tu experiencia de viaje.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-12 p-6 bg-primary/5 rounded-2xl border border-primary/10 text-center">
+        <p class="text-gray-600 leading-relaxed">
+          En TravelSuggest, creemos que viajar es una oportunidad para descubrir y cuidar. Al seguir estos consejos, te unes a un movimiento de viajeros conscientes que ayudan a preservar el mundo para futuras generaciones. Gracias por ser parte de este cambio!
+        </p>
+      </div>
+    </div>
   </div>
 </template>
-
-<style scoped>
-  @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
-  .tips-container {
-    padding: 40px 30px;
-    max-width: 800px;
-    margin: auto;
-    line-height: 1.8;
-    color: #333;
-  }
-
-  h1 {
-    font-size: 32px;
-    font-weight: bold;
-    color:#4a90e2; 
-    text-align: center;
-    margin-top: 70px;
-    margin-bottom: 20px;
-    font-family: Georgia, 'Times New Roman', Times, serif;
-  }
-
-  .intro, .closing {
-    margin-bottom: 20px;
-    color: #555;
-    font-family: 'Open Sans', sans-serif;
-    font-size: 16px;
-  }
-
-  .tip {
-    margin-bottom: 20px;
-    padding: 20px;
-    background-color: #f0f4ff;
-    border-left: 6px solid #05a4c8;
-    border-radius: 8px;
-  
-  }
-
-  .tip h2 {
-    font-size: 23px;
-    color: #4a4a4a;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    font-family: Georgia, 'Times New Roman', Times, serif;
-  }
-
-  p {
-    margin: 0;
-    font-size: 16px;
-    color: #444;
-    text-align: justify;
-    font-family: 'Open Sans', sans-serif;
-  }
-</style>
