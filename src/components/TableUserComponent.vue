@@ -45,7 +45,7 @@ const changePage = (page: number) => { currentPage.value = page }
     <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8">
       <h1 class="text-3xl font-bold text-primary">Usuarios de TravelSuggest</h1>
       <button @click="handleAddUser"
-        class="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-primary font-semibold rounded-full shadow-md hover:bg-gradient-to-r hover:from-accent-light hover:to-emerald-300 hover:text-white transition-all duration-300">
+        class="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-primary font-semibold rounded-full shadow-md hover:bg-linear-to-r hover:from-accent-light hover:to-emerald-300 hover:text-white transition-all duration-300">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
         </svg>
@@ -58,7 +58,7 @@ const changePage = (page: number) => { currentPage.value = page }
       <div class="overflow-x-auto">
         <table class="w-full">
           <thead>
-            <tr class="bg-gradient-to-r from-primary to-accent text-white">
+            <tr class="bg-linear-to-r from-primary to-accent text-white">
               <th class="px-6 py-4 text-left text-sm font-semibold">Id</th>
               <th class="px-6 py-4 text-left text-sm font-semibold">Nombre Usuario</th>
               <th class="px-6 py-4 text-left text-sm font-semibold">Email</th>
@@ -127,7 +127,7 @@ const changePage = (page: number) => { currentPage.value = page }
       <button v-for="page in totalPages" :key="page" @click="changePage(page)"
         class="w-10 h-10 rounded-xl text-sm font-semibold transition-all duration-200"
         :class="currentPage === page
-          ? 'bg-gradient-to-r from-primary to-accent text-white shadow-md shadow-primary/25'
+          ? 'bg-linear-to-r from-primary to-accent text-white shadow-md shadow-primary/25'
           : 'bg-white text-gray-600 border border-gray-200 hover:border-primary hover:text-primary'">
         {{ page }}
       </button>

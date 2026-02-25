@@ -6,8 +6,8 @@ import type { DestinationQueryParameters } from '@/core/destination'
 const destinationStore = useDestinationStore()
 const emit = defineEmits(['no-results'])
 
-const seasons = ['Verano', 'Primavera', 'Otoño', 'Invierno', 'Todas las estaciones']
-const categories = ['Playa', 'Montaña', 'Ciudad', 'Aventura', 'Cultural', 'Gastronomía', 'Ocio']
+const seasons = ['Verano', 'Primavera', 'Oto�o', 'Invierno', 'Todas las estaciones']
+const categories = ['Playa', 'Monta�a', 'Ciudad', 'Aventura', 'Cultural', 'Gastronom�a', 'Ocio']
 const popularityOptions = [
   { title: 'Alta', value: 'true' },
   { title: 'Normal', value: 'false' },
@@ -50,14 +50,27 @@ const applyFilters = async () => {
 </script>
 
 <template>
-  <div
-    class="relative rounded-2xl p-[1px] mb-10 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30"
-  >
-    <div class="bg-dark-card/95 backdrop-blur-xl rounded-2xl p-6 md:p-8">
-      <div class="flex items-center justify-center gap-2 mb-6">
-        <div class="h-px flex-1 bg-gradient-to-r from-transparent to-primary/30"></div>
-        <h3 class="text-lg font-bold text-primary flex items-center gap-2">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <div class="relative rounded-2xl mb-10 overflow-hidden">
+    <div
+      class="bg-linear-to-br from-gray-900 via-gray-800 to-gray-900 rounded-2xl p-6 md:p-8 shadow-xl"
+    >
+      <!-- Decoracion de fondo -->
+      <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute -top-10 -left-10 w-48 h-48 bg-primary/10 rounded-full blur-3xl"></div>
+        <div
+          class="absolute -bottom-10 -right-10 w-48 h-48 bg-accent/10 rounded-full blur-3xl"
+        ></div>
+      </div>
+
+      <div class="relative flex items-center justify-center gap-2 mb-6">
+        <div class="h-px flex-1 bg-linear-to-r from-transparent to-white/20"></div>
+        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+          <svg
+            class="w-5 h-5 text-accent-light"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -67,55 +80,57 @@ const applyFilters = async () => {
           </svg>
           Filtrar Destinos
         </h3>
-        <div class="h-px flex-1 bg-gradient-to-l from-transparent to-accent/30"></div>
+        <div class="h-px flex-1 bg-linear-to-l from-transparent to-white/20"></div>
       </div>
 
       <form
         @submit.prevent="applyFilters"
-        class="space-y-4 md:space-y-0 md:flex md:flex-wrap md:items-end md:gap-4 md:justify-center"
+        class="relative space-y-4 md:space-y-0 md:flex md:flex-wrap md:items-end md:gap-4 md:justify-center"
       >
         <!-- City name -->
         <div class="w-full md:w-52">
-          <label class="block text-xs font-medium text-gray-300 mb-1.5 tracking-wide uppercase"
+          <label class="block text-xs font-medium text-white/70 mb-1.5 tracking-wide uppercase"
             >Destino</label
           >
           <input
             v-model="filters.cityName"
             type="text"
             placeholder="Nombre..."
-            class="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:ring-2 focus:ring-primary/40 focus:border-primary/50 focus:bg-white/10 outline-none transition-all text-sm"
+            class="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/40 focus:ring-2 focus:ring-accent/50 focus:border-accent/50 focus:bg-white/15 outline-none transition-all text-sm backdrop-blur-sm"
           />
         </div>
 
         <!-- Season -->
         <div class="w-full md:w-48">
-          <label class="block text-xs font-medium text-gray-300 mb-1.5 tracking-wide uppercase"
+          <label class="block text-xs font-medium text-white/70 mb-1.5 tracking-wide uppercase"
             >Estacion</label
           >
           <select
             v-model="filters.season"
-            class="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white focus:ring-2 focus:ring-primary/40 focus:border-primary/50 focus:bg-white/10 outline-none transition-all text-sm appearance-none cursor-pointer"
+            class="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-xl text-white focus:ring-2 focus:ring-accent/50 focus:border-accent/50 focus:bg-white/15 outline-none transition-all text-sm appearance-none cursor-pointer backdrop-blur-sm"
           >
-            <option value="" class="bg-dark-card">Todas</option>
-            <option v-for="s in seasons" :key="s" :value="s" class="bg-dark-card">{{ s }}</option>
+            <option value="" class="bg-gray-800 text-white">Todas</option>
+            <option v-for="s in seasons" :key="s" :value="s" class="bg-gray-800 text-white">
+              {{ s }}
+            </option>
           </select>
         </div>
 
         <!-- Popularity -->
         <div class="w-full md:w-48">
-          <label class="block text-xs font-medium text-gray-300 mb-1.5 tracking-wide uppercase"
+          <label class="block text-xs font-medium text-white/70 mb-1.5 tracking-wide uppercase"
             >Popularidad</label
           >
           <select
             v-model="filters.isPopular"
-            class="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white focus:ring-2 focus:ring-primary/40 focus:border-primary/50 focus:bg-white/10 outline-none transition-all text-sm appearance-none cursor-pointer"
+            class="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-xl text-white focus:ring-2 focus:ring-accent/50 focus:border-accent/50 focus:bg-white/15 outline-none transition-all text-sm appearance-none cursor-pointer backdrop-blur-sm"
           >
-            <option value="" class="bg-dark-card">Todas</option>
+            <option value="" class="bg-gray-800 text-white">Todas</option>
             <option
               v-for="p in popularityOptions"
               :key="p.title"
               :value="p.value"
-              class="bg-dark-card"
+              class="bg-gray-800 text-white"
             >
               {{ p.title }}
             </option>
@@ -124,15 +139,15 @@ const applyFilters = async () => {
 
         <!-- Category -->
         <div class="w-full md:w-48">
-          <label class="block text-xs font-medium text-gray-300 mb-1.5 tracking-wide uppercase"
+          <label class="block text-xs font-medium text-white/70 mb-1.5 tracking-wide uppercase"
             >Categoria</label
           >
           <select
             v-model="filters.category"
-            class="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white focus:ring-2 focus:ring-primary/40 focus:border-primary/50 focus:bg-white/10 outline-none transition-all text-sm appearance-none cursor-pointer"
+            class="w-full px-4 py-2.5 bg-white/10 border border-white/20 rounded-xl text-white focus:ring-2 focus:ring-accent/50 focus:border-accent/50 focus:bg-white/15 outline-none transition-all text-sm appearance-none cursor-pointer backdrop-blur-sm"
           >
-            <option value="" class="bg-dark-card">Todas</option>
-            <option v-for="c in categories" :key="c" :value="c" class="bg-dark-card">
+            <option value="" class="bg-gray-800 text-white">Todas</option>
+            <option v-for="c in categories" :key="c" :value="c" class="bg-gray-800 text-white">
               {{ c }}
             </option>
           </select>
@@ -141,7 +156,7 @@ const applyFilters = async () => {
         <!-- Button -->
         <button
           type="submit"
-          class="group w-full md:w-auto px-8 py-2.5 bg-gradient-to-r from-primary to-accent text-white font-semibold rounded-xl shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5 active:scale-95 transition-all duration-300 text-sm flex items-center justify-center gap-2"
+          class="group w-full md:w-auto px-8 py-2.5 bg-linear-to-r from-primary to-accent text-white font-semibold rounded-xl shadow-lg shadow-accent/20 hover:shadow-xl hover:shadow-accent/30 hover:-translate-y-0.5 active:scale-95 transition-all duration-300 text-sm flex items-center justify-center gap-2"
         >
           <svg
             class="w-4 h-4 group-hover:rotate-12 transition-transform"

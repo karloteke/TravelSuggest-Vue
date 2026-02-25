@@ -67,38 +67,38 @@ const changePage = (page: number) => {
 const getSeasonEmoji = (season: string) => {
   switch (season) {
     case 'Verano':
-      return '☀️'
+      return '??'
     case 'Primavera':
-      return '🌸'
-    case 'Otoño':
-      return '🍂'
+      return '??'
+    case 'Oto�o':
+      return '??'
     case 'Invierno':
-      return '❄️'
-    case 'Todas las estaciones del año':
-      return '🌍'
+      return '??'
+    case 'Todas las estaciones del a�o':
+      return '??'
     default:
-      return '📅'
+      return '??'
   }
 }
 
 const getCategoryEmoji = (category: string) => {
   switch (category) {
     case 'Playa':
-      return '🏖️'
-    case 'Montaña':
-      return '⛰️'
+      return '???'
+    case 'Monta�a':
+      return '??'
     case 'Ciudad':
-      return '🏙️'
+      return '???'
     case 'Aventura':
-      return '🥾'
+      return '??'
     case 'Cultural':
-      return '🎭'
+      return '??'
     case 'Gastronomia':
-      return '🍴'
+      return '??'
     case 'Ocio':
-      return '🎉'
+      return '??'
     default:
-      return '🏷️'
+      return '???'
   }
 }
 
@@ -172,7 +172,7 @@ const handleNoResults = () => {
       <div class="flex justify-start mb-8" v-if="isLoggedIn">
         <button
           @click="handleAddDestination"
-          class="group/btn flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary to-accent text-white font-semibold rounded-full shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5 active:scale-95 transition-all duration-300"
+          class="group/btn flex items-center gap-2 px-6 py-3 bg-linear-to-r from-primary to-accent text-white font-semibold rounded-full shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5 active:scale-95 transition-all duration-300"
         >
           <svg
             class="w-5 h-5 group-hover/btn:rotate-90 transition-transform duration-300"
@@ -204,7 +204,7 @@ const handleNoResults = () => {
           v-if="showNoResultsAlert"
           class="fixed top-24 right-5 z-50 flex items-center gap-3 px-5 py-4 bg-blue-50 border border-blue-200 text-blue-700 rounded-xl shadow-lg max-w-sm backdrop-blur-sm"
         >
-          <svg class="w-5 h-5 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+          <svg class="w-5 h-5 text-blue-500 shrink-0" fill="currentColor" viewBox="0 0 20 20">
             <path
               fill-rule="evenodd"
               d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
@@ -232,7 +232,7 @@ const handleNoResults = () => {
               class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
             />
             <div
-              class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+              class="absolute inset-0 bg-linear-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
             ></div>
             <div class="absolute top-3 right-3 flex gap-2">
               <span
@@ -243,9 +243,9 @@ const handleNoResults = () => {
             </div>
             <div v-if="destination.isPopular" class="absolute top-3 left-3">
               <span
-                class="px-3 py-1.5 bg-gradient-to-r from-amber-400 to-orange-400 backdrop-blur-sm text-xs font-bold text-white rounded-full flex items-center gap-1 shadow-lg shadow-amber-400/30"
+                class="px-3 py-1.5 bg-linear-to-r from-amber-400 to-orange-400 backdrop-blur-sm text-xs font-bold text-white rounded-full flex items-center gap-1 shadow-lg shadow-amber-400/30"
               >
-                🔥 Popular
+                ?? Popular
               </span>
             </div>
           </div>
@@ -355,7 +355,7 @@ const handleNoResults = () => {
           :class="[
             'w-10 h-10 rounded-xl text-sm font-semibold transition-all duration-300',
             currentPage === page
-              ? 'bg-gradient-to-r from-primary to-accent text-white shadow-lg shadow-primary/30 scale-110'
+              ? 'bg-linear-to-r from-primary to-accent text-white shadow-lg shadow-primary/30 scale-110'
               : 'bg-white/80 backdrop-blur-sm text-gray-600 border border-gray-200/60 hover:border-primary hover:text-primary hover:shadow-md',
           ]"
         >

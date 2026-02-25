@@ -81,7 +81,7 @@ const submitForm = async () => {
 
 <template>
   <div
-    class="min-h-[calc(100vh-5rem)] flex items-center justify-center px-4 py-12 bg-gradient-to-br from-gray-50 to-blue-50"
+    class="min-h-[calc(100vh-5rem)] flex items-center justify-center px-4 py-12 bg-linear-to-br from-gray-50 to-blue-50"
   >
     <div class="w-full max-w-xl" v-if="suggestion">
       <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
@@ -179,7 +179,7 @@ const submitForm = async () => {
 
           <button
             type="submit"
-            class="w-full py-3 bg-gradient-to-r from-primary to-accent text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-primary/25 active:scale-[0.98] transition-all duration-200"
+            class="w-full py-3 bg-linear-to-r from-primary to-accent text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-primary/25 active:scale-[0.98] transition-all duration-200"
           >
             Actualizar Experiencia
           </button>
@@ -200,7 +200,7 @@ const submitForm = async () => {
       v-if="successAlert"
       class="fixed top-24 right-5 z-50 flex items-center gap-3 px-5 py-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl shadow-lg max-w-sm"
     >
-      <svg class="w-5 h-5 text-emerald-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+      <svg class="w-5 h-5 text-emerald-500 shrink-0" fill="currentColor" viewBox="0 0 20 20">
         <path
           fill-rule="evenodd"
           d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"

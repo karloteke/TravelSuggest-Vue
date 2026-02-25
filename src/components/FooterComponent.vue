@@ -44,7 +44,7 @@ function navigateTo(route: string) {
         </div>
 
         <!-- Divider -->
-        <div class="w-full max-w-md h-px bg-gradient-to-r from-transparent via-gray-600 to-transparent"></div>
+        <div class="w-full max-w-md h-px bg-linear-to-r from-transparent via-gray-600 to-transparent"></div>
 
         <!-- Copyright -->
         <p class="text-sm text-gray-400">
