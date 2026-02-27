@@ -6,8 +6,8 @@ import type { DestinationQueryParameters } from '@/core/destination'
 const destinationStore = useDestinationStore()
 const emit = defineEmits(['no-results'])
 
-const seasons = ['Verano', 'Primavera', 'Oto�o', 'Invierno', 'Todas las estaciones']
-const categories = ['Playa', 'Monta�a', 'Ciudad', 'Aventura', 'Cultural', 'Gastronom�a', 'Ocio']
+const seasons = ['Verano', 'Primavera', 'Otoño', 'Invierno', 'Todas las estaciones']
+const categories = ['Playa', 'Montaña', 'Ciudad', 'Aventura', 'Cultural', 'Gastronomía', 'Ocio']
 const popularityOptions = [
   { title: 'Alta', value: 'true' },
   { title: 'Normal', value: 'false' },

@@ -67,38 +67,40 @@ const changePage = (page: number) => {
 const getSeasonEmoji = (season: string) => {
   switch (season) {
     case 'Verano':
-      return '??'
+      return '☀️'
     case 'Primavera':
-      return '??'
-    case 'Oto�o':
-      return '??'
+      return '🌸'
+    case 'Otoño':
+      return '🍂'
     case 'Invierno':
-      return '??'
-    case 'Todas las estaciones del a�o':
-      return '??'
+      return '❄️'
+    case 'Todas las estaciones del año':
+      return '🌍'
+    case 'Todas las estaciones':
+      return '🌍'
     default:
-      return '??'
+      return '📍'
   }
 }
 
 const getCategoryEmoji = (category: string) => {
   switch (category) {
     case 'Playa':
-      return '???'
-    case 'Monta�a':
-      return '??'
+      return '🏖️'
+    case 'Montaña':
+      return '⛰️'
     case 'Ciudad':
-      return '???'
+      return '🏙️'
     case 'Aventura':
-      return '??'
+      return '🧗'
     case 'Cultural':
-      return '??'
-    case 'Gastronomia':
-      return '??'
+      return '🏛️'
+    case 'Gastronomía':
+      return '🍽️'
     case 'Ocio':
-      return '??'
+      return '🎭'
     default:
-      return '???'
+      return '📍'
   }
 }
 
@@ -245,7 +247,7 @@ const handleNoResults = () => {
               <span
                 class="px-3 py-1.5 bg-linear-to-r from-amber-400 to-orange-400 backdrop-blur-sm text-xs font-bold text-white rounded-full flex items-center gap-1 shadow-lg shadow-amber-400/30"
               >
-                ?? Popular
+                🔥 Popular
               </span>
             </div>
           </div>
@@ -257,7 +259,6 @@ const handleNoResults = () => {
             >
               {{ destination.cityName }}
             </h3>
-            <p class="text-xs text-gray-400 mb-3">ID: {{ destination.id }}</p>
 
             <p class="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">
               {{ destination.description }}

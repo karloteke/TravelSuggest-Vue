@@ -135,7 +135,7 @@ onMounted(async () => {
               <span
                 class="inline-flex items-center gap-1.5 text-sm font-bold text-white bg-emerald-500/90 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-lg"
               >
-                ?? {{ suggestion.price }} EUR
+                💰 {{ suggestion.price }} EUR
               </span>
             </div>
             <div class="absolute top-3 right-3">
@@ -177,15 +177,15 @@ onMounted(async () => {
               <span
                 class="flex items-center gap-1.5 text-sm font-semibold text-emerald-600 bg-emerald-50/80 px-3 py-1.5 rounded-full"
               >
-                ?? {{ suggestion.price }} EUR
+                💰 {{ suggestion.price }} EUR
               </span>
               <span class="text-xs text-gray-400 flex items-center gap-1">
-                ?? {{ formatDate(suggestion.created_at) }}
+                 📅 {{ formatDate(suggestion.created_at) }}
               </span>
             </div>
             <div v-else class="flex items-center mb-4">
               <span class="text-xs text-gray-400 flex items-center gap-1">
-                ?? {{ formatDate(suggestion.created_at) }}
+                📅  {{ formatDate(suggestion.created_at) }}
               </span>
             </div>
 

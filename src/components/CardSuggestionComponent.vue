@@ -174,7 +174,7 @@ const handleNoResults = () => {
               <span
                 class="inline-flex items-center gap-1.5 text-sm font-bold text-white bg-emerald-500/90 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-lg"
               >
-                ?? {{ suggestion.price }} EUR
+                💰 {{ suggestion.price }} EUR
               </span>
             </div>
             <!-- Rating on image -->
@@ -210,7 +210,6 @@ const handleNoResults = () => {
             >
               {{ suggestion.title }}
             </h3>
-            <p class="text-xs text-gray-400 mb-4">Usuario: {{ suggestion.userId }}</p>
 
             <p class="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">
               {{ suggestion.description }}
@@ -221,16 +220,16 @@ const handleNoResults = () => {
               <span
                 class="flex items-center gap-1.5 text-sm font-semibold text-emerald-600 bg-emerald-50/80 px-3 py-1.5 rounded-full"
               >
-                ?? {{ suggestion.price }} EUR
+                💰 {{ suggestion.price }} EUR
               </span>
               <span class="text-xs text-gray-400 flex items-center gap-1">
-                ?? {{ formatDate(suggestion.created_at) }}
+                📅 {{ formatDate(suggestion.created_at) }}
               </span>
             </div>
             <!-- Date only (when has image, price is on image) -->
             <div v-else class="flex items-center justify-between mb-4">
               <span class="text-xs text-gray-400 flex items-center gap-1">
-                ?? {{ formatDate(suggestion.created_at) }}
+                📅 {{ formatDate(suggestion.created_at) }}
               </span>
             </div>
 
