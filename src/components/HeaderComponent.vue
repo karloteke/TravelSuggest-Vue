@@ -236,7 +236,7 @@ const menuItems = computed(() => {
       </div>
     </div>
 
-    <!-- Mobile menu premium -->
+    <!-- Mobile menu -->
     <transition
       enter-active-class="transition duration-300 ease-out"
       enter-from-class="opacity-0 -translate-y-4 scale-95"
@@ -247,17 +247,32 @@ const menuItems = computed(() => {
     >
       <div
         v-if="menuOpen"
-        class="md:hidden bg-white/95 backdrop-blur-xl border-t border-gray-100/50 shadow-2xl"
+        class="md:hidden bg-linear-to-b from-slate-800 via-blue-900 to-slate-900 backdrop-blur-2xl border-t-4 border-blue-500/30 shadow-2xl"
       >
-        <div class="px-4 py-4 space-y-1">
+        <div class="px-3 py-4 space-y-1.5">
+          <!-- Menu Items -->
           <a
             v-for="(item, index) in menuItems"
             :key="index"
             @click="navigateTo(item.route)"
-            class="flex items-center gap-3 px-4 py-3.5 rounded-xl text-gray-700 hover:text-primary hover:bg-linear-to-r hover:from-primary/5 hover:to-accent/5 transition-all cursor-pointer group"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl text-white hover:text-white/90 transition-all duration-300 cursor-pointer group backdrop-blur-sm hover:bg-white/10 border border-white/5 hover:border-white/20 active:scale-95"
           >
+            <div
+              class="flex-shrink-0 p-2 rounded-lg bg-white/10 group-hover:bg-white/15 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-white/10"
+            >
+              <svg
+                class="w-5 h-5 text-white transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" :d="item.icon" />
+              </svg>
+            </div>
+            <span class="font-bold text-base tracking-tight flex-1">{{ item.text }}</span>
             <svg
-              class="w-5 h-5 transition-transform group-hover:scale-110"
+              class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform group-hover:translate-x-1"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -266,41 +281,82 @@ const menuItems = computed(() => {
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
-                :d="item.icon"
+                d="M9 5l7 7-7 7"
               />
             </svg>
-            <span class="font-bold text-base">{{ item.text }}</span>
           </a>
 
+          <!-- Divider -->
+          <div v-if="isLoggedIn()" class="my-1.5 h-px bg-white/10"></div>
+
+          <!-- Points Section -->
           <template v-if="isLoggedIn()">
-            <div class="flex items-center gap-2 px-4 py-3">
-              <svg class="w-5 h-5 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                />
-              </svg>
-              <span class="text-sm font-bold text-amber-700">{{ userPoints }} puntos</span>
+            <div
+              class="mx-4 p-3 rounded-xl bg-white/5 border border-amber-400/20 backdrop-blur-sm hover:bg-white/10 transition-all duration-300"
+            >
+              <div class="flex items-center gap-2.5">
+                <div class="p-1.5 rounded-lg bg-amber-400/15">
+                  <svg class="w-5 h-5 text-amber-300" fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <p class="text-white/60 text-xs font-medium">Tus puntos</p>
+                  <p class="text-white text-lg font-bold">{{ userPoints }} pts</p>
+                </div>
+              </div>
             </div>
-            <hr class="border-gray-200/50 my-1" />
+
+            <!-- Divider -->
+            <div class="my-1.5 h-px bg-white/10"></div>
+
+            <!-- Logout Button -->
             <a
               @click="handleLogout"
-              class="flex items-center gap-3 px-4 py-3.5 rounded-xl text-red-600 hover:bg-red-50 transition-all cursor-pointer font-bold text-base"
+              class="flex items-center gap-3 px-4 py-3 rounded-xl text-red-100 hover:text-white transition-all duration-300 cursor-pointer group backdrop-blur-sm hover:bg-red-500/15 border border-white/5 hover:border-red-400/30 active:scale-95"
             >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div
+                class="flex-shrink-0 p-2 rounded-lg bg-red-500/15 group-hover:bg-red-500/20 transition-all duration-300"
+              >
+                <svg
+                  class="w-5 h-5 text-red-300 group-hover:text-red-100 transition-colors"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                  />
+                </svg>
+              </div>
+              <span class="font-bold text-base tracking-tight flex-1">Cerrar sesión</span>
+              <svg
+                class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
-                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                  d="M9 5l7 7-7 7"
                 />
               </svg>
-              <span>Cerrar sesion</span>
             </a>
           </template>
         </div>
+
+        <!-- Decorative gradient overlay -->
+        <div
+          class="pointer-events-none absolute bottom-0 left-0 right-0 h-20 bg-linear-to-t from-blue-800/20 to-transparent"
+        ></div>
       </div>
     </transition>
   </nav>
-
-  <!-- NO spacer - the hero goes behind the transparent navbar -->
 </template>
