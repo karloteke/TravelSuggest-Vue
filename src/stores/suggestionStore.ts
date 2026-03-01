@@ -59,13 +59,11 @@ export const useSuggestionStore = defineStore('suggestions', () => {
         headers['Authorization'] = `Bearer ${token}`
       }
 
-      const response = await fetch(`${API_BASE_URL}/Suggestion?destinationId=${destinationId}`,
-        {
-          method: 'POST',
-          headers,
-          body: JSON.stringify(suggestionPayload),
-        },
-      )
+      const response = await fetch(`${API_BASE_URL}/Suggestion?destinationId=${destinationId}`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(suggestionPayload),
+      })
 
       if (!response.ok) {
         const errorText = await response.text()
@@ -78,9 +76,8 @@ export const useSuggestionStore = defineStore('suggestions', () => {
       const createdSuggestion = await response.json()
       console.log('Sugerencia añadida satisfactoriamente:', createdSuggestion)
 
-      suggestions.unshift(createdSuggestion) // Insertar la nueva sugerencia al inicio del array 
+      suggestions.unshift(createdSuggestion) // Insertar la nueva sugerencia al inicio del array
       await userStore.fetchCurrentUser() // Actualiza los puntos del usuario
-
     } catch (error) {
       console.error('Error al añadir la sugerencia:', error)
     }
@@ -171,9 +168,7 @@ export const useSuggestionStore = defineStore('suggestions', () => {
 
   async function fetchSuggestionsByDestinationId(destinationId: number): Promise<Suggestion[]> {
     try {
-      const response = await fetch(
-        `https://localhost:7193/Suggestion?destinationId=${destinationId}`,
-      )
+      const response = await fetch(`${API_BASE_URL}/Suggestion?destinationId=${destinationId}`)
 
       if (!response.ok) {
         throw new Error('No se pudieron obtener las sugerencias para este destino')
